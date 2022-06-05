@@ -10,6 +10,7 @@ import { ThemeProvider } from '@mui/styles';
 import { green } from '@mui/material/colors';
 import Loadingpage from './page/Loadingpage';
 import Landingpage from './page/Landingpage';
+import Prose from './Apppage/prose';
 
 
 
@@ -56,7 +57,8 @@ function App() {
  <div>
     <Loadingpage
     isopen = {isLoadingpage}/>
-    {!isLoadingpage && <Landingpage/>} 
+    {/* {!isLoadingpage && <Landingpage/>} */}
+    <Prose/>
  </div>
    ) 
 
