@@ -26,24 +26,50 @@ function Prose(params) {
     const classes = usestyle()
 
     const [textData, settextData] = React.useState('');
+    const [isFirstletter, setisFirstletter] = React.useState(false);
+    const [firstletter, setfirstletter] = React.useState('');
+    const [isChangeTextBox, setisChangeTextBox] = React.useState(false);
+    const [isFilleradded, setisFilleradded] = React.useState(false);
 
     function onChangetext(event) {
-        const text = event.target.value
-        settextData(event.target.value)
+        let text = event.target.value
 
-        if(event.target.value){
-            const allletter = text.split('')
-            const firstletter = text[0]
+       const filler = '         '
 
-            allletter.shift()
     
-           console.log(firstletter, allletter)
-        }
-        
-       
-       
-       
+        text = !isFilleradded? filler.concat(text): text
+        setisFilleradded(true) 
+        settextData(text)
+
+        //DEFAULT BACK TO INPUT FIELD
+        // if(text == filler){
+        //     setisChangeTextBox(false)
+        // }
+
+        // setisFirstletter(!event.target.value? true:false )
     }
+
+
+    function onChange1stletter(event) {
+            const text = event.target.value
+            if(text.length > 1){
+                setisChangeTextBox(true)
+                return
+            }else{
+                setisChangeTextBox(false)
+            }
+          
+            setfirstletter(text)
+            console.log('dmn')
+    }
+
+    // const firstletterobj= {
+    //     firstletter,
+    //     onchangeletter: onChange1stletter
+    // }
+
+
+ 
 
     return (
      <div className="w-screen bg-gray-300 lg:p-8 p-10 h-screen" >
@@ -63,6 +89,9 @@ function Prose(params) {
                 <Textarea
                 onChangetext = {onChangetext}
                 textData = {textData}
+                firstletter = {firstletter}
+                onChange1stletter = {onChange1stletter}
+                isChangeTextBox = {isChangeTextBox}
                 />
 
 
