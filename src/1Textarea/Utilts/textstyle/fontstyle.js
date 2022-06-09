@@ -6,29 +6,35 @@ import React from "react"
 
 
 const Leaf = props => {
-  const [firstx, setfirstx] = React.useState(true);
+  // const [firstx, setfirstx] = React.useState(true);
 
-  const incomingText= props.children.props.leaf.text.length
+  // const incomingText= props.children.props.leaf.text.length
 
-  // React.useEffect(() => {
-  //     if(incomingText > 0){
-  //   setfirstx(false)
-  //     }
-  //   console.log('rrr')
-  // }, []);
   
 
   
-console.log(props.children.props.leaf.text.length)
+console.log(props.children.props)
 
-  return (
-    <span
+const content = props.children.props.leaf
+
+
+const contentStyle = {
+  fontWeight: content.bold ? 'bold' : 'normal',
+  fontStyle: content.italics? 'italic': 'normal'
+}
+
+  
+    
+     return (
+      <span onClick={()=>console.log(content.italics)}
       {...props.attributes}
-      style={{ fontWeight: props.leaf.bold ? 'bold' : 'normal' , color: 'blue' }}
+      style={contentStyle}
     >
       {props.children}
     </span>
-  )
+     )
+    
+    
 }
 
 const DefaultElement = props => {

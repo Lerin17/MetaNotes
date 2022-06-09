@@ -2,6 +2,8 @@ import { ClassNames } from '@emotion/react'
 import React, {Component, useCallback} from 'react'
 // Import React dependencies.
 
+//mui dependencies
+import { Button } from "@mui/material";
 
 // Import the Slate editor factory.
 import { createEditor, Editor, Path, Text, Transforms } from 'slate'
@@ -11,12 +13,19 @@ import { Slate, Editable, withReact, } from 'slate-react'
 import { Leaf } from '../Utilts/textstyle/fontstyle'
 import {Firstletter, CodeElement, DefaultElement } from '../Utilts/Uniquestyle/firstletter'
 
+// import Toolbar from '../textareacomponents/Toolbar'
+import Bool from '../Utilts/boolean';
 
 
 
 
 
-// Add the initial value.
+
+
+
+
+
+// Add the initial valu dde.
 const initialValue = [
     {
       type: 'paragraph',
@@ -26,24 +35,30 @@ const initialValue = [
   
   const Textproseslate = () => {
     const [editor] = React.useState(() => withReact(createEditor()))
-    const [first, setfirst] = React.useState(false);
-
+    // const [first, setfirst] = React.useState(false);
+   
 
     
-    // editor.apply({
-    //   type: 'insert_text',
-    //   path: [0, 0],
-    //   offset: 15,
-    //   text: 'A new string of text to be inserted.',
-    // })
-
-    // React.useEffect(() => {
-    //   console.log(editor.children[0])
-    //   if(editor.children[0]){
-    //    console.log(Transforms.select(editor, [0,0]))
-    //   }
-    // }, [editor.children]);
-
+    const ToolbarMarkBtn = (props) => {
+     const [value, togglevalue] = Bool(true)
+      return (
+          <Button onClick={()=>props.toggleMark(value, togglevalue)} className="px-2 text-black w-6" sx={{ minHeight: 0, minWidth: 0, padding: 0 }} >{props.icon}</Button>
+      )
+      }
+      
+    
+    const Toolbar = () => {
+      // const editor = useSlate()
+      return (
+        <div className="flex bg-white" >
+          <ToolbarMarkBtn style = 'bold' value = {true} icon = 'B'
+          toggleMark = {toggleMark}
+          />
+          <Button className="px-2 text-black w-6 " sx={{ minHeight: 0, minWidth: 0, padding: 0 }} >I</Button>
+        </div>
+      )
+    }
+  
 
     const renderElement = props => {
       switch (props.element.type) {
@@ -54,42 +69,39 @@ const initialValue = [
       }
     }
 
- 
-
-    const [xbold, setxbold] = React.useState(false);
+   
+    const toggleMark = (value, togglevalue) => { 
+      // console.log('clck')
+      togglevalue()
+      editor.addMark('italics', value )
+  }
 
 
     const renderLeaf = useCallback(props => {
       return <Leaf {...props} />
     }, [])
 
-    console.log(editor)
+   
+   
+    console.log(Text)
 
     return (
         <div className='bg-red-200' >
+
+
      <Slate editor={editor} value={initialValue}>
 
-  
-
-      <button
-      onMouseDown={e => {
-        console.log('click')
-        e.preventDefault()
-        Transforms.setNodes(
-          editor,
-          { bold: xbold },
-          { match: n => Text.isText(n), split: true },
-        )
-        setxbold(prev => !prev)
-
-      }}
-      >
-        boldx
-      </button>
-
+      <Toolbar
+      toggleMark = {toggleMark}
+      />
+      
         < Editable  
       renderElement={renderElement}
       renderLeaf={renderLeaf}
+
+      // onMouseMove = {
+      //   console.log('eee')
+      // }
   
       onKeyDown={event => {
         if (event.key === '`' && event.ctrlKey) {
@@ -105,9 +117,8 @@ const initialValue = [
           )
         }
       }}
-
-
         />
+
       </Slate>
         </div>
      
