@@ -4,6 +4,9 @@ import { makeStyles } from "@mui/styles";
 import Sidebar from "../Appcom/sidebar";
 import React from "react";
 import Textarea from "../Appcom/textarea";
+import Textproseslate from "../1Textarea/textarea-v/TextproseSlate";
+import { Button } from "@mui/material";
+
 
 const usestyle = makeStyles((theme)=> ({
 textarea: {
@@ -74,7 +77,9 @@ function Prose(params) {
     return (
      <div className="w-screen bg-gray-300 lg:p-8 p-10 h-screen" >
 
-         <div className="bg-red-200 text-2xl" >header</div>
+         <div className="bg-red-200 text-2xl" >header <span>
+                    <Button>bold</Button>
+                    </span>  </div>
 
         <div className="flex flex-col h-full  lg:flex-row md:flex-row" > 
 
@@ -84,19 +89,22 @@ function Prose(params) {
 
            
 
-            <div className=" mx-auto h-full bg-gray-400 lg:w-10/12 md:w-10/12 w-11/12  rounded">
+            <div className=" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-11/12 px-6 rounded">
 
-                <Textarea
+           <Textproseslate/>
+
+                {/* <Textarea
                 onChangetext = {onChangetext}
                 textData = {textData}
                 firstletter = {firstletter}
                 onChange1stletter = {onChange1stletter}
                 isChangeTextBox = {isChangeTextBox}
-                />
+                /> */}
 
 
             </div>
-                  
+
+                
 
          </div>
             
