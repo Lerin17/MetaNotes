@@ -77,9 +77,7 @@ function Prose(params) {
     return (
      <div className="w-screen bg-gray-300 lg:p-8 p-10 h-screen" >
 
-         <div className="bg-red-200 text-2xl" >header <span>
-                    <Button>bold</Button>
-                    </span>  </div>
+         <div className="bg-red-200 text-2xl" >header </div>
 
         <div className="flex flex-col h-full  lg:flex-row md:flex-row" > 
 
