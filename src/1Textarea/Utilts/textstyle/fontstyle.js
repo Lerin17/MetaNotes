@@ -31,7 +31,7 @@ const contentStyle = {
     
      return (
       <span onMouseEnter={()=>getstyle(content)}
-      {...props.attributes}
+      {...props.attributes} onClick = {console.log('eeee')}
       style={contentStyle}
     >
       {props.children}
@@ -47,7 +47,8 @@ const DefaultElement = props => {
 const getstyle  = (props) => {
 
 let styleobj 
-// console.log('eeee')
+
+
 if(props){
   console.log(props)
 }
@@ -59,12 +60,9 @@ if(props){
   }
 }
 
-
-
  return (
   styleobj
  ) 
-
 }
 
 

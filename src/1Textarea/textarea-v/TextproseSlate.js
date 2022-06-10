@@ -41,7 +41,11 @@ const initialValue = [
     
 
   console.log(editorText)
+  console.log(getstyle())
 
+  editor.onChange(
+    console.log('wwww')
+  )
 
   React.useEffect(() => { 
     initialtextobj = editor.children[0].children[0].text 
@@ -87,7 +91,7 @@ const initialValue = [
      }, [editorText]);
 
 
- 
+    
 
     // let currentTextArea = React.useRef(null)
    
@@ -118,7 +122,7 @@ const initialValue = [
      }
 
       return (
-          <Button onClick={()=>props.toggleMark(orfalse, toggleorfalse)} className="px-2 text-black w-6" sx={{ minHeight: 0, minWidth: 0, padding: 0 }} >{props.icon}</Button>
+          <Button onClick={()=>props.toggleMark(orfalse, toggleorfalse, props.style)} className="px-2 text-black w-6" sx={{ minHeight: 0, minWidth: 0, padding: 0 }} >{props.icon}</Button>
       )
       }
 
@@ -128,10 +132,14 @@ const initialValue = [
       // const editor = useSlate()
       return (
         <div className="flex bg-white" >
-          <ToolbarMarkBtn style = 'bold' value = {true} icon = 'B'
+          <ToolbarMarkBtn style = 'bold'  icon = 'B'
           toggleMark = {toggleMark}
           />
-          <Button className="px-2 text-black w-6 " sx={{ minHeight: 0, minWidth: 0, padding: 0 }} >I</Button>
+
+          <ToolbarMarkBtn style = 'italics'  icon = 'I'
+          toggleMark = {toggleMark}
+          />
+          {/* <Button className="px-2 text-black w-6 " sx={{ minHeight: 0, minWidth: 0, padding: 0 }} >I</Button> */}
         </div>
       )
     }
@@ -147,14 +155,14 @@ const initialValue = [
     }
 
    
-    const toggleMark = (value, togglevaue) => { 
+    const toggleMark = (value, togglevaue, style) => { 
       console.log(value)
       togglevaue()
-      editor.addMark('italics', value )
+      editor.addMark( style, value )
 
 
         editor.onChange(
-          console.log('eeeeee'),
+          console.log('eeeee'),
           ReactEditor.focus(editor),
            Transforms.select(editor, Editor.end(editor, [])) 
         )
@@ -171,17 +179,6 @@ const initialValue = [
 
 
 ;
-  
-// // console.log(editor)
-// console.log(isAppStarted)
-
-// if(isAppStarted){
-
-//     console.log('first text')
-   
-
-// }
-
 
 //  editor.selection()
 //    Transforms.insertNodes(editor, [
@@ -216,7 +213,7 @@ const initialValue = [
         < Editable  
       renderElement={renderElement}
       renderLeaf={renderLeaf}
-    
+      onChange = {console.log('eee')}
       
   
       onKeyDown={event => {

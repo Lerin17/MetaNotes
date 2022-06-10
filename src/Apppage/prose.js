@@ -105,7 +105,7 @@ function Prose(params) {
 
            
 
-            <div className=" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-11/12 px-6 rounded"  onClick={()=>setisSlatetexthover(prev => !prev)} onKeyDown={()=>setisSlatetexthover(prev => !prev) }>
+            <div className=" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-11/12 px-6 rounded" onMouseEnter={()=>setisSlatetexthover(prev => !prev)}  onClick={()=>setisSlatetexthover(prev => !prev)} onKeyDown={()=>setisSlatetexthover(prev => !prev) }>
 
            <Textproseslate
            yam = {isSlatetexthover}
