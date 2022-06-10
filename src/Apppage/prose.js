@@ -84,6 +84,11 @@ function Prose(params) {
     //     onchangeletter: onChange1stletter
     // }
 
+    function openTextModal(params) {
+        console.log('open modal')
+        
+    }
+
 
  
 
@@ -100,13 +105,13 @@ function Prose(params) {
 
            
 
-            <div className=" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-11/12 px-6 rounded" onClick={()=>setisSlatetexthover(prev => !prev)}>
+            <div className=" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-11/12 px-6 rounded"  onClick={()=>setisSlatetexthover(prev => !prev)} onKeyDown={()=>setisSlatetexthover(prev => !prev) }>
 
            <Textproseslate
            yam = {isSlatetexthover}
            />
            
-
+ 
                 {/* <Textarea
                 onChangetext = {onChangetext}
                 textData = {textData}
