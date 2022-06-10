@@ -6,7 +6,7 @@ import React from "react";
 import Textarea from "../Appcom/textarea";
 import Textproseslate from "../1Textarea/textarea-v/TextproseSlate";
 import { Button } from "@mui/material";
-
+import Bool from "../1Textarea/Utilts/boolean";
 
 const usestyle = makeStyles((theme)=> ({
 textarea: {
@@ -25,6 +25,16 @@ textarea: {
 
 
 function Prose(params) {
+    const [value, togglevalue] = Bool(true)
+
+    const [boolprose, setboolprose] = React.useState(false);
+
+
+    function setbool(params) {
+        setboolprose(prev=>!prev)
+    }
+
+    console.log(togglevalue)
 
     const classes = usestyle()
 
@@ -34,11 +44,14 @@ function Prose(params) {
     const [isChangeTextBox, setisChangeTextBox] = React.useState(false);
     const [isFilleradded, setisFilleradded] = React.useState(false);
 
+    const [isSlatetexthover, setisSlatetexthover] = React.useState(false);
+   
+
     function onChangetext(event) {
         let text = event.target.value
 
        const filler = '         '
-
+       
     
         text = !isFilleradded? filler.concat(text): text
         setisFilleradded(true) 
@@ -87,9 +100,12 @@ function Prose(params) {
 
            
 
-            <div className=" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-11/12 px-6 rounded">
+            <div className=" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-11/12 px-6 rounded" onClick={()=>setisSlatetexthover(prev => !prev)}>
 
-           <Textproseslate/>
+           <Textproseslate
+           yam = {isSlatetexthover}
+           />
+           
 
                 {/* <Textarea
                 onChangetext = {onChangetext}
