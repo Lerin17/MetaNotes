@@ -7,26 +7,13 @@ import React from "react"
 
 const Leaf = props => {
 
-
-  
-// console.log(props.children.props)
-
 const content = props.children.props.leaf
 
 
-const contentStyle = {
-  fontWeight: content.bold ? 'bold' : 'normal',
-  fontStyle: content.italics? 'italic': 'normal',
-}
-
-// const styleobjects = () => {
-//  styleobj = {
-//    isItalics : content.italics
-//  }
-//  console.log(styleobj)
-// }
-
-
+  const contentStyle = {
+    fontWeight: content.bold ? 'bold' : 'normal',
+    fontStyle: content.italics? 'italic': 'normal',
+  }
 
     
      return (
@@ -36,8 +23,7 @@ const contentStyle = {
     >
       {props.children}
     </span>
-     )
-        
+     )       
 }
 
 const DefaultElement = props => {
@@ -45,9 +31,7 @@ const DefaultElement = props => {
 }
 
 const getstyle  = (props) => {
-
 let styleobj 
-
 
 if(props){
   console.log(props)
@@ -65,7 +49,9 @@ if(props){
  ) 
 }
 
+const STY = getstyle()
 
 
 
-export  {Leaf, DefaultElement, getstyle}
+
+export  {Leaf, DefaultElement, STY}
