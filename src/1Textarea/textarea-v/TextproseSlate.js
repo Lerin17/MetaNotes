@@ -243,6 +243,7 @@ const initialValue = [
       renderElement={renderElement}
       renderLeaf={renderLeaf}
       onChange = {console.log('eee')}
+      autoFocus
       
       onMouseEnter={()=>{
        const  marks = Editor.marks(editor)
