@@ -1,11 +1,11 @@
-import { IconButton } from "@material-ui/core";
+import { AppBar, IconButton } from "@material-ui/core";
 import { Timer } from "@material-ui/icons";
 import { makeStyles } from "@mui/styles";
 import Sidebar from "../Appcom/sidebar";
 import React from "react";
 import Textarea from "../Appcom/textarea";
 import Textproseslate from "../1Textarea/textarea-v/TextproseSlate";
-import { Button } from "@mui/material";
+import { Button, Toolbar } from "@mui/material";
 import Bool from "../1Textarea/Utilts/boolean";
 
 const usestyle = makeStyles((theme)=> ({
@@ -93,9 +93,11 @@ function Prose(params) {
  
 
     return (
+        <div>
+      
      <div className="w-screen bg-gray-300 lg:p-8 p-10 h-screen" >
 
-         <div className="bg-red-200 text-2xl" >header </div>
+     <div className="bg-red-200 text-2xl" >header </div>
 
         <div className="flex flex-col h-full  lg:flex-row md:flex-row" > 
 
@@ -105,29 +107,20 @@ function Prose(params) {
 
            
 
-            <div className=" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-11/12 px-6 rounded" onMouseEnter={()=>setisSlatetexthover(prev => !prev)}  onClick={()=>setisSlatetexthover(prev => !prev)} onKeyDown={()=>setisSlatetexthover(prev => !prev) }>
+            <div className=" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-11/12 px-6 rounded " onMouseEnter={()=>setisSlatetexthover(prev => !prev)}  onClick={()=>setisSlatetexthover(prev => !prev)} onKeyDown={()=>setisSlatetexthover(prev => !prev) }>
+
+            {/* <div className="absolute">mee</div> */}
 
            <Textproseslate
-        //    yam = {isSlatetexthover}
            />
-           
- 
-                {/* <Textarea
-                onChangetext = {onChangetext}
-                textData = {textData}
-                firstletter = {firstletter}
-                onChange1stletter = {onChange1stletter}
-                isChangeTextBox = {isChangeTextBox}
-                /> */}
-
-
+          
             </div>
 
-                
-
+              
          </div>
             
-        
+    </div>
+   
     </div>
     )
     
