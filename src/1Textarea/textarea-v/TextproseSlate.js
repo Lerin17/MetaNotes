@@ -3,7 +3,7 @@ import React, {Component, forwardRef, useCallback, useRef} from 'react'
 // Import React dependencies.
 
 //mui dependencies
-import { Button } from "@mui/material";
+import { Button, imageListItemClasses } from "@mui/material";
 // Import the Slate editor factory.
 import { createEditor, Editor, Node, Path, Text, Transforms } from 'slate'
 
@@ -29,29 +29,19 @@ const initialValue = [
     },
   ]
 
-  // const STYx = STY
-
-  // console.log(STY)
   
-  const Textproseslate = (props) => {
+  const Textproseslate = () => {
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
-    const [orfalse, setorfalse] = React.useState(true);
+    // const [orfalse, setorfalse] = React.useState(true);
     // const [editorText, seteditorText] = React.useState();
     let initialtextobj
-    const [markx, setmarkx] = React.useState();
+    const [markx, setmarkx] = React.useState({});
+    const [value, setValue] = React.useState(initialValue);
+
+    // const  marks = Editor.marks(editor)
+    // console.log(marks)
+   
     
-
-  editor.onChange(
-    console.log('wwww')
-  )
-
-  React.useEffect(() => { 
-    initialtextobj = editor.children[0].children[0].text 
-    console.log(initialtextobj.length)
-    console.log('eeeede')  
-     }, []);
-
-
 
     const Leaf = props => {
       // const editor = useSlate()
@@ -64,8 +54,6 @@ const initialValue = [
           backgroundColor: content.meta? 'red': '',      
         }
       
-          
-       
              return (
               <span 
               {...props.attributes} onClick = {console.log('eeee')}
@@ -73,94 +61,41 @@ const initialValue = [
             >
               {props.children}
             </span>
-             )
-          
-           
-            
+             )          
       }
-    
 
 
-
-        // editor.onChange(
-        //   console.log(editor.selection)
-        // )
-
-        // console.log(getstyle())
-
-  
-
-
-    
-    const ToolbarMarkBtn = (props) => {
-      function toggleorfalse(params) {
-        setorfalse(prev => !prev) 
-    } 
-    
-    if(markx){
-      return (
-        <Button onClick={()=>props.toggleMark(orfalse, toggleorfalse ,props.style, props.active)} className= {`text-black px-2  w-6 ${props.active? 'font-bold':'font-normal'}`} sx={{ minHeight: 0, minWidth: 0, padding: 0 }} >{props.icon}</Button>
-    )
-    } }
-
+      // const ToolbarMarkBtn = (props) => {
+      //   function toggleorfalse(params) {
+      //     setorfalse(prev => !prev) 
+      // } 
       
+      // if(marks){
+      //   return (
+      //     <Button onClick={()=>props.toggleMark(orfalse, toggleorfalse ,props.style, props.active)} className= {`text-black px-2  w-6 ${props.active? 'font-bold':'font-normal'}`} sx={{ minHeight: 0, minWidth: 0, padding: 0 }} >{props.icon}</Button>
+      // )
+      // } }
+
+      // console.log(markx)
+  
     
-    const Toolbar = () => {
-      // const editor = useSlate()
-   
-  if(markx){
+   const Toolbar = (props) => {
+  
+    console.log(props.mark)
+    const buttonActiveStyle = props.mark
+    console.log(buttonActiveStyle.bold)
     return (
-      <div className="flex bg-white " >
-        <ToolbarMarkBtn active = {markx.bold} style = 'bold'  icon = 'B'
-        toggleMark = {toggleMark}
-        />
-
-        <ToolbarMarkBtn active = {markx.italics} style = 'italics'  icon = 'I'
-        toggleMark = {toggleMark}
-        />
-
-        <ToolbarMarkBtn active = {markx.qoutes} style = 'qoutes'  icon = '**'
-        toggleMark = {toggleMark}
-        />
-      
-      <div className='ml-3'>
-      <ToolbarMarkBtn active = {markx.qoutes} style = 'header1'  icon = 'H1'
-        toggleMark = {toggleMark}
-        />
-
-      <ToolbarMarkBtn active = {markx.qoutes} style = 'header2'  icon = 'H2'
-        toggleMark = {toggleMark}
-        />
-
-      <ToolbarMarkBtn active = {markx.qoutes} style = 'header3'  icon = 'H3'
-        toggleMark = {toggleMark}
-        />
-
-      </div>
-
       <div>
-      <ToolbarMarkBtn active = {markx.qoutes} style = 'meta'  icon = 'M'
-        toggleMark = {toggleMark}
-        />
-      </div>
-
-      <div className='ml-8' >
-      <ToolbarMarkBtn active = {markx.qoutes} style = 'header3'  icon = 'A'
-        toggleMark = {toggleMark}
-        />
-          <ToolbarMarkBtn active = {markx.qoutes} style = 'header3'  icon = 'V'
-        toggleMark = {toggleMark}
-        />
-      </div>
-      
-        {/* <Button className="px-2 text-black w-6 " sx={{ minHeight: 0, minWidth: 0, padding: 0 }} >I</Button> */}
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.bold} icon = 'B' format ='bold' red='per'/>
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.italics} icon = 'I' format = 'italics' red='per'/>
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.qoutes} icon = 'Q' format = 'qoutes' red='per'/>
+      {/* <ToolbarMarkBtnx icon = 'H1' format = 'qoutes' red='per'/>
+      <ToolbarMarkBtnx icon = 'H2' format = 'qoutes' red='per'/> */}
       </div>
     )
-
-  }
-      
-    }
-  
+   }
+    
+   
 
     const renderElement = props => {
       switch (props.element.type) {
@@ -171,6 +106,7 @@ const initialValue = [
       }
     }
 
+    // console.log(markx)
     
    
     const toggleMark = (value, togglevaue, style, active) => { 
@@ -184,18 +120,9 @@ const initialValue = [
         editor.addMark( style, value )
       }
   
-
       console.log(
         Editor.end
       )
-
-
-        // editor.onChange(
-        //   console.log('eeeee'),
-        //   ReactEditor.focus(editor),
-        //    Transforms.select(editor, Editor.end(editor, [])) 
-        // )
-
   }
 
 
@@ -203,86 +130,127 @@ const initialValue = [
         return <Leaf {...props} />  
        }, [])
 
-  
+     
+      //  setmarkx(marks)
 
-      //  console.log(markx)
-
-;
-
-
-
-    return (
-
-            <div 
+    return (         
+     <Slate editor={editor} value={value} onChange={value => setValue(value)} >
+           <div 
             style={{
             gridTemplateRows: 'auto 1fr'
             }} className='App w-full h-full  grid grid-flow-row overflow-hidden' >
             <div className="w-full p-4 border-b border-black font-bold "> 
             <Toolbar
-      toggleMark = {toggleMark}
-      />
+            mark = {markx}
+            />
       </div>
       <div style={{
             gridTemplateRows: '1fr 0.1fr'
             }} className=" main-content grid grid-flow-col overflow-hidden  ">
         <div className="overflow-auto p-4 relative ">
-          <div className="w-full mb-12">
-              
-     <Slate editor={editor} value={initialValue}>
+          {/* <div className="w-full mb-12"></div> */}
       
         < Editable  
       renderElement={renderElement}
       renderLeaf={renderLeaf}
-      // autoFocus
+      autoFocus
+
+      onClick={()=>{
+        setTimeout(() => {
+          console.log('no id')
+          setmarkx(Editor.marks(editor))
+        }, 50);
+      }}
 
       style={{
         padding: '10px',
         border: '1px solid #999',
         textAlign: 'start',
-      
-      }}
-      
-      // onMouseEnter={()=>{
-      //  const  marks = Editor.marks(editor)
-      //  setmarkx(marks)
-      // } 
-      // }
-
-   
-
-      onClick= {()=>{
-        const  marks = Editor.marks(editor)
-        setmarkx(marks)
-        // ReactEditor.focus(editor),
-        // Transforms.select(editor, [0,0]) 
-      }
-      }
-  
-      onKeyDown={event => {
-        if (event.key === '`' && event.ctrlKey) {
-          console.log('clickced')
-          event.preventDefault()
-          const [match] = Editor.nodes(editor, {
-            match: n => n.type === 'code',
-          })
-          Transforms.setNodes(
-            editor,
-            { type: match ? 'paragraph' : 'code' },
-            { match: n => Editor.isBlock(editor, n)}
-          )
-        }
-      }}
+       }}
         />
-
+         </div>
+        </div>
+      </div>
       </Slate>
-      </div>
-        </div>
-      </div>
-        </div>
+     
       
     )
   }
 
+  // const isMarkActive = (editor, format) => {
+  //   const marks = Editor.marks(editor);
+  //   return marks ? marks[format] === true : false;
+  // };
+
+  // const MarkButton = ({ format, icon }) => {
+  //   const editor = useSlate();
+  //   return (
+  //     <Button
+  //       active={isMarkActive(editor, format)}
+  //       onMouseDown={event => {
+  //         event.preventDefault();
+  //         toggleMark(editor, format);
+  //       }}
+  //     >
+  //       <Icon>{icon}</Icon>
+  //     </Button>
+  //   );
+  // };
+
+  const toggleMark = (editor, format) => { 
+    // console.log(active)
+    const active = isMarkActive(editor, format)
+    console.log(format)
+    console.log(active)
+
+     const formatvalue = active? false: true
+  //  const active = false
+     
+      editor.addMark(format, formatvalue )
+}
+
+const isMarkActive = (editor, format) => {
+  const formatx = format
+    const activex = Editor.marks(editor)
+    // console.log(editor)
+  //   console.log(format)
+  //  console.log(activex, 'ee')
+  let Smarkactive = false
+
+   if(activex == null){
+    Smarkactive = false
+   }else {
+    // console.log(format)
+    if (activex[format] === true){
+      // console.log('yes')
+      Smarkactive = true
+     }
+   }
+
+  
+
+     return (Smarkactive)
+  //  console.log(Boolean(activex.format))
+   
+}
+
+
+  const ToolbarMarkBtnx = (props) => {
+    const [format, setformat] = React.useState(props.format);
+    // console.log(format)
+    const editor = useSlate();
+    // const format = props.format
+    // console.log(props)
+  //  const active = isMarkActive(editor, format)
+
+   
+   console.log(props.activestyle)
+    return (
+      <Button className= {`text-black ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={()=>{toggleMark(editor, format)}}
+      // disabled={isMarkActive(editor)}
+      >{props.icon}</Button>
+  )
+   }
 
 
 
