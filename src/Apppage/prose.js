@@ -8,111 +8,64 @@ import Textproseslate from "../1Textarea/textarea-v/TextproseSlate";
 import { Button, Toolbar } from "@mui/material";
 import Bool from "../1Textarea/Utilts/boolean";
 
-const usestyle = makeStyles((theme)=> ({
-textarea: {
-    resize: 'none',
-    border: 'none',
-    backgroundColor: 'transparent',
-    outline: 'none',
-
-    
-}
-    
-}))
-
+import {Stylecontext} from '../context/MetamodalContext'
 
 
 
 
 function Prose(params) {
-    const [value, togglevalue] = Bool(true)
+    const {isMetamodal, toggleMetamodal} = React.useContext(Stylecontext)
 
-    const [boolprose, setboolprose] = React.useState(false);
+    console.log(isMetamodal)
+    const styles = () => {
+        return (
+            {
+                sidebar: isMetamodal? 'hidden': ' lg:w-1/12 xl:w-1/12 lg:h-full md:h-full h-2/12 md:w-1/12 mb-3 md:mb-0 lg:mb-0 bg-white',
 
+                Textproseslate: isMetamodal? 'flex flex-col lg:flex-row md:flex-row  mx-auto h-full bg-white lg:w-10/12 md:w-12/12 w-full px-2 rounded':" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-full px-2 rounded"
 
-    function setbool(params) {
-        setboolprose(prev=>!prev)
+            }
+           
+        )   
     }
 
-    console.log(togglevalue)
 
-    const classes = usestyle()
 
-    const [textData, settextData] = React.useState('');
-    const [isFirstletter, setisFirstletter] = React.useState(false);
-    const [firstletter, setfirstletter] = React.useState('');
-    const [isChangeTextBox, setisChangeTextBox] = React.useState(false);
-    const [isFilleradded, setisFilleradded] = React.useState(false);
 
-    const [isSlatetexthover, setisSlatetexthover] = React.useState(false);
+
+
+    // const [textData, settextData] = React.useState('');
+    // const [isFirstletter, setisFirstletter] = React.useState(false);
+    // const [firstletter, setfirstletter] = React.useState('');
+    // const [isChangeTextBox, setisChangeTextBox] = React.useState(false);
+    // const [isFilleradded, setisFilleradded] = React.useState(false);
+
+    // const [isSlatetexthover, setisSlatetexthover] = React.useState(false);
    
 
-    function onChangetext(event) {
-        let text = event.target.value
-
-       const filler = '         '
-       
-    
-        text = !isFilleradded? filler.concat(text): text
-        setisFilleradded(true) 
-        settextData(text)
-
-        //DEFAULT BACK TO INPUT FIELD
-        // if(text == filler){
-        //     setisChangeTextBox(false)
-        // }
-
-        // setisFirstletter(!event.target.value? true:false )
-    }
 
 
-    function onChange1stletter(event) {
-            const text = event.target.value
-            if(text.length > 1){
-                setisChangeTextBox(true)
-                return
-            }else{
-                setisChangeTextBox(false)
-            }
-          
-            setfirstletter(text)
-            console.log('dmn')
-    }
-
-    // const firstletterobj= {
-    //     firstletter,
-    //     onchangeletter: onChange1stletter
-    // }
-
-    function openTextModal(params) {
-        console.log('open modal')
-        
-    }
-
-
- 
+ const classes = styles(isMetamodal)
+ console.log(classes.sidebar)
 
     return (
-        <div>
-      
-     <div className="w-screen bg-gray-300 lg:p-8 p-10 h-screen" >
+<div className="">    
+    <div className="w-screen bg-gray-300 lg:p-8 md:p-0 h-screen" >
+    <div className=" text-lg uppercase border-b-4 font-bold" >header </div>
+            <div className="flex flex-col h-full  lg:flex-row md:flex-row" > 
 
-     <div className="bg-red-200 text-2xl" >header </div>
-
-        <div className="flex flex-col h-full  lg:flex-row md:flex-row" > 
-
-            <div className="lg:w-1/12 xl:w-1/12 lg:h-full md:h-full h-2/12 md:w-1/12 mb-3 md:mb-0 lg:mb-0 bg-white" >
+            <div className= {classes.sidebar} >
             <Sidebar/>
             </div>
 
            
 
-            <div className=" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-11/12 px-6 rounded " >
+            <div className= {classes.Textproseslate} >
+           <Textproseslate/> 
 
-            {/* <div className="absolute">mee</div> */}
-
-           <Textproseslate/>
-          
+                {isMetamodal && <div className="lg:w-4/12 md:w-4/12 w-8/12  absolute  lg:relative md:relative bottom-0 h-72  " >
+                <Textarea/>
+                </div>}      
             </div>
 
               

@@ -9,11 +9,12 @@ import { useForkRef } from "@mui/material";
 const usestyle = makeStyles((theme)=> ({
 textarea: {
     resize: 'none',
-    border: 'none',
+    // border: 'none',
     backgroundColor: 'transparent',
     outline: 'none',
     color: 'blue',
-    textSize: '12px',
+    fontSize: '10px',
+    height: '300px'
  
 },
 text: {
@@ -57,27 +58,23 @@ function Textarea(props) {
     return (
     
         <div className="h-full" onClick={setTextArea} >
+{/* 
+                    <div>Name</div> */}
 
-                    <div>Name</div>
-
-                    <div className="bg-gray-200 h-3/4 my-6 ">
-                        <div className="flex -mb-4">
-                       
-                        <input className="h-12 w-16 text-right text-5xl bg-gray-500 " ref={currentTextArea} 
-                        value= {props.firstletter} onChange = {props.onChange1stletter} />
-
+                    <div className="bg-gray-200 h-scren  ">
+                           
+                        <div className="border-b border-white" >
+                                img
                         </div>
 
                         <div className="h-full">
-                            <textarea className={`w-full h-full p-4  text-lg -mt-6  ${classes.textarea}`} onChange = {props.onChangetext} value = {props.textData}
+                            <textarea className={`w-full h-full px-2   ${classes.textarea}`} onChange = {props.onChangetext} value = {props.textData}
                             ref= {props.isChangeTextBox? currentTextArea: null}
                             ></textarea>
                         </div>
                         
                     
                     </div>
-
-                    <div>footer</div>
 
                 </div>
     )

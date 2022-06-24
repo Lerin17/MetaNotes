@@ -8,6 +8,8 @@ import theme from './theme';
 import Navbar from './components/navbar';
 import Leftbar from './components/leftbar';
 
+import { StylecontextProvider } from './context/MetamodalContext';
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -15,11 +17,10 @@ root.render(
   // <React.StrictMode>
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme = {theme}>
- 
-    <App />
-    </ThemeProvider >
-    
-  
+      <StylecontextProvider>
+      <App />
+      </StylecontextProvider>
+    </ThemeProvider >  
     </StyledEngineProvider>
   // </React.StrictMode>
 );

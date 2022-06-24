@@ -1,5 +1,6 @@
 import { ClassNames } from '@emotion/react'
 import React, {Component, forwardRef, useCallback, useRef} from 'react'
+import { Stylecontext } from '../../context/MetamodalContext';
 // Import React dependencies.
 
 //mui dependencies
@@ -17,6 +18,7 @@ import Bool from '../Utilts/boolean';
 import { SettingsRounded } from '@material-ui/icons';
 import { useMemo } from 'react';
 import { withHistory } from 'slate-history';
+import Textarea from '../../Appcom/textarea';
 
 
 
@@ -29,17 +31,19 @@ const initialValue = [
     },
   ]
 
+
+
   
   const Textproseslate = () => {
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
-    // const [orfalse, setorfalse] = React.useState(true);
-    // const [editorText, seteditorText] = React.useState();
+   
     let initialtextobj
     const [markx, setmarkx] = React.useState({});
     const [value, setValue] = React.useState(initialValue);
 
-    // const  marks = Editor.marks(editor)
-    // console.log(marks)
+    const {isMetamodal, toggleMetamodal} = React.useContext(Stylecontext)
+
+    console.log(isMetamodal)
    
     
 
@@ -51,12 +55,16 @@ const initialValue = [
           fontStyle: content.italics? 'italic': 'normal',
           opacity: content.qoutes? '0.5': '1',
           fontSize: content.header1? '32px': content.header2? '20px': content.header3? '18px': '16px',
-          backgroundColor: content.meta? 'red': '',      
+          // backgroundColor: content.meta? 'red': 'none',      
         }
+
+        const contentStyleMeta = `${content.meta?'text-green-600 hover:bg-green-500 hover:text-white underline': 'bg-none'}`
+        
+        const isMeta = content.meta
       
              return (
               <span 
-              {...props.attributes} onClick = {console.log('eeee')}
+              {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal, event)}
               style={contentStyle}
             >
               {props.children}
@@ -65,32 +73,22 @@ const initialValue = [
       }
 
 
-      // const ToolbarMarkBtn = (props) => {
-      //   function toggleorfalse(params) {
-      //     setorfalse(prev => !prev) 
-      // } 
-      
-      // if(marks){
-      //   return (
-      //     <Button onClick={()=>props.toggleMark(orfalse, toggleorfalse ,props.style, props.active)} className= {`text-black px-2  w-6 ${props.active? 'font-bold':'font-normal'}`} sx={{ minHeight: 0, minWidth: 0, padding: 0 }} >{props.icon}</Button>
-      // )
-      // } }
 
-      // console.log(markx)
   
     
    const Toolbar = (props) => {
   
-    console.log(props.mark)
+    // console.log(props.mark)
     const buttonActiveStyle = props.mark
-    console.log(buttonActiveStyle.bold)
+    // console.log(buttonActiveStyle.bold)
     return (
       <div>
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.bold} icon = 'B' format ='bold' red='per'/>
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.italics} icon = 'I' format = 'italics' red='per'/>
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.qoutes} icon = 'Q' format = 'qoutes' red='per'/>
-      {/* <ToolbarMarkBtnx icon = 'H1' format = 'qoutes' red='per'/>
-      <ToolbarMarkBtnx icon = 'H2' format = 'qoutes' red='per'/> */}
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.bold} icon = 'B' format ='bold' />
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.italics} icon = 'I' format = 'italics' />
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.qoutes} icon = 'Q' format = 'qoutes' />
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header1} icon = 'H1' format = 'header1' />
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'H2' format = 'header2' /> 
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'M' format = 'meta' /> 
       </div>
     )
    }
@@ -133,69 +131,54 @@ const initialValue = [
      
       //  setmarkx(marks)
 
-    return (         
-     <Slate editor={editor} value={value} onChange={value => setValue(value)} >
-           <div 
-            style={{
-            gridTemplateRows: 'auto 1fr'
-            }} className='App w-full h-full  grid grid-flow-row overflow-hidden' >
-            <div className="w-full p-4 border-b border-black font-bold "> 
-            <Toolbar
-            mark = {markx}
+    return (       
+      // <div className='flex flex-col lg:flex-row md:flex-row' >
+        <Slate editor={editor} value={value} onChange={value => setValue(value)} >
+              <div 
+                style={{
+                gridTemplateRows: 'auto 1fr'
+                }} className='App w-full h-full  grid grid-flow-row overflow-hidden' >
+                <div className="w-full  p-2 border-b border-black font-bold "> 
+                <Toolbar
+                mark = {markx}
+                />
+          </div>
+          <div style={{
+                gridTemplateRows: '1fr 0.1fr'
+                }} className=" main-content grid grid-flow-col overflow-hidden  ">
+            <div className="overflow-auto p-4 relative lg:h-full md:h-full  ">
+              {/* <div className="w-full mb-12"></div> */}
+          
+            < Editable  
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
+          autoFocus
+
+          onClick={()=>{
+            setTimeout(() => {
+              // console.log('no id')
+              setmarkx(Editor.marks(editor))
+            }, 50);
+          }}
+
+          style={{
+            padding: '10px',
+            border: '1px solid #999',
+            textAlign: 'start',
+          }}
             />
-      </div>
-      <div style={{
-            gridTemplateRows: '1fr 0.1fr'
-            }} className=" main-content grid grid-flow-col overflow-hidden  ">
-        <div className="overflow-auto p-4 relative ">
-          {/* <div className="w-full mb-12"></div> */}
+            </div>
+            </div>
+          </div>
+          </Slate>
+
       
-        < Editable  
-      renderElement={renderElement}
-      renderLeaf={renderLeaf}
-      autoFocus
-
-      onClick={()=>{
-        setTimeout(() => {
-          console.log('no id')
-          setmarkx(Editor.marks(editor))
-        }, 50);
-      }}
-
-      style={{
-        padding: '10px',
-        border: '1px solid #999',
-        textAlign: 'start',
-       }}
-        />
-         </div>
-        </div>
-      </div>
-      </Slate>
-     
+   
       
     )
   }
 
-  // const isMarkActive = (editor, format) => {
-  //   const marks = Editor.marks(editor);
-  //   return marks ? marks[format] === true : false;
-  // };
-
-  // const MarkButton = ({ format, icon }) => {
-  //   const editor = useSlate();
-  //   return (
-  //     <Button
-  //       active={isMarkActive(editor, format)}
-  //       onMouseDown={event => {
-  //         event.preventDefault();
-  //         toggleMark(editor, format);
-  //       }}
-  //     >
-  //       <Icon>{icon}</Icon>
-  //     </Button>
-  //   );
-  // };
+//toggleMark button
 
   const toggleMark = (editor, format) => { 
     // console.log(active)
@@ -207,14 +190,14 @@ const initialValue = [
   //  const active = false
      
       editor.addMark(format, formatvalue )
-}
+} 
+
+////////
 
 const isMarkActive = (editor, format) => {
   const formatx = format
     const activex = Editor.marks(editor)
-    // console.log(editor)
-  //   console.log(format)
-  //  console.log(activex, 'ee')
+
   let Smarkactive = false
 
    if(activex == null){
@@ -239,18 +222,21 @@ const isMarkActive = (editor, format) => {
     const [format, setformat] = React.useState(props.format);
     // console.log(format)
     const editor = useSlate();
-    // const format = props.format
-    // console.log(props)
-  //  const active = isMarkActive(editor, format)
 
-   
-   console.log(props.activestyle)
     return (
       <Button className= {`text-black ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={()=>{toggleMark(editor, format)}}
       // disabled={isMarkActive(editor)}
       >{props.icon}</Button>
   )
    }
+
+ const openMetaModal = ( isMeta, toggleMetamodal, event) => {
+  if(isMeta){
+    // event.preventdefault()
+    toggleMetamodal()
+     console.log('eee')
+  }
+ }
 
 
 
