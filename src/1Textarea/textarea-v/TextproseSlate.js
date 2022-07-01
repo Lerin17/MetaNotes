@@ -48,19 +48,20 @@ const initialValue = [
 
     const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId} = React.useContext(Stylecontext)
 
-    const [Metapairx, setMetapairx] = React.useState();
+    const [Metapairx, setMetapairx] = React.useState(1);
     // console.log(currentMeta)
     // console.log(MetaArray)
     // console.log(MetaID)
     
-    // React.useEffect(() => {
-    //   console.log(MetaID, 'metax')
-    //    setMetapairx(MetaID)
-    //    settestnum(prev => prev + 1)
-    //    console.log(testnum, '1st test');
-    // }, [MetaID]);
+    React.useEffect(() => {
+      console.log(MetaID, 'metax')
+       setMetapairx(MetaID)
+      //  settestnum(prev => prev + 1)
+      //  console.log(testnum, '1st test');
+    }, [MetaID]);
 
 
+    console.log(Metapairx, '1sttest')
     // console.log(MetaID, 'outside')
     // console.log(Metapairx, 'tside')
    
@@ -78,17 +79,33 @@ const initialValue = [
           // backgroundColor: content.meta? 'red': 'none',      
         }
 
+        const [Metapairidxx, setMetapairidxx] = React.useState(1);
+
+     
+
         const contentStyleMeta = `${content.meta?'text-green-600 hover:bg-green-500 hover:text-white underline': 'bg-none'}`
         
         const isMeta = content.meta
         const MetapairID = MetaID
-        console.log(Metapairx, 'test')
-        console.log(testnum, '2nd test');
+
+        // console.log(props.Metapairx, 'cx')
+        // console.log(Metapairx, 'test')
+
+        console.log(Metapairidxx, 'ddd')
+
+        React.useEffect(() => {
+          if(isMeta){
+            setMetapairidxx(prev => prev + 1)
+            console.log(Metapairidxx)
+          }
+         
+        }, []);
+        // console.log(testnum, '2nd test');
         // const MetapairID = CreateMetaID(isMeta)
         // const MetapairID = 2
              return (
-              <span data-yam = '2' data-metaparentid = {`**${MetapairID}**`}
-              {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal, MetapairID ,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, event)}
+              <span data-yam = '2' data-metaparentid = {`**${Metapairidxx}**`}
+              {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal, MetapairID ,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, Metapairidxx, event)}
               style={contentStyle}
             >
               {props.children}
@@ -149,7 +166,8 @@ const initialValue = [
 
 
        const renderLeaf = useCallback(props => {
-        return <Leaf {...props} />  
+        return <Leaf {...props}
+        Metapairx ={Metapairx} />  
        }, [])
 
      
@@ -260,7 +278,7 @@ const isMarkActive = (editor, format) => {
   //   console.log(jam)
   //  }
 
- const openMetaModal = ( isMeta, toggleMetamodal, MetapairID,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, event) => {
+ const openMetaModal = ( isMeta, toggleMetamodal, MetapairID,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId,Metapairidxx, event) => {
   // event.preventdefault()
   if(isMeta){
     const string = event.target.offsetParent.innerHTML
@@ -269,7 +287,7 @@ const isMarkActive = (editor, format) => {
     // console.log()
     sortSelectedMeta(bam[3])
     // sortMeta(bam[3], MetaArray)
-
+    console.log(Metapairidxx, 'eex')
     // updateTestNum()
     updateTextProseId(bam[3])
     
