@@ -31,6 +31,8 @@ const initialValue = [
     },
   ]
 
+// const saveValue = 
+
 
 
   
@@ -40,11 +42,29 @@ const initialValue = [
     let initialtextobj
     const [markx, setmarkx] = React.useState({});
     const [value, setValue] = React.useState(initialValue);
+    // const [testnum, settestnum] = React.useState(1);
+    // const [MetapairID, setMetapairID] = React.useState(MetaID);
 
-    const {isMetamodal, toggleMetamodal} = React.useContext(Stylecontext)
 
-    console.log(isMetamodal)
+    const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId} = React.useContext(Stylecontext)
+
+    const [Metapairx, setMetapairx] = React.useState();
+    // console.log(currentMeta)
+    // console.log(MetaArray)
+    // console.log(MetaID)
+    
+    // React.useEffect(() => {
+    //   console.log(MetaID, 'metax')
+    //    setMetapairx(MetaID)
+    //    settestnum(prev => prev + 1)
+    //    console.log(testnum, '1st test');
+    // }, [MetaID]);
+
+
+    // console.log(MetaID, 'outside')
+    // console.log(Metapairx, 'tside')
    
+
     
 
     const Leaf = props => {
@@ -61,10 +81,14 @@ const initialValue = [
         const contentStyleMeta = `${content.meta?'text-green-600 hover:bg-green-500 hover:text-white underline': 'bg-none'}`
         
         const isMeta = content.meta
-      
+        const MetapairID = MetaID
+        console.log(Metapairx, 'test')
+        console.log(testnum, '2nd test');
+        // const MetapairID = CreateMetaID(isMeta)
+        // const MetapairID = 2
              return (
-              <span 
-              {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal, event)}
+              <span data-yam = '2' data-metaparentid = {`**${MetapairID}**`}
+              {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal, MetapairID ,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, event)}
               style={contentStyle}
             >
               {props.children}
@@ -230,11 +254,42 @@ const isMarkActive = (editor, format) => {
   )
    }
 
- const openMetaModal = ( isMeta, toggleMetamodal, event) => {
+  //  const sortMeta = (id, MetaArray) => {
+  //   const jam = MetaArray.filter(item => (item.id == id))
+  //   console.log(MetaArray, 'dax')
+  //   console.log(jam)
+  //  }
+
+ const openMetaModal = ( isMeta, toggleMetamodal, MetapairID,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, event) => {
+  // event.preventdefault()
   if(isMeta){
-    // event.preventdefault()
+    const string = event.target.offsetParent.innerHTML
+    const bam = string.split('**')
+    console.log(bam[3])
+    // console.log()
+    sortSelectedMeta(bam[3])
+    // sortMeta(bam[3], MetaArray)
+
+    // updateTestNum()
+    updateTextProseId(bam[3])
+    
     toggleMetamodal()
-     console.log('eee')
+    // CreateMetaObj(MetapairID)
+    // console.log(event.target.dataset.metaparentid)
+    // console.log(event.target)
+    // console.log(event.target.offsetParent.innerHTML)
+ 
+    
+    
+   
+
+    // if(bam[3])
+  //   let part = string.substring(
+  //     string.lastIndexOf("**") + 1, 
+  //     string.lastIndexOf("**")
+  // );
+
+  // console.log(part)
   }
  }
 
