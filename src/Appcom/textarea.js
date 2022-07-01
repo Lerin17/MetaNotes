@@ -1,8 +1,9 @@
 import React, { useRef } from "react";
 import { makeStyles } from "@mui/styles";
 import Sidebar from "../Appcom/sidebar";
-import { useForkRef } from "@mui/material";
-
+import { ButtonBase, useForkRef } from "@mui/material";
+import { Button, IconButton } from "@material-ui/core";
+import { Stylecontext } from "../context/MetamodalContext";
 
 
 
@@ -12,9 +13,9 @@ textarea: {
     // border: 'none',
     backgroundColor: 'transparent',
     outline: 'none',
-    color: 'blue',
+    color: 'green',
     fontSize: '10px',
-    height: '300px'
+    height: '200px',
  
 },
 text: {
@@ -27,6 +28,9 @@ text: {
 
 
 function Textarea(props) {
+   
+    const {isMetamodal, toggleMetamodal,  CreateMetaID, currentMetacontent, MetacontentOnchange, updateCurrentMeta} = React.useContext(Stylecontext)
+
     let currentTextArea = React.useRef(null)
     const isFirstletter = props.isFirstletter
     const classes = usestyle({isFirstletter})
@@ -43,7 +47,7 @@ function Textarea(props) {
     }
 
     
-
+    console.log(currentMetacontent)
     // console.log(currentTextArea.current)
     // console.log(props.firstletter)
     // console.log(props.isChangeTextBox)
@@ -61,14 +65,24 @@ function Textarea(props) {
 {/* 
                     <div>Name</div> */}
 
-                    <div className="bg-gray-200 h-scren  ">
+                    <div className="bg-gray-200 h-scren lg:rounded-y  md:rounded-y rounded rounded-b mb-3 ">
                            
-                        <div className="border-b border-white" >
-                                img
+                        <div className="border-b border-white flex justify-between px-3" >
+                            <div>
+                            <Button onClick={()=>toggleMetamodal()} style={{ minHeight: 0, minWidth: 0, padding: 0 }} className = 'text-white'  variant= "text" >
+                             X
+                             </Button>
+                            </div>
+                            
+                            <div>
+                            <Button onClick={()=>updateCurrentMeta(currentMetacontent)} style={{ minHeight: 0, minWidth: 0, padding: 0 }} className = 'text-white'  variant= "text" >
+                             V
+                             </Button>
+                            </div>
                         </div>
 
                         <div className="h-full">
-                            <textarea className={`w-full h-full px-2   ${classes.textarea}`} onChange = {props.onChangetext} value = {props.textData}
+                            <textarea className={`w-full h-full px-2   ${classes.textarea}`} onChange = {MetacontentOnchange} value = {currentMetacontent}
                             ref= {props.isChangeTextBox? currentTextArea: null}
                             ></textarea>
                         </div>
