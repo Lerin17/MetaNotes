@@ -40,7 +40,7 @@ const initialValue = [
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
    
     let initialtextobj
-    const [markx, setmarkx] = React.useState({});
+    const [markx, setmarkx] = React.useState({xx:'xx'});
     const [value, setValue] = React.useState(initialValue);
     // const [testnum, settestnum] = React.useState(1);
     // const [MetapairID, setMetapairID] = React.useState(MetaID);
@@ -69,7 +69,11 @@ const initialValue = [
     
 
     const Leaf = props => {
+      const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId} = React.useContext(Stylecontext)
       // const editor = useSlate()
+
+      console.log(MetaID)
+
       const content = props.children.props.leaf 
         const contentStyle = {
           fontWeight: content.bold ? 'bold' : 'normal',
@@ -81,7 +85,7 @@ const initialValue = [
 
         const [Metapairidxx, setMetapairidxx] = React.useState(1);
 
-     
+        // console.log(Metapairx, 'xd')
 
         const contentStyleMeta = `${content.meta?'text-green-600 hover:bg-green-500 hover:text-white underline': 'bg-none'}`
         
@@ -91,21 +95,24 @@ const initialValue = [
         // console.log(props.Metapairx, 'cx')
         // console.log(Metapairx, 'test')
 
-        console.log(Metapairidxx, 'ddd')
+        console.log(MetapairID, 'ddd')
+        console.log(props.leaf.metaid, 'props')
+        const Checkmetaid = props.leaf.metaid
+        // console.log(props)
 
-        React.useEffect(() => {
-          if(isMeta){
-            setMetapairidxx(prev => prev + 1)
-            console.log(Metapairidxx)
-          }
+        // React.useEffect(() => {
+        //   if(isMeta){
+        //     setMetapairidxx(prev => prev + 1)
+        //     console.log(Metapairidxx)
+        //   }
          
-        }, []);
+        // }, []);
         // console.log(testnum, '2nd test');
         // const MetapairID = CreateMetaID(isMeta)
         // const MetapairID = 2
              return (
-              <span data-yam = '2' data-metaparentid = {`**${Metapairidxx}**`}
-              {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal, MetapairID ,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, Metapairidxx, event)}
+              <span data-yam = '2' data-metaparentid = {`**${MetapairID}**`}
+              {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal, MetapairID ,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, Checkmetaid,event)}
               style={contentStyle}
             >
               {props.children}
@@ -129,7 +136,7 @@ const initialValue = [
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.qoutes} icon = 'Q' format = 'qoutes' />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header1} icon = 'H1' format = 'header1' />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'H2' format = 'header2' /> 
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'M' format = 'meta' /> 
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'M' format = 'meta' formatid = {MetaID} /> 
       </div>
     )
    }
@@ -167,7 +174,7 @@ const initialValue = [
 
        const renderLeaf = useCallback(props => {
         return <Leaf {...props}
-        Metapairx ={Metapairx} />  
+        markx = {markx} />  
        }, [])
 
      
@@ -198,10 +205,16 @@ const initialValue = [
 
           onClick={()=>{
             setTimeout(() => {
-              // console.log('no id')
+              console.log(Editor.marks(editor))
               setmarkx(Editor.marks(editor))
-            }, 50);
+            }, 20);
           }}
+
+          // onDoubleClick = {()=>{
+          //   setTimeout(()=>{
+          //     setmarkx(Editor.marks(editor))
+          //   }, 50)
+          // }}
 
           style={{
             padding: '10px',
@@ -222,7 +235,7 @@ const initialValue = [
 
 //toggleMark button
 
-  const toggleMark = (editor, format) => { 
+  const toggleMark = (editor, format, formatid) => { 
     // console.log(active)
     const active = isMarkActive(editor, format)
     console.log(format)
@@ -232,6 +245,9 @@ const initialValue = [
   //  const active = false
      
       editor.addMark(format, formatvalue )
+      if(formatid){
+        editor.addMark('metaid', formatid )
+      }
 } 
 
 ////////
@@ -262,11 +278,12 @@ const isMarkActive = (editor, format) => {
 
   const ToolbarMarkBtnx = (props) => {
     const [format, setformat] = React.useState(props.format);
+    const [formatid, setformatid] = React.useState(props.formatid);
     // console.log(format)
     const editor = useSlate();
 
     return (
-      <Button className= {`text-black ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={()=>{toggleMark(editor, format)}}
+      <Button className= {`text-black ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={()=>{toggleMark(editor, format, formatid)}}
       // disabled={isMarkActive(editor)}
       >{props.icon}</Button>
   )
@@ -278,29 +295,30 @@ const isMarkActive = (editor, format) => {
   //   console.log(jam)
   //  }
 
- const openMetaModal = ( isMeta, toggleMetamodal, MetapairID,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId,Metapairidxx, event) => {
+ const openMetaModal = ( isMeta, toggleMetamodal, MetapairID,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId,Checkmetaid, event) => {
   // event.preventdefault()
   if(isMeta){
-    const string = event.target.offsetParent.innerHTML
-    const bam = string.split('**')
-    console.log(bam[3])
+    // const string = event.target.offsetParent.innerHTML
+    // console.log(event.target)
+    // const bam = string.split('**')
+    // console.log(bam[3], 'bam')
+   console.log(Checkmetaid, 'again')
+    // console.log(markx, 'markx')
     // console.log()
-    sortSelectedMeta(bam[3])
+    sortSelectedMeta(Checkmetaid)
     // sortMeta(bam[3], MetaArray)
-    console.log(Metapairidxx, 'eex')
-    // updateTestNum()
-    updateTextProseId(bam[3])
+  // console.log(Metapairidxx, 'eex')
+  //   // updateTestNum()  
+    updateTextProseId(Checkmetaid)
     
     toggleMetamodal()
     // CreateMetaObj(MetapairID)
     // console.log(event.target.dataset.metaparentid)
     // console.log(event.target)
     // console.log(event.target.offsetParent.innerHTML)
- 
-    
-    
-   
 
+
+     
     // if(bam[3])
   //   let part = string.substring(
   //     string.lastIndexOf("**") + 1, 
