@@ -16,6 +16,7 @@ function StylecontextProvider(props) {
  const [currentMeta, setcurrentMeta] = React.useState();
  const [currentMetacontent, setcurrentMetacontent] = React.useState('');
  const [testNum, settestNum] = React.useState(1);
+
  
 //  const MetacontentOnchange = (event) => {
 //   setcurrentMetacontent(
@@ -69,6 +70,7 @@ function CreateMetaID(isMeta) {
   
   const toggleMetamodal = () => {
     setisMetamodal(prev => !prev)
+
     setTimeout(()=>{
       console.log(MetaArray, 's')
     }, 300)
