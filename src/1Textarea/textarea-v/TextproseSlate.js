@@ -46,30 +46,30 @@ const initialValue = [
     // const [MetapairID, setMetapairID] = React.useState(MetaID);
 
 
-    const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId} = React.useContext(Stylecontext)
+    const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId} = React.useContext(Stylecontext)
 
-    const [Metapairx, setMetapairx] = React.useState(1);
+    // const [Metapairx, setMetapairx] = React.useState(1);
     // console.log(currentMeta)
     // console.log(MetaArray)
     // console.log(MetaID)
     
-    React.useEffect(() => {
-      console.log(MetaID, 'metax')
-       setMetapairx(MetaID)
-      //  settestnum(prev => prev + 1)
-      //  console.log(testnum, '1st test');
-    }, [MetaID]);
+    // React.useEffect(() => {
+    //   console.log(MetaID, 'metax')
+    //    setMetapairx(MetaID)
+    //   //  settestnum(prev => prev + 1)
+    //   //  console.log(testnum, '1st test');
+    // }, [MetaID]);
 
 
-    console.log(Metapairx, '1sttest')
+    // console.log(Metapairx, '1sttest')
     // console.log(MetaID, 'outside')
     // console.log(Metapairx, 'tside')
    
-
+console.log(MetaID)
     
 
     const Leaf = props => {
-      const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId} = React.useContext(Stylecontext)
+      const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, updateMetaArray , currentMeta,  sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId, createCurrentMetaObj, isSelectedMetalready} = React.useContext(Stylecontext)
       // const editor = useSlate()
 
       console.log(MetaID)
@@ -90,14 +90,14 @@ const initialValue = [
         const contentStyleMeta = `${content.meta?'text-green-600 hover:bg-green-500 hover:text-white underline': 'bg-none'}`
         
         const isMeta = content.meta
-        const MetapairID = MetaID
+        // const MetapairID = MetaID
 
         // console.log(props.Metapairx, 'cx')
         // console.log(Metapairx, 'test')
 
-        console.log(MetapairID, 'ddd')
+        // console.log(MetapairID, 'ddd')
         console.log(props.leaf.metaid, 'props')
-        const Checkmetaid = props.leaf.metaid
+        const slateMetaId = props.leaf.metaid
         // console.log(props)
 
         // React.useEffect(() => {
@@ -111,8 +111,8 @@ const initialValue = [
         // const MetapairID = CreateMetaID(isMeta)
         // const MetapairID = 2
              return (
-              <span data-yam = '2' data-metaparentid = {`**${MetapairID}**`}
-              {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal, MetapairID ,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, Checkmetaid,event)}
+              <span
+              {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal ,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, slateMetaId,createCurrentMetaObj,updateMetaArray, isSelectedMetalready, event)}
               style={contentStyle}
             >
               {props.children}
@@ -136,7 +136,7 @@ const initialValue = [
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.qoutes} icon = 'Q' format = 'qoutes' />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header1} icon = 'H1' format = 'header1' />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'H2' format = 'header2' /> 
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'M' format = 'meta' formatid = {MetaID} /> 
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'M' format = 'meta' formatid = {MetaID} updatMetaId = {updatMetaId}  /> 
       </div>
     )
    }
@@ -235,7 +235,7 @@ const initialValue = [
 
 //toggleMark button
 
-  const toggleMark = (editor, format, formatid) => { 
+  const toggleMark = (editor, format, formatid, updatMetaId) => { 
     // console.log(active)
     const active = isMarkActive(editor, format)
     console.log(format)
@@ -247,6 +247,8 @@ const initialValue = [
       editor.addMark(format, formatvalue )
       if(formatid){
         editor.addMark('metaid', formatid )
+        updatMetaId()
+
       }
 } 
 
@@ -279,11 +281,13 @@ const isMarkActive = (editor, format) => {
   const ToolbarMarkBtnx = (props) => {
     const [format, setformat] = React.useState(props.format);
     const [formatid, setformatid] = React.useState(props.formatid);
-    // console.log(format)
+
+    const updatMetaId =  props.updatMetaId
+    // console.log(updatMetaId)
     const editor = useSlate();
 
     return (
-      <Button className= {`text-black ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={()=>{toggleMark(editor, format, formatid)}}
+      <Button className= {`text-black font-stick  ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={()=>{toggleMark(editor, format, formatid, updatMetaId)}}
       // disabled={isMarkActive(editor)}
       >{props.icon}</Button>
   )
@@ -295,21 +299,26 @@ const isMarkActive = (editor, format) => {
   //   console.log(jam)
   //  }
 
- const openMetaModal = ( isMeta, toggleMetamodal, MetapairID,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId,Checkmetaid, event) => {
+ const openMetaModal = ( isMeta, toggleMetamodal, sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId,slateMetaId, createCurrentMetaObj,updateMetaArray, isSelectedMetalready, event) => {
   // event.preventdefault()
   if(isMeta){
     // const string = event.target.offsetParent.innerHTML
     // console.log(event.target)
     // const bam = string.split('**')
     // console.log(bam[3], 'bam')
-   console.log(Checkmetaid, 'again')
+   console.log(slateMetaId, 'again')
     // console.log(markx, 'markx')
     // console.log()
-    sortSelectedMeta(Checkmetaid)
-    // sortMeta(bam[3], MetaArray)
-  // console.log(Metapairidxx, 'eex')
-  //   // updateTestNum()  
-    updateTextProseId(Checkmetaid)
+    const isMetaalready = isSelectedMetalready(slateMetaId)
+
+    if(!isMetaalready){
+      createCurrentMetaObj(slateMetaId)
+    }
+    sortSelectedMeta(slateMetaId)
+    
+  
+    // updateMetaArray()
+    updateTextProseId(slateMetaId)
     
     toggleMetamodal()
     // CreateMetaObj(MetapairID)

@@ -14,9 +14,11 @@ import Metatextarea from "../Appcom/Metatextarea";
 
 
 
-
 function Prose(params) {
     const {isMetamodal, toggleMetamodal} = React.useContext(Stylecontext)
+
+    // const {isMetamodal, toggleMetamodal,  CreateMetaID, currentMetacontent, currentMeta, MetacontentOnchange, updateCurrentMeta, updateMetaArray, MetaArray, } = React.useContext(Stylecontext)
+
 
     console.log(isMetamodal)
     const styles = () => {
@@ -53,7 +55,8 @@ function Prose(params) {
 
     return (
 <div className="">    
-    <div className="w-screen bg-gray-300 lg:px-8 md:p-0 h-screen" >
+    <div 
+    className="w-screen bg-gradient-to-r from-gray-800 via-neutral-800 to-white lg:px-8 md:p-0 h-screen" >
     {/* <div className=" text-lg uppercase border-b-4 font-bold" >header </div> */}
             <div className="flex flex-col h-full  lg:flex-row md:flex-row" > 
 
@@ -73,7 +76,9 @@ function Prose(params) {
                 <Textarea/>
                 </div>}       */}
                 <div className={classes.Metatextarea} >
-                    <Metatextarea/>
+                    <Metatextarea
+                    key={isMetamodal?'1':'2'}
+                    />
                 </div>
             </div>
 

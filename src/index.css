@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree&family=El+Messiri&family=Hammersmith+One&family=Uncial+Antiqua&family=Stick+No+Bills&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree&family=Stick+No+Bills&display=swap');
+
+/* @import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree&display=swap') */
+/* @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap') */
+/* @import url('https://fonts.googleapis.com/css2?display=swap') */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

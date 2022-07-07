@@ -15,7 +15,7 @@ function StylecontextProvider(props) {
 //  const MetaArrayx =  [...MetaArray]
  const [currentMeta, setcurrentMeta] = React.useState();
  const [currentMetacontent, setcurrentMetacontent] = React.useState('');
- const [testNum, settestNum] = React.useState(1);
+//  const [testNum, settestNum] = React.useState(1);
 
  
 //  const MetacontentOnchange = (event) => {
@@ -24,10 +24,10 @@ function StylecontextProvider(props) {
 //   )
 //  }
 
-function updateTestNum(params) {
-  settestNum(prev => prev + 1)
-  console.log(testNum);
-}
+// function updateTestNum(params) {
+//   settestNum(prev => prev + 1)
+//   console.log(testNum);
+// }
 
 // console.log(testNum);
 
@@ -36,20 +36,11 @@ React.useEffect(() => {
   console.log('damnn')
   console.log(TextproseID)
 
-  const isalreadyx = MetaArray.filter(item => (item.id == TextproseID))
+  // const isalreadyx = MetaArray.filter(item => (item.id == TextproseID))
 
-  console.log(isalreadyx, 'checks')
+  // console.log(isalreadyx, 'checks')
 
-  if(isMetamodal == true){
- setMetaID(prev => prev + 1)
-  }
-
-  setcurrentMeta(
-    {
-      id: MetaID,
-      content: {}
-    }
-  )
+  
   
   console.log(currentMeta)
   console.log(MetaID)
@@ -57,36 +48,56 @@ React.useEffect(() => {
 }, [isMetamodal]);
 
 
-function CreateMetaID(isMeta) {
-  // if(isMeta){
-  //   setTimeout(() => {
-  //     setMetaID(prev => prev + 1)
-  //   }, 50);    
-  // }
-  console.log(MetaID, 'test')
-  return `${MetaID}`
-
+function  updatMetaId (params) {
+  setMetaID(prev => prev + 1)
 }
+
+function createCurrentMetaObj(Metaid) {
+  setcurrentMeta(
+    {
+      id: Metaid,
+      content: {}
+    }
+  )
+}
+
+
+
+// function CreateMetaID(isMeta) {
+//   // if(isMeta){
+//   //   setTimeout(() => {
+//   //     setMetaID(prev => prev + 1)
+//   //   }, 50);    
+//   // }
+//   console.log(MetaID, 'test')
+//   return `${MetaID}`
+
+// }
   
   const toggleMetamodal = () => {
     setisMetamodal(prev => !prev)
 
-    setTimeout(()=>{
-      console.log(MetaArray, 's')
-    }, 300)
+    // setTimeout(()=>{
+    //   console.log(MetaArray, 's')
+    // }, 300)
     
   }
  
-//  const CreateMetaObj = (MetaID) => {
-//   // const isMetaalready = MetaArray.some(item => item.id === MetaID)
-  
-//   setcurrentMeta(
-//     {
-//       id: MetaID,
-//       content: {}
-//     }
-//   )
-//  }
+
+  const isSelectedMetalready = (id) => {
+  if(MetaArray.length < 1){
+    return false
+  }
+  const xisSelectedMetalready = MetaArray.some(item => item.id == id)
+  const SelectedMetaobj = MetaArray.find(item => item.id == id)
+
+  if(xisSelectedMetalready){
+    setcurrentMeta(SelectedMetaobj)
+  }
+  // console.log(xisSelectedMetalready, 'is')
+  return xisSelectedMetalready
+  }
+
 
 const updateTextProseId = (id) => {
   console.log(id)
@@ -94,6 +105,16 @@ setTextproseID(id)
 }
 
  const updateMetaArray = () => {
+
+  // updateCurrentMeta(value)
+
+  const isCurrentMetaAlready = MetaArray.some(item => item.id == currentMeta.id)
+
+  if(isCurrentMetaAlready){
+    setMetaArray(prev => prev.map(item =>item.id == currentMeta.id? {...item, content: currentMeta.content}:item))
+    return
+  }
+
    setMetaArray(prev => [...prev, currentMeta])
  }
 
@@ -118,7 +139,7 @@ setTextproseID(id)
 
 
 return (
-    <Stylecontext.Provider value = {{isMetamodal, toggleMetamodal, MetaID, CreateMetaID, MetaArray, setMetaArray, updateMetaArray, currentMeta, currentMetacontent,  updateCurrentMeta, sortSelectedMeta, updateTestNum, MetaID, updateTextProseId}} >
+    <Stylecontext.Provider value = {{isMetamodal, toggleMetamodal, MetaID, MetaArray, setMetaArray, updateMetaArray, currentMeta, currentMetacontent,  updateCurrentMeta, sortSelectedMeta, MetaID, updateTextProseId, updatMetaId, createCurrentMetaObj, isSelectedMetalready}} >
         {props.children}
     </Stylecontext.Provider>
 )

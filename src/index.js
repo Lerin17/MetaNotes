@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import 'remixicon/fonts/remixicon.css'
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material';
@@ -9,6 +11,7 @@ import Navbar from './components/navbar';
 import Leftbar from './components/leftbar';
 
 import { StylecontextProvider } from './context/MetamodalContext';
+import { LibaryContextProvider } from './context/LibaryContext';
 
 
 
@@ -18,7 +21,9 @@ root.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme = {theme}>
       <StylecontextProvider>
-      <App />
+        <LibaryContextProvider>
+        <App />
+        </LibaryContextProvider>
       </StylecontextProvider>
     </ThemeProvider >  
     </StyledEngineProvider>
