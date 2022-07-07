@@ -64,7 +64,7 @@ function Sidebar (params) {
                 <div className= {classes.sidebuttonCon} >
                     <div className= {classes.sidebuttonIcon}>
                     <IconButton className="sm:w-8 mx-auto hover:bg-transparent" >
-                    <i class="ri-home-5-line text-white"></i>   
+                    <i className="ri-home-5-line text-white"></i>   
                     </IconButton>             
                      </div>
 

@@ -10,7 +10,7 @@ import theme from './theme';
 import Navbar from './components/navbar';
 import Leftbar from './components/leftbar';
 
-import { StylecontextProvider } from './context/MetamodalContext';
+import { MetacontextProvider } from './context/MetamodalContext';
 import { LibaryContextProvider } from './context/LibaryContext';
 
 
@@ -20,11 +20,11 @@ root.render(
   // <React.StrictMode>
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme = {theme}>
-      <StylecontextProvider>
+      <MetacontextProvider>
         <LibaryContextProvider>
         <App />
         </LibaryContextProvider>
-      </StylecontextProvider>
+      </MetacontextProvider>
     </ThemeProvider >  
     </StyledEngineProvider>
   // </React.StrictMode>

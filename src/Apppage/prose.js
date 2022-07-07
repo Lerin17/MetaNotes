@@ -8,14 +8,14 @@ import Textproseslate from "../1Textarea/textarea-v/TextproseSlate";
 import { Button, Toolbar } from "@mui/material";
 import Bool from "../1Textarea/Utilts/boolean";
 
-import {Stylecontext} from '../context/MetamodalContext'
+import {Metacontext} from '../context/MetamodalContext'
 import Metatextarea from "../Appcom/Metatextarea";
 // import Metaarea from "../Appcom/Metaarea";
 
 
 
 function Prose(params) {
-    const {isMetamodal, toggleMetamodal} = React.useContext(Stylecontext)
+    const {isMetamodal, toggleMetamodal} = React.useContext(Metacontext)
 
     // const {isMetamodal, toggleMetamodal,  CreateMetaID, currentMetacontent, currentMeta, MetacontentOnchange, updateCurrentMeta, updateMetaArray, MetaArray, } = React.useContext(Stylecontext)
 

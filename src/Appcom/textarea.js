@@ -3,7 +3,7 @@ import { makeStyles } from "@mui/styles";
 import Sidebar from "../Appcom/sidebar";
 import { ButtonBase, useForkRef } from "@mui/material";
 import { Button, IconButton } from "@material-ui/core";
-import { Stylecontext } from "../context/MetamodalContext";
+import { Metacontext } from "../context/MetamodalContext";
 
 
 
@@ -29,7 +29,7 @@ text: {
 
 function Textarea(props) {
    
-    const {isMetamodal, toggleMetamodal,  CreateMetaID, currentMetacontent, MetacontentOnchange, updateCurrentMeta} = React.useContext(Stylecontext)
+    const {isMetamodal, toggleMetamodal,  CreateMetaID, currentMetacontent, MetacontentOnchange, updateCurrentMeta} = React.useContext(Metacontext)
 
     let currentTextArea = React.useRef(null)
     const isFirstletter = props.isFirstletter

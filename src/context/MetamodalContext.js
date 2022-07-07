@@ -3,9 +3,9 @@ import React from "react";
 
 //this file will handle the styling of the prose componet when the theme or MetaState is changed
 
-const Stylecontext = React.createContext()
+const Metacontext = React.createContext()
 
-function StylecontextProvider(props) {
+function MetacontextProvider(props) {
 
  const [isMetamodal, setisMetamodal] = React.useState(false);
  const [MetaID, setMetaID] = React.useState(1);
@@ -139,11 +139,11 @@ setTextproseID(id)
 
 
 return (
-    <Stylecontext.Provider value = {{isMetamodal, toggleMetamodal, MetaID, MetaArray, setMetaArray, updateMetaArray, currentMeta, currentMetacontent,  updateCurrentMeta, sortSelectedMeta, MetaID, updateTextProseId, updatMetaId, createCurrentMetaObj, isSelectedMetalready}} >
+    <Metacontext.Provider value = {{isMetamodal, toggleMetamodal, MetaID, MetaArray, setMetaArray, updateMetaArray, currentMeta, currentMetacontent,  updateCurrentMeta, sortSelectedMeta, MetaID, updateTextProseId, updatMetaId, createCurrentMetaObj, isSelectedMetalready}} >
         {props.children}
-    </Stylecontext.Provider>
+    </Metacontext.Provider>
 )
 }
 
 
-export {StylecontextProvider, Stylecontext}
+export {MetacontextProvider, Metacontext}

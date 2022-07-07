@@ -1,6 +1,6 @@
 import { ClassNames } from '@emotion/react'
 import React, {Component, forwardRef, useCallback, useRef} from 'react'
-import { Stylecontext } from '../../context/MetamodalContext';
+
 // Import React dependencies.
 
 //mui dependencies
@@ -15,12 +15,12 @@ import {Firstletter, CodeElement, DefaultElement } from '../Utilts/Uniquestyle/f
 
 // import Toolbar from '../textareacomponents/Toolbar'
 import Bool from '../Utilts/boolean';
-import { SettingsRounded } from '@material-ui/icons';
+// import { SettingsRounded } from '@material-ui/icons';
 import { useMemo } from 'react';
 import { withHistory } from 'slate-history';
-import Textarea from '../../Appcom/textarea';
-
-
+// import Textarea from '../../Appcom/textarea';
+import { Metacontext } from '../../context/MetamodalContext';
+import { LibaryContext } from '../../context/LibaryContext';
 
 
 // Add the initial valu dde.
@@ -42,34 +42,25 @@ const initialValue = [
     let initialtextobj
     const [markx, setmarkx] = React.useState({xx:'xx'});
     const [value, setValue] = React.useState(initialValue);
-    // const [testnum, settestnum] = React.useState(1);
-    // const [MetapairID, setMetapairID] = React.useState(MetaID);
+
+    console.log(value, 'value')
+
+    const {updateBookTextProse} =  React.useContext(LibaryContext)
+
+    const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId} = React.useContext(Metacontext)
+
+    React.useEffect((value) => {
+      updateBookTextProse(value)
+    }, [value]);
 
 
-    const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId} = React.useContext(Stylecontext)
-
-    // const [Metapairx, setMetapairx] = React.useState(1);
-    // console.log(currentMeta)
-    // console.log(MetaArray)
-    // console.log(MetaID)
-    
-    // React.useEffect(() => {
-    //   console.log(MetaID, 'metax')
-    //    setMetapairx(MetaID)
-    //   //  settestnum(prev => prev + 1)
-    //   //  console.log(testnum, '1st test');
-    // }, [MetaID]);
 
 
-    // console.log(Metapairx, '1sttest')
-    // console.log(MetaID, 'outside')
-    // console.log(Metapairx, 'tside')
-   
-console.log(MetaID)
+
     
 
     const Leaf = props => {
-      const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, updateMetaArray , currentMeta,  sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId, createCurrentMetaObj, isSelectedMetalready} = React.useContext(Stylecontext)
+      const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, updateMetaArray , currentMeta,  sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId, createCurrentMetaObj, isSelectedMetalready} = React.useContext(Metacontext)
       // const editor = useSlate()
 
       console.log(MetaID)
@@ -90,13 +81,7 @@ console.log(MetaID)
         const contentStyleMeta = `${content.meta?'text-green-600 hover:bg-green-500 hover:text-white underline': 'bg-none'}`
         
         const isMeta = content.meta
-        // const MetapairID = MetaID
 
-        // console.log(props.Metapairx, 'cx')
-        // console.log(Metapairx, 'test')
-
-        // console.log(MetapairID, 'ddd')
-        console.log(props.leaf.metaid, 'props')
         const slateMetaId = props.leaf.metaid
         // console.log(props)
 
@@ -210,11 +195,7 @@ console.log(MetaID)
             }, 20);
           }}
 
-          // onDoubleClick = {()=>{
-          //   setTimeout(()=>{
-          //     setmarkx(Editor.marks(editor))
-          //   }, 50)
-          // }}
+     
 
           style={{
             padding: '10px',
@@ -306,7 +287,7 @@ const isMarkActive = (editor, format) => {
     // console.log(event.target)
     // const bam = string.split('**')
     // console.log(bam[3], 'bam')
-   console.log(slateMetaId, 'again')
+  //  console.log(slateMetaId, 'again')
     // console.log(markx, 'markx')
     // console.log()
     const isMetaalready = isSelectedMetalready(slateMetaId)

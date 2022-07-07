@@ -1,6 +1,6 @@
 import { ClassNames } from '@emotion/react'
 import React, {Component, forwardRef, useCallback, useRef} from 'react'
-import { Stylecontext } from '../context/MetamodalContext';
+
 // import { Stylecontext } from '../../context/MetamodalContext';
 // Import React dependencies.
 
@@ -21,7 +21,8 @@ import { useMemo } from 'react';
 import { withHistory } from 'slate-history';
 // import Textarea from '../../Appcom/textarea';
 
-
+import { Metacontext } from '../context/MetamodalContext';
+import { LibaryContext } from '../context/LibaryContext';
 
 
 // Add the initial valu dde.
@@ -33,33 +34,37 @@ import { withHistory } from 'slate-history';
   const Metatextarea = () => {
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
-    const {isMetamodal, toggleMetamodal,  CreateMetaID, currentMetacontent, currentMeta, MetacontentOnchange, updateCurrentMeta, updateMetaArray, MetaArray, } = React.useContext(Stylecontext)
+    const {updateBookMetaArray} = React.useContext(LibaryContext)
+
+    const {isMetamodal, toggleMetamodal,  CreateMetaID, currentMetacontent, currentMeta, MetacontentOnchange, updateCurrentMeta, updateMetaArray, MetaArray, } = React.useContext(Metacontext)
+
     
     let iscurrentMetaempty = true
 
-    if(currentMeta){
-      // console.log(Boolean(currentMeta.content) , 'currentMeta')
-      // console.log((Object.entries(currentMeta.content).length === 0) , 'currentMeta')
-      iscurrentMetaempty = (Object.entries(currentMeta.content).length === 0)
+    ///just hashed this out , not sure if it causes problems
+    // if(currentMeta){
+    //   // console.log(Boolean(currentMeta.content) , 'currentMeta')
+    //   // console.log((Object.entries(currentMeta.content).length === 0) , 'currentMeta')
+    //   iscurrentMetaempty = (Object.entries(currentMeta.content).length === 0)
+    // }
 
-   
-    }
-
-    React.useEffect(() => {
-      if(!iscurrentMetaempty && currentMeta){
-        console.log('patient')
-        console.log(currentMeta.content, 'content')
-        setTimeout(() => {
-          setValue([ {
-            type: 'paragraph',
-            children: [{ text: '' }],
-          }])
-        }, 100);
+    // React.useEffect(() => {
+    //   if(!iscurrentMetaempty && currentMeta){
+    //     console.log('patient')
+    //     console.log(currentMeta.content, 'content')
+    //     setTimeout(() => {
+    //       setValue([ {
+    //         type: 'paragraph',
+    //         children: [{ text: '' }],
+    //       }])
+    //     }, 100);
       
-      }else{
-        console.log('eee')
-      }
-    }, [isMetamodal]); 
+    //   }else{
+    //     console.log('eee')
+    //   }
+    // }, [isMetamodal]); 
+
+
 
     const initialValue =!iscurrentMetaempty && currentMeta?currentMeta.content :  [
       {
@@ -86,32 +91,12 @@ import { withHistory } from 'slate-history';
 
 //handle updating current meta modal
     React.useEffect(() => {
-      console.log(value, 'damnx') 
+      // console.log(value, 'damnx') 
       updateCurrentMeta(value)
     }, [value ]);
    
 
-    // const getBorderRadius = () => {
-    // if(windowWidth < 500){
-    //     return '4px'
-    // }else{
-    //     return '0px'
-    // }
-    // }
 
-    // console.log(MetaArray)
-
-      // window.addEventListener('resize',
-      // ()=> setwindowWidth(window.innerWidth)
-      // )
-
-      // React.useEffect(() => {
-      //   setwindowWidth(window.innerWidth)
-      //   setborderRadiusx(getBorderRadius())
-      // }, [windowWidth]);
-     
-
-    //   console.log(value)
 
 
 const Toolbar = ({value}) => {
