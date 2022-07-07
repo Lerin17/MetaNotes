@@ -25,12 +25,7 @@ import { withHistory } from 'slate-history';
 
 
 // Add the initial valu dde.
-const initialValue = [
-    {
-      type: 'paragraph',
-      children: [{ text: '' }],
-    },
-  ]
+
 
 
 
@@ -38,7 +33,49 @@ const initialValue = [
   const Metatextarea = () => {
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
-    const {isMetamodal, toggleMetamodal,  CreateMetaID, currentMetacontent, MetacontentOnchange, updateCurrentMeta, updateMetaArray, MetaArray, } = React.useContext(Stylecontext)
+    const {isMetamodal, toggleMetamodal,  CreateMetaID, currentMetacontent, currentMeta, MetacontentOnchange, updateCurrentMeta, updateMetaArray, MetaArray, } = React.useContext(Stylecontext)
+    
+    let iscurrentMetaempty = true
+
+    if(currentMeta){
+      // console.log(Boolean(currentMeta.content) , 'currentMeta')
+      // console.log((Object.entries(currentMeta.content).length === 0) , 'currentMeta')
+      iscurrentMetaempty = (Object.entries(currentMeta.content).length === 0)
+
+   
+    }
+
+    React.useEffect(() => {
+      if(!iscurrentMetaempty && currentMeta){
+        console.log('patient')
+        console.log(currentMeta.content, 'content')
+        setTimeout(() => {
+          setValue([ {
+            type: 'paragraph',
+            children: [{ text: '' }],
+          }])
+        }, 100);
+      
+      }else{
+        console.log('eee')
+      }
+    }, [isMetamodal]); 
+
+    const initialValue =!iscurrentMetaempty && currentMeta?currentMeta.content :  [
+      {
+        type: 'paragraph',
+        children: [{ text: '' }],
+      },
+    ]
+
+
+  
+   
+   
+
+   
+
+  
    
     // let initialtextobj
     // const [markx, setmarkx] = React.useState({});
@@ -46,30 +83,38 @@ const initialValue = [
     const [windowWidth, setwindowWidth] = React.useState();
     const [borderRadiusx, setborderRadiusx] = React.useState();
 
-    const getBorderRadius = () => {
-    if(windowWidth < 500){
-        return '4px'
-    }else{
-        return '0px'
-    }
-    }
+
+//handle updating current meta modal
+    React.useEffect(() => {
+      console.log(value, 'damnx') 
+      updateCurrentMeta(value)
+    }, [value ]);
+   
+
+    // const getBorderRadius = () => {
+    // if(windowWidth < 500){
+    //     return '4px'
+    // }else{
+    //     return '0px'
+    // }
+    // }
 
     // console.log(MetaArray)
 
-      window.addEventListener('resize',
-      ()=> setwindowWidth(window.innerWidth)
-      )
+      // window.addEventListener('resize',
+      // ()=> setwindowWidth(window.innerWidth)
+      // )
 
-      React.useEffect(() => {
-        setwindowWidth(window.innerWidth)
-        setborderRadiusx(getBorderRadius())
-      }, [windowWidth]);
+      // React.useEffect(() => {
+      //   setwindowWidth(window.innerWidth)
+      //   setborderRadiusx(getBorderRadius())
+      // }, [windowWidth]);
      
 
     //   console.log(value)
 
 
-const Toolbar = () => {
+const Toolbar = ({value}) => {
     return (
         <div>
             <Button  onClick={()=>toggleMetamodal()} >X</Button>
@@ -103,7 +148,7 @@ const Toolbar = () => {
           
             < Editable
     
-        onKeyDown={()=>updateCurrentMeta(value)}
+        // onKeyDown={()=>updateCurrentMeta(value)}
 
           style={{
             padding: '4px',
