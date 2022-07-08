@@ -40,32 +40,31 @@ import { LibaryContext } from '../context/LibaryContext';
 
     
     let iscurrentMetaempty = true
+   
+   
 
-    ///just hashed this out , not sure if it causes problems
-    // if(currentMeta){
-    //   // console.log(Boolean(currentMeta.content) , 'currentMeta')
-    //   // console.log((Object.entries(currentMeta.content).length === 0) , 'currentMeta')
-    //   iscurrentMetaempty = (Object.entries(currentMeta.content).length === 0)
-    // }
+    if(currentMeta){
+      iscurrentMetaempty = (Object.entries(currentMeta.content).length === 0)
+    }
 
-    // React.useEffect(() => {
-    //   if(!iscurrentMetaempty && currentMeta){
-    //     console.log('patient')
-    //     console.log(currentMeta.content, 'content')
-    //     setTimeout(() => {
-    //       setValue([ {
-    //         type: 'paragraph',
-    //         children: [{ text: '' }],
-    //       }])
-    //     }, 100);
+    React.useEffect(() => {
+      if(!iscurrentMetaempty && currentMeta){
+        // console.log('patient')
+        // console.log(currentMeta.content, 'content')
+        setTimeout(() => {
+          setValue([ {
+            type: 'paragraph',
+            children: [{ text: '' }],
+          }])
+        }, 100);
       
-    //   }else{
-    //     console.log('eee')
-    //   }
-    // }, [isMetamodal]); 
+      }else{
+        console.log('eee')
+      }
+    }, [isMetamodal]); 
 
 
-
+//code below asks the question of whether the current meta is not empty && and if the current meta it self exist. if so, the initial value is set to current meta content which has been set via the textprose double click  
     const initialValue =!iscurrentMetaempty && currentMeta?currentMeta.content :  [
       {
         type: 'paragraph',
@@ -77,33 +76,29 @@ import { LibaryContext } from '../context/LibaryContext';
   
    
    
-
-   
-
-  
-   
-    // let initialtextobj
-    // const [markx, setmarkx] = React.useState({});
     const [value, setValue] = React.useState(initialValue);
     const [windowWidth, setwindowWidth] = React.useState();
     const [borderRadiusx, setborderRadiusx] = React.useState();
 
 
-//handle updating current meta modal
+//handle updating the current meta modal
     React.useEffect(() => {
       // console.log(value, 'damnx') 
       updateCurrentMeta(value)
     }, [value ]);
    
-
+//updating current Meta array for the libary
+React.useEffect(() => {
+  updateBookMetaArray(MetaArray)
+}, [MetaArray]);
 
 
 
 const Toolbar = ({value}) => {
     return (
         <div>
-            <Button  onClick={()=>toggleMetamodal()} >X</Button>
-             <Button onClick={()=>updateMetaArray()} >S</Button>
+            <Button className=' font-stick' onClick={()=>toggleMetamodal()} >X</Button>
+             <Button className=' font-stick' onClick={()=>updateMetaArray()} >S</Button>
         </div>
   
     )
@@ -121,7 +116,8 @@ const Toolbar = ({value}) => {
                
           
                 }} className='App w-full h-full  grid grid-flow-row overflow-hidden rounded lg:rounded-none md:rounded-none' >
-                <div className="w-full  p-2 border-b border-black font-bold "> 
+                <div className="w-full  p-1 border-b border-black font-bold "> 
+                <div className='border-b  border-dashed text-white' >Meta</div>
                 <Toolbar
                 />
           </div>

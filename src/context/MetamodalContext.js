@@ -32,9 +32,9 @@ function MetacontextProvider(props) {
 // console.log(testNum);
 
 React.useEffect(() => {
-  console.log(MetaArray)
-  console.log('damnn')
-  console.log(TextproseID)
+  // console.log(MetaArray)
+  // console.log('damnn')
+  // console.log(TextproseID)
 
   // const isalreadyx = MetaArray.filter(item => (item.id == TextproseID))
 

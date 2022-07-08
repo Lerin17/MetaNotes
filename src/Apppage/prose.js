@@ -10,14 +10,15 @@ import Bool from "../1Textarea/Utilts/boolean";
 
 import {Metacontext} from '../context/MetamodalContext'
 import Metatextarea from "../Appcom/Metatextarea";
-// import Metaarea from "../Appcom/Metaarea";
+import { LibaryContext } from "../context/LibaryContext";
+
 
 
 
 function Prose(params) {
     const {isMetamodal, toggleMetamodal} = React.useContext(Metacontext)
 
-    // const {isMetamodal, toggleMetamodal,  CreateMetaID, currentMetacontent, currentMeta, MetacontentOnchange, updateCurrentMeta, updateMetaArray, MetaArray, } = React.useContext(Stylecontext)
+    const {isLibarymodal} = React.useContext(LibaryContext)
 
 
     console.log(isMetamodal)
@@ -56,9 +57,9 @@ function Prose(params) {
     return (
 <div className="">    
     <div 
-    className="w-screen bg-gradient-to-r from-gray-800 via-neutral-800 to-white lg:px-8 md:p-0 h-screen" >
+    className="w-screen bg-gradient-to-r from-gray-800 via-neutral-800 to-white lg:px-8 md:p-0 h-screen " >
     {/* <div className=" text-lg uppercase border-b-4 font-bold" >header </div> */}
-            <div className="flex flex-col h-full  lg:flex-row md:flex-row" > 
+            <div className={`${isLibarymodal?'blur-sm':'blur-none'}  flex flex-col h-full  lg:flex-row    md:flex-row`} > 
 
 
                 <div className= {classes.sidebar} >

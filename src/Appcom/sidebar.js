@@ -1,7 +1,7 @@
 import React from "react";
 import { AppBar, Box, Button, Card, CardContent, CardMedia, IconButton, Modal, Paper, TextField, Toolbar, Typography } from "@mui/material"
 
-import { FolderOpen, MenuBookOutlined, Timer } from "@material-ui/icons";
+import { FolderOpen, Height, MenuBookOutlined, Timer } from "@material-ui/icons";
 import { makeStyles } from "@mui/styles";
 import { ClassNames } from "@emotion/react";
 
@@ -10,6 +10,9 @@ import { display } from "@mui/system";
 import theme from "../theme";
 
 
+
+import { LibaryContext } from "../context/LibaryContext";
+import { Accordion, AccordionDetails, AccordionSummary, ClickAwayListener, Grow, Menu, MenuItem, MenuList, Popper } from "@material-ui/core";
 
 
 
@@ -46,98 +49,115 @@ function Sidebar (params) {
 
 
     const classes = usestyle()
+    const {Createbookentry, isLibarymodal,  toggleLibaryModal} = React.useContext(LibaryContext)
 
+    // const sidebarb = () => {
+
+    // }
+
+    const [open, setOpen] = React.useState(false);
+
+    // const handleOpen = () => {
+    //   setOpen(true);
+    // };
+    // const handleClose = () => {
+    //   setOpen(false);
+    // };
+
+    const styles = ['absolute top-1/2 md:left-72 lg:left-96   -translate-x-1/2 -translate-y-1/2  bg-transparent border  pb-3 md:ml-5 lg:ml-10']
+  
+    // const style = {
+    //     position: 'absolute',
+    //     top: '50%',
+    //     left: '25%',
+    //     transform: 'translate(-50%, -50%)',
+    //     width: 300,
+    //     bgcolor: 'background.paper',
+    //     border: '2px solid #000',
+    //     boxShadow: 24,
+    //     pt: 2,
+    //     px: 4,
+    //     pb: 3,
+    //   };
+    
+
+    const Sidebarbuttoncom = (props) => {
+        return (
+        <div className=" lg:mr-0 xl:mr-0 md:mr-0 rounded-lg shadow  lg:border border-gray-600 md:mt-2 lg:mt-2 w-full">
+            <div className= {classes.sidebuttonCon} >
+                <div className= {classes.sidebuttonIcon}>
+                <IconButton  onClick={props.handleClick} className="sm:w-8 mx-auto hover:bg-transparent" >
+                <i className={`${props.icon} text-white`}></i>   
+                </IconButton>             
+                 </div>
+
+                <div className="hidden xl:block self-center justify-start w-full" >
+                <Button sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = 'text-white'  variant= "text" >
+                 {props.text}
+                </Button>
+                </div>
+            </div>
+      </div>
+        )
+    }
 
     return (
 <div className="h-full  flex justify-start  ">
 
-    
-
-        
+           
         <div className={`flex  md:flex-col lg:flex-col lg:w-full md:w-full md:bg-transparent `}>
+              
+          <Sidebarbuttoncom
+        icon = 'ri-home-5-line'
+        text = 'home'
+        // handleClick = {}
+        />
 
         
-    
-             
+        <Sidebarbuttoncom
+        icon = 'ri-timer-2-line'
+        text = ' Recents'
+        // handleClick = {}
+        />
 
-            <div className=" lg:mr-0 xl:mr-0 md:mr-0 rounded-lg shadow  lg:border border-gray-600 w-full">
-                <div className= {classes.sidebuttonCon} >
-                    <div className= {classes.sidebuttonIcon}>
-                    <IconButton className="sm:w-8 mx-auto hover:bg-transparent" >
-                    <i className="ri-home-5-line text-white"></i>   
-                    </IconButton>             
-                     </div>
+        <Sidebarbuttoncom
+        icon = 'ri-save-2-line '
+        text = 'Save'
+        handleClick = {Createbookentry}
+        />
 
-                    <div className="hidden xl:block self-center justify-start w-full" >
-                    <Button sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = 'text-white'  variant= "text" >
-                    Home
-                    </Button>
+       {/* <SideButtonacc
+       /> */}
+
+        <Sidebarbuttoncom
+        icon = 'ri-folder-open-line'
+        text = 'Libary'
+        handleClick = {toggleLibaryModal}
+        />
+
+
+<Modal
+        open={isLibarymodal}
+        onClose={toggleLibaryModal}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box className={styles} sx={{ width: 400 , height: 600 }}>
+            <div>
+                <div className="bg-gray-800 py-1 text-white font-bold" >Libary</div>
+
+                <div> 
+                    <div className="w-20 p-2 bg-gray-600 " >
+                    <IconButton className="hover:bg-transparent py-0" >
+                    <i className=" ri-file-list-2-line text-white"></i>
+                    </IconButton>
+                    <div>Name</div>    
                     </div>
                 </div>
-          </div>
-
-          
-
-       
-
-
-          <div className=" lg:mr-0 xl:mr-0 md:mr-0 rounded-lg shadow lg:border border-gray-600 md:mt-2 lg:mt-2 w-full ">
-                <div className= {classes.sidebuttonCon} >
-                    <div className= {classes.sidebuttonIcon}>
-                    <IconButton className="sm:w-8 mx-auto hover:bg-transparent" >
-                    <i className="ri-timer-2-line text-white"></i>
-                   
-                    </IconButton>             
-                    </div>
-
-                     <div className="hidden xl:block self-center justify-start w-full" >
-                    <Button sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = 'text-white'  variant= "text" >
-                    Recents
-                    </Button>
-                    </div>
-                </div>
-          </div>
-
-
-          <div className="  lg:mr-0 xl:mr-0 md:mr-0  md:mt-2 lg:mt-2 w-full  shadow lg:border rounded-lg border-gray-600">
-                <div  className= {classes.sidebuttonCon} >
-                    <div className= {classes.sidebuttonIcon}>
-                    <IconButton className="sm:w-8 mx-auto hover:bg-transparent" >
-                    <i className="ri-save-2-line text-white"></i>
-                    </IconButton>             
-                    </div>
-
-                     <div className="hidden xl:block self-center justify-start w-full" >
-                    <Button sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = 'text-white'  variant= "text" >
-                    Save
-                    </Button>
-                    </div>
-                </div>
-          </div>
-
-          
-          <div className="  lg:mr-0 xl:mr-0 md:mr-0  md:mt-2 lg:mt-2 w-full  shadow lg:border rounded-lg border-gray-600">
-                <div  className= {classes.sidebuttonCon} >
-                    <div className= {classes.sidebuttonIcon}>
-                    <IconButton className="sm:w-8 mx-auto hover:bg-transparent" >
-                    <i className="ri-folder-open-line text-white"></i>
-                    </IconButton>             
-                    </div>
-
-                     <div className="hidden xl:block self-center justify-start w-full" >
-                    <Button sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = 'text-white'  variant= "text" >
-                    Libary
-                    </Button>
-                    </div>
-                </div>
-          </div>
-
-
-   
-
-
-
-         </div>
+            </div>
+        </Box>
+      </Modal>
+    </div>
 
        
 
