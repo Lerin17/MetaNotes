@@ -43,13 +43,13 @@ const initialValue = [
     const [markx, setmarkx] = React.useState({xx:'xx'});
     const [value, setValue] = React.useState(initialValue);
 
-    console.log(value, 'value')
+    // console.log(value, 'value')
 
     const {updateBookTextProse} =  React.useContext(LibaryContext)
 
     const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId} = React.useContext(Metacontext)
 
-    React.useEffect((value) => {
+    React.useEffect(() => {
       updateBookTextProse(value)
     }, [value]);
 
@@ -63,7 +63,7 @@ const initialValue = [
       const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, updateMetaArray , currentMeta,  sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId, createCurrentMetaObj, isSelectedMetalready} = React.useContext(Metacontext)
       // const editor = useSlate()
 
-      console.log(MetaID)
+      // console.log(MetaID)
 
       const content = props.children.props.leaf 
         const contentStyle = {
@@ -172,7 +172,8 @@ const initialValue = [
                 style={{
                 gridTemplateRows: 'auto 1fr'
                 }} className='App w-full h-full  grid grid-flow-row overflow-hidden' >
-                <div className="w-full  p-2 border-b border-black font-bold "> 
+                <div className="w-full  p-1 border-b border-black font-bold "> 
+                <div className='border-b border-black border-dashed text-left' >Name</div>
                 <Toolbar
                 mark = {markx}
                 />
@@ -302,20 +303,7 @@ const isMarkActive = (editor, format) => {
     updateTextProseId(slateMetaId)
     
     toggleMetamodal()
-    // CreateMetaObj(MetapairID)
-    // console.log(event.target.dataset.metaparentid)
-    // console.log(event.target)
-    // console.log(event.target.offsetParent.innerHTML)
-
-
-     
-    // if(bam[3])
-  //   let part = string.substring(
-  //     string.lastIndexOf("**") + 1, 
-  //     string.lastIndexOf("**")
-  // );
-
-  // console.log(part)
+ 
   }
  }
 
