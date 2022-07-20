@@ -21,40 +21,95 @@ import { withHistory } from 'slate-history';
 // import Textarea from '../../Appcom/textarea';
 import { Metacontext } from '../../context/MetamodalContext';
 import { LibaryContext } from '../../context/LibaryContext';
+import { Input } from '@material-ui/core';
+
 
 
 // Add the initial valu dde.
-const initialValue = [
-    {
-      type: 'paragraph',
-      children: [{ text: '' }],
-    },
-  ]
 
 // const saveValue = 
 
-
+// const initialValue =!iscurrentMetaempty && currentMeta?currentMeta.content :  [
+//   {
+//     type: 'paragraph',
+//     children: [{ text: '' }],
+//   },
+// ]
 
   
   const Textproseslate = () => {
+    
+    const {updateBookTextProse,  currentBook, bookID, LibaryArray, selectedBook, setselectedBook, isResettextareas,  setbookID, currentBookMetaArray} =  React.useContext(LibaryContext)
+
+    const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId,} = React.useContext(Metacontext)
+
+
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+
+    let istextprosermpty = true
+
+    const initialValue = selectedBook?selectedBook.bookTextprosecontent:[
+      {
+        type: 'paragraph',
+        children: [{ text: '' }],
+      },
+    ]
+  
    
     let initialtextobj
     const [markx, setmarkx] = React.useState({xx:'xx'});
     const [value, setValue] = React.useState(initialValue);
+    const [title, settitle] = React.useState('');
 
-    // console.log(value, 'value')
+    const ontitleChange = (event) => {
+      settitle(event.target.value)
+    }
 
-    const {updateBookTextProse} =  React.useContext(LibaryContext)
 
-    const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId} = React.useContext(Metacontext)
+
+
+
 
     React.useEffect(() => {
-      updateBookTextProse(value)
-    }, [value]);
+      updateBookTextProse(value, title)
+    }, [value, title]);
 
 
+    //the useeffect below handle the switvhing out of books. including their id, textprose and meta content. it occurs
 
+    React.useEffect(() => {
+      // const textprosecontent = LibaryArray.find(item => item.bookid == bookID) 
+
+      console.log(bookID)
+    
+
+      if(selectedBook && currentBook){
+        console.log('jam')
+        setValue(selectedBook.bookTextprosecontent)
+        settitle(selectedBook.bookTitle)
+        setMetaArray(currentBookMetaArray)
+        console.log('1st')
+        
+        console.log(selectedBook.bookid)
+      }
+
+      setTimeout(() => {
+        console.log('when')
+        setselectedBook()
+      }, 50);
+      
+
+      
+
+      // if(textprosecontent){
+      //   console.log('tease') 
+      //   // console.log(textprosecontent, 'content')
+       
+      // }
+
+      
+
+    }, [isResettextareas]);
 
 
     
@@ -83,18 +138,7 @@ const initialValue = [
         const isMeta = content.meta
 
         const slateMetaId = props.leaf.metaid
-        // console.log(props)
-
-        // React.useEffect(() => {
-        //   if(isMeta){
-        //     setMetapairidxx(prev => prev + 1)
-        //     console.log(Metapairidxx)
-        //   }
-         
-        // }, []);
-        // console.log(testnum, '2nd test');
-        // const MetapairID = CreateMetaID(isMeta)
-        // const MetapairID = 2
+      
              return (
               <span
               {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal ,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, slateMetaId,createCurrentMetaObj,updateMetaArray, isSelectedMetalready, event)}
@@ -106,7 +150,16 @@ const initialValue = [
       }
 
 
-
+  const Titlebar = () => {
+    return (
+      <div>
+        <div>Name</div>
+        <div>
+          <input></input>
+        </div>
+      </div>
+    )
+  }
   
     
    const Toolbar = (props) => {
@@ -173,7 +226,15 @@ const initialValue = [
                 gridTemplateRows: 'auto 1fr'
                 }} className='App w-full h-full  grid grid-flow-row overflow-hidden' >
                 <div className="w-full  p-1 border-b border-black font-bold "> 
-                <div className='border-b border-black border-dashed text-left' >Name</div>
+                <div className='border-b border-black border-dashed text-left flex justify-between' >
+                  <input className='border-none bg-transparent outline-none'
+                  onChange={ontitleChange}
+                  value={title}
+                  placeholder={'Enter title'}
+                  />
+
+                  <div className='text-gray-300 mr-16' >Last saved</div>
+                </div>
                 <Toolbar
                 mark = {markx}
                 />

@@ -135,17 +135,15 @@ const Toolbar = ({value}) => {
             padding: '4px',
             border: '1px solid #999',
             textAlign: 'start',
-            fontSize: '10px'
+            fontSize: '10px',
+            color: 'white'
           }}
             />
             </div>
             </div>
           </div>
           </Slate>
-
-      
-   
-      
+    
     )
   }
 
