@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Box, Button, Card, CardContent, CardMedia, IconButton, Modal, Paper, TextField, Toolbar, Typography } from "@mui/material"
+import { AppBar, Badge, Box, Button, Card, CardContent, CardMedia, IconButton, Modal, Paper, TextField, Toolbar, Typography } from "@mui/material"
 
 import { FolderOpen, Height, MenuBookOutlined, Timer } from "@material-ui/icons";
 import { makeStyles } from "@mui/styles";
@@ -35,11 +35,7 @@ const usestyle = makeStyles((theme)=> ({
         color: 'green', 
         [theme.breakpoints.up("md")]: {
             justifyContent: 'start'
-        },
-
-
-
-     
+        },     
     }
     
     }))
@@ -49,37 +45,14 @@ function Sidebar (params) {
 
 
     const classes = usestyle()
-    const {Createbookentry, isLibarymodal,  toggleLibaryModal} = React.useContext(LibaryContext)
-
-    // const sidebarb = () => {
-
-    // }
+    const {Createbookentry, isLibarymodal,  toggleLibaryModal, LibaryArray, toggleResetTextareas, openBook} = React.useContext(LibaryContext)
 
     const [open, setOpen] = React.useState(false);
 
-    // const handleOpen = () => {
-    //   setOpen(true);
-    // };
-    // const handleClose = () => {
-    //   setOpen(false);
-    // };
+  
 
     const styles = ['absolute top-1/2 md:left-72 lg:left-96   -translate-x-1/2 -translate-y-1/2  bg-transparent border  pb-3 md:ml-5 lg:ml-10']
-  
-    // const style = {
-    //     position: 'absolute',
-    //     top: '50%',
-    //     left: '25%',
-    //     transform: 'translate(-50%, -50%)',
-    //     width: 300,
-    //     bgcolor: 'background.paper',
-    //     border: '2px solid #000',
-    //     boxShadow: 24,
-    //     pt: 2,
-    //     px: 4,
-    //     pb: 3,
-    //   };
-    
+
 
     const Sidebarbuttoncom = (props) => {
         return (
@@ -100,6 +73,30 @@ function Sidebar (params) {
       </div>
         )
     }
+
+    const Filecomponent = (props) => {
+        return (
+            <div className="w-20 px-1 bg-gray-600 flex flex-col " >
+                <div className="  self-center "  >
+                <IconButton onClick={()=>openBook(props.bookid)} className="hover:bg-transparent py-0 " >
+                <i className=" ri-file-list-2-line text-gray-300 "></i>
+                </IconButton>
+                </div>
+                
+                <div className="text-sm font-bold self-center text-gray-200" >{props.title}</div>  
+
+                <div className="self-end" ><i className="ri-delete-bin-2-line hover:text-red-500"></i></div>  
+            </div>     
+        )
+    }
+
+    const Filedisplay = LibaryArray.length? LibaryArray.map((item,i) => <div>
+        <Filecomponent
+        key ={i}
+        title= {item.bookTitle}
+        bookid = {item.bookid}
+        />
+    </div> ):'No items available'
 
     return (
 <div className="h-full  flex justify-start  ">
@@ -135,8 +132,14 @@ function Sidebar (params) {
         handleClick = {toggleLibaryModal}
         />
 
+        <Sidebarbuttoncom
+        icon = 'ri-home-5-line'
+        text = 'New'
+        handleClick = {toggleResetTextareas}
+        />
 
-<Modal
+
+    <Modal
         open={isLibarymodal}
         onClose={toggleLibaryModal}
         aria-labelledby="parent-modal-title"
@@ -146,23 +149,20 @@ function Sidebar (params) {
             <div>
                 <div className="bg-gray-800 py-1 text-white font-bold" >Libary</div>
 
-                <div> 
-                    <div className="w-20 p-2 bg-gray-600 " >
+                <div className="flex wrap" > 
+                    {Filedisplay}
+                    {/* <div className="w-20 p-2 bg-gray-600 " >
                     <IconButton className="hover:bg-transparent py-0" >
                     <i className=" ri-file-list-2-line text-white"></i>
                     </IconButton>
                     <div>Name</div>    
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </Box>
       </Modal>
     </div>
 
-       
-
-  
-          
 </div>
     )
     

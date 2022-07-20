@@ -5,17 +5,28 @@ const LibaryContext = React.createContext()
 const LibaryContextProvider = (props) => {
 
     const [LibaryArray, setLibaryArray] = React.useState([]);
+
+    const [currentBookTitle, setcurrentBookTitle] = React.useState('');
     const [currentBookTextProse, setcurrentBookTextProse] = React.useState({});
     const [currentBookMetaArray, setcurrentBookMetaArray] = React.useState([]);
+
+    const randomnumid = () => Math.floor(Math.random() * 100000000000)
+    const [bookID, setbookID] = React.useState(randomnumid());
+
     const [currentBook, setcurrentBook] = React.useState();
+    const [selectedBook, setselectedBook] = React.useState();
+    // const [history, sethistory] = React.useState();
 
-    const [bookID, setbookID] = React.useState(2);
 
+
+    //START additional for ui config and reset of textprose
     const [isLibarymodal, setisLibarymodal] = React.useState(false);
+    const [isResettextareas, setisResettextareas] = React.useState(false);
+    //additional for ui config and reset of textprose end
 
-    React.useEffect(() => {
-        setbookID(prev => prev + 1 )
-    }, []);
+    //is book already present on reset
+    //   const isbookalready = Libaryarrayids.some(item => item == currentBook.bookid)
+
 
     React.useEffect(() => {
      
@@ -30,56 +41,137 @@ const LibaryContextProvider = (props) => {
         console.log(currentBook)
         console.log(Libaryarrayids)
 
-        setLibaryArray(prev => prev.map(item => Libaryarrayids.includes(item.bookid)?{...item,
-            bookTextprosecontent:currentBookTextProse,
-             bookMetaarray:currentBookMetaArray}:item))
+        console.log(LibaryArray.some(item => Libaryarrayids.includes(item.bookid)), 'does it include')
 
-        // setLibaryArray(prev => [...prev, currentBook])
+        console.log(Libaryarrayids.includes(bookID))
+        console.log(bookID, 'bookid')
+
+
+        if(Libaryarrayids.some(item => item == bookID)){
+            // console.log('cothela')
+            setLibaryArray(prev => prev.map(item => item.bookid == bookID?{...item,
+                bookTitle:currentBookTitle,
+                bookTextprosecontent:currentBookTextProse,
+                 bookMetaarray:currentBookMetaArray}:item))
+        }else{
+            setLibaryArray(prev => [...prev, currentBook])
+        }
+      
+
+        // console.log('whats reals')
+ 
         }       
     }, [currentBook]);
 
 
 
     
-    console.log(LibaryArray, 'libary')
+    // console.log(LibaryArray, 'libary')
+
+    //handle ui and reset start
    
     const toggleLibaryModal = () => {
         setisLibarymodal(prev => !prev)
     }
 
-    const updateBookTextProse = (value) => {
-        // console.log(value, 'val')
+    const toggleResetTextareas = () => {
+        setisResettextareas(prev => !prev)
+    }
+
+    const Createnewtextareas = () => {
+        // console.log('create')
+    }
+    //handle and ui end
+
+
+    //handle mounting an already existing book start
+    const openBook = (id) => {
+        console.log(id)
+        const book = LibaryArray.find(item => item.bookid == id)
+        
+        setselectedBook(book)
+        console.log(book)
+
+        // setTimeout(() => {
+        //     setcurrentBook(book)
+        //     setbookID(book.bookid)    
+        //     console.log(LibaryArray)
+        // }, 50);
+
+        // setTimeout(() => {
+            
+        // }, 100);
+        setTimeout(() => {
+         toggleResetTextareas() 
+        }, 100);
+
+        
+        // console.log(book, 'open book')
+    }
+
+    // React.useEffect(() => {
+    //     setselectedBook()
+    // }, [currentBook]);
+
+    console.log(LibaryArray)
+        //handle mounting an already existing book end
+
+
+    
+
+    // console.log(randomnumid(), 'randomid')
+
+
+
+
+    //handle updates of book components start
+
+    const updateBookTextProse = (value, title) => {
         setcurrentBookTextProse(value)
+        setcurrentBookTitle(title)
     }
 
     const updateBookMetaArray = (value) => {
         setcurrentBookMetaArray(value)
-        // console.log(currentBookMetaArray, 'metaarray')
     }
-    
-    // const updateLibaryArray = () => {
-    //     if(LibaryArray.length == 0){
-    //     setLibaryArray([currentBook])
-    //     }
-       
-    // }
 
+    const updateBookID = () => {
+        setbookID(randomnumid() )
+    }
+
+    React.useEffect(() => {
+     console.log(selectedBook, 'selcted book')
+      updateBookID()
+
+      if(selectedBook && currentBook){
+        console.log('2nd')
+        setbookID(selectedBook.bookid)
+      }
+    }, [isResettextareas]);
+
+    //handle updates of book  components end
+    
+
+//create book entry updates the current book, which in turn with the use of a useEffect updates the libaryarray 
 
    const Createbookentry = () => {
+        console.log(bookID)
+
        setcurrentBook({
-        bookid: 2,
+        bookid: bookID,
+        bookTitle:currentBookTitle,
         bookTextprosecontent: currentBookTextProse ,
         bookMetaarray : currentBookMetaArray      
        })
    }
 
-   console.log(currentBook)
+//    console.log(currentBook)
 
 
     
     
     return (
-        <LibaryContext.Provider value={{updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal}} >
+        <LibaryContext.Provider value={{LibaryArray,updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal, toggleResetTextareas, isResettextareas, openBook, currentBook, bookID, selectedBook, setselectedBook,  setbookID, currentBookMetaArray}} >
              {props.children}
         </LibaryContext.Provider>    
     )
