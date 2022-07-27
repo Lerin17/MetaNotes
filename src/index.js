@@ -12,6 +12,7 @@ import Leftbar from './components/leftbar';
 
 import { MetacontextProvider } from './context/MetamodalContext';
 import { LibaryContextProvider } from './context/LibaryContext';
+import { TagContextProvider } from './context/tagContext';
 
 
 
@@ -21,9 +22,11 @@ root.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme = {theme}>
       <MetacontextProvider>
-        <LibaryContextProvider>
-        <App />
-        </LibaryContextProvider>
+        <TagContextProvider>
+          <LibaryContextProvider>
+          <App />
+          </LibaryContextProvider>
+        </TagContextProvider>
       </MetacontextProvider>
     </ThemeProvider >  
     </StyledEngineProvider>

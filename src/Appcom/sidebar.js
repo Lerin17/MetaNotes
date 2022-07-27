@@ -138,6 +138,13 @@ function Sidebar (params) {
         handleClick = {toggleResetTextareas}
         />
 
+        <Sidebarbuttoncom
+        icon = 'ri-home-5-line'
+        text = 'tags'
+        // handleClick = {toggleResetTextareas}
+        />
+
+
 
     <Modal
         open={isLibarymodal}

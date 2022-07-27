@@ -3,6 +3,7 @@ import React, {Component, forwardRef, useCallback, useRef} from 'react'
 
 // Import React dependencies.
 
+
 //mui dependencies
 import { Button, imageListItemClasses } from "@mui/material";
 // Import the Slate editor factory.
@@ -21,6 +22,7 @@ import { withHistory } from 'slate-history';
 // import Textarea from '../../Appcom/textarea';
 import { Metacontext } from '../../context/MetamodalContext';
 import { LibaryContext } from '../../context/LibaryContext';
+import { TagContext } from '../../context/tagContext';
 import { Input } from '@material-ui/core';
 
 
@@ -43,6 +45,9 @@ import { Input } from '@material-ui/core';
 
     const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId,} = React.useContext(Metacontext)
 
+    const {currentTag } = React.useContext(TagContext)
+    
+
 
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
@@ -60,6 +65,8 @@ import { Input } from '@material-ui/core';
     const [markx, setmarkx] = React.useState({xx:'xx'});
     const [value, setValue] = React.useState(initialValue);
     const [title, settitle] = React.useState('');
+    // const [currentTag, setcurrentTag] = React.useState();
+    // const [ismarksBtnclicked, setismarksBtnclicked] = React.useState(false);
 
     const ontitleChange = (event) => {
       settitle(event.target.value)
@@ -99,18 +106,22 @@ import { Input } from '@material-ui/core';
       }, 50);
       
 
-      
-
       // if(textprosecontent){
       //   console.log('tease') 
       //   // console.log(textprosecontent, 'content')
        
       // }
-
-      
-
     }, [isResettextareas]);
 
+
+  
+  React.useEffect(() => {
+    
+  }, []);
+
+  // const updateisMarkBtnclicked = () => {
+  //   setismarksBtnclicked(true)
+  // }
 
     
 
@@ -126,6 +137,7 @@ import { Input } from '@material-ui/core';
           fontStyle: content.italics? 'italic': 'normal',
           opacity: content.qoutes? '0.5': '1',
           fontSize: content.header1? '32px': content.header2? '20px': content.header3? '18px': '16px',
+          borderBottom: content.tag ?'2px dotted blue':'none'
           // backgroundColor: content.meta? 'red': 'none',      
         }
 
@@ -143,9 +155,7 @@ import { Input } from '@material-ui/core';
               <span
               {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal ,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, slateMetaId,createCurrentMetaObj,updateMetaArray, isSelectedMetalready, event)}
               style={contentStyle}
-            >
-              {props.children}
-            </span>
+            >{props.children}</span>
              )          
       }
 
@@ -169,12 +179,13 @@ import { Input } from '@material-ui/core';
     // console.log(buttonActiveStyle.bold)
     return (
       <div>
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.bold} icon = 'B' format ='bold' />
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.bold} icon = 'B' format ='bold'  />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.italics} icon = 'I' format = 'italics' />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.qoutes} icon = 'Q' format = 'qoutes' />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header1} icon = 'H1' format = 'header1' />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'H2' format = 'header2' /> 
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'M' format = 'meta' formatid = {MetaID} updatMetaId = {updatMetaId}  /> 
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'T' format = 'tag'   /> 
       </div>
     )
    }
@@ -255,9 +266,12 @@ import { Input } from '@material-ui/core';
               console.log(Editor.marks(editor))
               setmarkx(Editor.marks(editor))
             }, 20);
-          }}
+            const {selection} = editor
+          const anchoroffset = selection.anchor.offset
+          const focusoffset = selection.focus.offset
+          const focuspath = selection.focus.path
 
-     
+          }}
 
           style={{
             padding: '10px',
@@ -283,16 +297,53 @@ import { Input } from '@material-ui/core';
     const active = isMarkActive(editor, format)
     console.log(format)
     console.log(active)
+    const formatvalue = active? false: true
 
-     const formatvalue = active? false: true
-  //  const active = false
-     
+   const {selection} = editor
+
+   const anchoroffset = selection.anchor.offset
+   const focusoffset = selection.focus.offset
+   const focuspath = selection.focus.path
+
+
+
+
+    const point = Editor.start(editor, [0, 0])
+
+
+  
+    if(active){
+      editor.removeMark(format)
+   
+    }else{ 
       editor.addMark(format, formatvalue )
+    }
+
+    ReactEditor.focus(editor);
+ 
+  //  const active = false     
       if(formatid){
         editor.addMark('metaid', formatid )
         updatMetaId()
-
       }
+
+      // if(anchoroffset == focusoffset){
+      //   console.log(editor)
+      //   console.log(focusoffset)
+      //   console.log(focuspath)
+      //   // editor.autoFocus()
+      //   // Transforms.select(editor, Editor.end(editor, []))
+        
+      //   // setTimeout(() => {
+      //   //   Transforms.select(editor, {path: focuspath, offset: focusoffset});
+      //   // }, 20);
+      //   // Transforms.select(editor, {path: [0, 1], offset: 4});
+      //   // Transforms.select(editor, {path: focuspath, offset: focusoffset})
+       
+        
+      //  }
+      
+
 } 
 
 ////////
@@ -320,7 +371,7 @@ const isMarkActive = (editor, format) => {
    
 }
 
-
+//tool button i.e bold
   const ToolbarMarkBtnx = (props) => {
     const [format, setformat] = React.useState(props.format);
     const [formatid, setformatid] = React.useState(props.formatid);
@@ -330,7 +381,10 @@ const isMarkActive = (editor, format) => {
     const editor = useSlate();
 
     return (
-      <Button className= {`text-black font-stick  ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={()=>{toggleMark(editor, format, formatid, updatMetaId)}}
+      <Button className= {`text-black font-stick  ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={(event)=>{
+        // props.updateismarksBtnclicked()
+        event.preventDefault()
+        toggleMark(editor, format, formatid, updatMetaId)}}
       // disabled={isMarkActive(editor)}
       >{props.icon}</Button>
   )
