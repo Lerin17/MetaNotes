@@ -11,6 +11,8 @@ import Bool from "../1Textarea/Utilts/boolean";
 import {Metacontext} from '../context/MetamodalContext'
 import Metatextarea from "../Appcom/Metatextarea";
 import { LibaryContext } from "../context/LibaryContext";
+import { TagContext } from "../context/tagContext";
+import TagsLibary from "../Appcom/TagsLibarydisplay";
 
 
 
@@ -20,16 +22,22 @@ function Prose(params) {
 
     const {isLibarymodal, isResettextareas} = React.useContext(LibaryContext)
 
+    const {taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay} = React.useContext(TagContext)
 
-    console.log(isMetamodal)
+    // const {taggedObjArray, } = React.useContext(TagContext)
+
+
+    // console.log(isMetamodal)
     const styles = () => {
         return (
             {
-                sidebar: isMetamodal? 'hidden': 'md:mx-auto lg:py-14 md:py-14  lg:w-1/12 xl:w-1/12 md:w-1/12 lg:h-full md:h-full   mb-3 md:mb-0 lg:mb-0 ',
+                sidebar: isMetamodal || isTagLibaryDisplay? 'hidden': 'md:mx-auto lg:py-14 md:py-14  lg:w-1/12 xl:w-1/12 md:w-1/12 lg:h-full md:h-full   mb-3 md:mb-0 lg:mb-0 ',
 
-                Textproseslate: isMetamodal? 'flex flex-col lg:flex-row md:flex-row  mx-auto h-screen bg-white lg:w-10/12 md:w-12/12 w-full px-2 rounded':" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-full px-2 rounded",
+                proseContainer: isMetamodal || isTagLibaryDisplay? 'flex flex-col lg:flex-row md:flex-row  mx-auto h-screen bg-white lg:w-10/12 md:w-12/12 w-full px-2 rounded':" mx-auto h-full bg-white lg:w-10/12 md:w-10/12 w-full px-2 rounded",
 
-               Metatextarea: isMetamodal? 'lg:w-4/12 md:w-4/12 w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0': 'hidden'
+               Metatextarea: isMetamodal? 'lg:w-4/12 md:w-4/12 w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0': 'hidden',
+
+               TaggeditemsLibary: isTagLibaryDisplay?'lg:w-4/12 md:w-4/12 w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0':'hidden'
             }
            
         )   
@@ -63,14 +71,16 @@ function Prose(params) {
 
 
                 <div className= {classes.sidebar} >
-                <Sidebar/>
+                <Sidebar
+                key={2}
+                />
                 </div>
 
            
 
            
 
-                <div className= {classes.Textproseslate} >
+                <div className= {classes.proseContainer} >
                     <Textproseslate
                     key={isResettextareas? '1':'2'}
                     /> 
@@ -82,6 +92,10 @@ function Prose(params) {
                     <Metatextarea
                     key={isMetamodal?'1':'2'}
                     />
+                </div>
+
+                <div className={classes.TaggeditemsLibary} >
+                <TagsLibary/>
                 </div>
             </div>
 
