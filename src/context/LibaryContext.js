@@ -31,7 +31,7 @@ const LibaryContextProvider = (props) => {
     React.useEffect(() => {
      
 
-        console.log(Boolean(currentBook), 'check')
+        // console.log(Boolean(currentBook), 'check')
     
         //check if libaryarray is empty and currentbook is valid, then set,***else if add it to the list
         if(LibaryArray.length == 0 && currentBook){
@@ -113,7 +113,7 @@ const LibaryContextProvider = (props) => {
     //     setselectedBook()
     // }, [currentBook]);
 
-    console.log(LibaryArray)
+    // console.log(LibaryArray)
         //handle mounting an already existing book end
 
 

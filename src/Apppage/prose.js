@@ -14,6 +14,9 @@ import { LibaryContext } from "../context/LibaryContext";
 import { TagContext } from "../context/tagContext";
 import TagsLibary from "../Appcom/TagsLibarydisplay";
 
+import { Box,  Fade } from "@mui/material";
+
+
 
 
 
@@ -37,7 +40,7 @@ function Prose(params) {
 
                Metatextarea: isMetamodal? 'lg:w-4/12 md:w-4/12 w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0': 'hidden',
 
-               TaggeditemsLibary: isTagLibaryDisplay?'lg:w-4/12 md:w-4/12 w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0':'hidden'
+               TaggeditemsLibary: isTagLibaryDisplay?'lg:w-4/12 md:w-4/12 lg:h-screen overflow-auto md:h-screen w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0 ':'hidden'
             }
            
         )   
@@ -88,6 +91,9 @@ function Prose(params) {
                 {/* {isMetamodal && <div className="lg:w-4/12 md:w-4/12 w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0 " >
                 <Textarea/>
                 </div>}       */}
+                
+                
+
                 <div className={classes.Metatextarea} >
                     <Metatextarea
                     key={isMetamodal?'1':'2'}

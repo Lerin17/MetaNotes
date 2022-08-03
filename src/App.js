@@ -59,7 +59,9 @@ function App() {
     isopen = {isLoadingpage}/>}
    
     {/* {!isLoadingpage && <Landingpage/>} */}
-    <Prose/>
+    <Prose
+    key={2}
+    />
  </div>
    ) 
 

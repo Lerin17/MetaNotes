@@ -5,14 +5,17 @@ import { FolderOpen, Height, MenuBookOutlined, Timer } from "@material-ui/icons"
 import { makeStyles } from "@mui/styles";
 import { ClassNames } from "@emotion/react";
 
-import { purple, blue, brown } from '@mui/material/colors'
+import { purple, blue, brown, red, grey, yellow } from '@mui/material/colors'
 import { display } from "@mui/system";
 import theme from "../theme";
 
 
 
 import { LibaryContext } from "../context/LibaryContext";
+import { TagContext } from "../context/tagContext";
+
 import { Accordion, AccordionDetails, AccordionSummary, ClickAwayListener, Grow, Menu, MenuItem, MenuList, Popper } from "@material-ui/core";
+
 
 
 
@@ -47,8 +50,10 @@ function Sidebar (params) {
     const classes = usestyle()
     const {Createbookentry, isLibarymodal,  toggleLibaryModal, LibaryArray, toggleResetTextareas, openBook} = React.useContext(LibaryContext)
 
-    const [open, setOpen] = React.useState(false);
+    const {currentTag, isTagMenu, toggleisTagMenu, tagsArray, changeCurrentTag, taggedObjArray, toggleisTagLibaryDisplay } = React.useContext(TagContext)
 
+    // const [open, setOpen] = React.useState(false);
+    
   
 
     const styles = ['absolute top-1/2 md:left-72 lg:left-96   -translate-x-1/2 -translate-y-1/2  bg-transparent border  pb-3 md:ml-5 lg:ml-10']
@@ -90,13 +95,69 @@ function Sidebar (params) {
         )
     }
 
-    const Filedisplay = LibaryArray.length? LibaryArray.map((item,i) => <div>
+
+
+    const Tagcomponent = (props) => {
+        const tag = props.color
+      
+
+        const colors = [
+            {name:'red', value: red}, 
+            {name:'blue', value:blue}, 
+            {name:'grey', value:grey}, 
+            {name:'yellow', value:yellow}
+        ]
+
+        const currentcolor = colors.find(item => item.name == tag)
+        const iscurrenttag = currentTag == props.name
+    
+
+        console.log(currentcolor)
+        const style = `${iscurrenttag?'border-4':'border-none'} w-full px-1`
+        // <Box sx={{ color: 'text.secondary' }}>Sessions</Box>
+
+        return(
+            <Box  sx={{ backgroundColor: currentcolor.value[700]}} className={style}>
+            {/* <div className="  "  >
+            <IconButton className="hover:bg-transparent py-0 " >
+            <i className=" ri-file-list-2-line text-gray-300 "></i>
+            </IconButton>
+            </div> */}
+            
+            <div className={`text-sm font-bold self-center text-black`} >{props.name} {props.color}</div>  
+
+            <div className="flex" >
+            <div className="mr-2" ><i className="ri-delete-bin-2-line hover:text-red-700"></i></div>
+
+            <div onClick={()=>changeCurrentTag(props.name)} className="mx-2" ><i className="ri-price-tag-3-line hover:text-gray-200"></i></div>
+
+            <div onClick={()=>toggleisTagLibaryDisplay()} className="ml-2" ><i className="ri-folder-open-line hover:text-gray-200"></i></div>
+            </div>
+             
+        </Box>     
+        )
+    }
+
+    const Tagsdisplay = tagsArray.length? tagsArray.map((item, i)=>{
+    return (
+        <div key={i} >
+            <Tagcomponent
+            name={item.name}
+            color={item.color}
+            />
+        </div>
+    )
+    }):'tags not available'
+
+    const Filedisplay = LibaryArray.length? LibaryArray.map((item,i) => <div key={i}>
         <Filecomponent
         key ={i}
         title= {item.bookTitle}
         bookid = {item.bookid}
         />
     </div> ):'No items available'
+
+
 
     return (
 <div className="h-full  flex justify-start  ">
@@ -133,15 +194,15 @@ function Sidebar (params) {
         />
 
         <Sidebarbuttoncom
-        icon = 'ri-home-5-line'
+        icon = 'ri-file-add-line'
         text = 'New'
         handleClick = {toggleResetTextareas}
         />
 
         <Sidebarbuttoncom
-        icon = 'ri-home-5-line'
+        icon = 'ri-price-tag-3-line'
         text = 'tags'
-        // handleClick = {toggleResetTextareas}
+        handleClick = {toggleisTagMenu}
         />
 
 
@@ -158,6 +219,29 @@ function Sidebar (params) {
 
                 <div className="flex wrap" > 
                     {Filedisplay}
+                    {/* <div className="w-20 p-2 bg-gray-600 " >
+                    <IconButton className="hover:bg-transparent py-0" >
+                    <i className=" ri-file-list-2-line text-white"></i>
+                    </IconButton>
+                    <div>Name</div>    
+                    </div> */}
+                </div>
+            </div>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={isTagMenu}
+        onClose={toggleisTagMenu}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box className={styles} sx={{ width: 400 , height: 600 }}>
+            <div>
+                <div className="bg-gray-800 py-1 text-white font-bold" >Tags</div>
+
+                <div className="flex flex-col" > 
+                    {Tagsdisplay}
                     {/* <div className="w-20 p-2 bg-gray-600 " >
                     <IconButton className="hover:bg-transparent py-0" >
                     <i className=" ri-file-list-2-line text-white"></i>
