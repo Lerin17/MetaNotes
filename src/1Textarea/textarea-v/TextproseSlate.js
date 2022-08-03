@@ -27,9 +27,6 @@ import { Input } from '@material-ui/core';
 
 
 
-// Add the initial valu dde.
-
-// const saveValue = 
 
 // const initialValue =!iscurrentMetaempty && currentMeta?currentMeta.content :  [
 //   {
@@ -45,9 +42,9 @@ import { Input } from '@material-ui/core';
 
     const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId,} = React.useContext(Metacontext)
 
-    const {currentTag } = React.useContext(TagContext)
+    const {currentTag,  currentTagObj, gettextproseValues, settextproseLocationObj, currentLocationPath } = React.useContext(TagContext)
     
-
+    
 
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
@@ -74,11 +71,9 @@ import { Input } from '@material-ui/core';
 
 
 
-
-
-
     React.useEffect(() => {
       updateBookTextProse(value, title)
+      gettextproseValues(value, editor)
     }, [value, title]);
 
 
@@ -114,10 +109,31 @@ import { Input } from '@material-ui/core';
     }, [isResettextareas]);
 
 
+    //handle the updating of the location needed to switch from tagLocation to initial cursorLocation
+
+    React.useEffect(() => {
+      if(editor){
+        settextproseLocationObj(editor.selection)
+      }
+      
+    }, [value]);
+
+    //handle ui change for finding tagLocation
+      React.useEffect(() => {
+        console.log('switch')
+        if(currentLocationPath){
+          Transforms.select(editor, {path: [0, 0], offset: 3});
+        }
+
+        
+      
+      }, [currentLocationPath]);
+
+
   
-  React.useEffect(() => {
+  // React.useEffect(() => {
     
-  }, []);
+  // }, []);
 
   // const updateisMarkBtnclicked = () => {
   //   setismarksBtnclicked(true)
@@ -127,27 +143,71 @@ import { Input } from '@material-ui/core';
 
     const Leaf = props => {
       const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, updateMetaArray , currentMeta,  sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId, createCurrentMetaObj, isSelectedMetalready} = React.useContext(Metacontext)
+
+      const {tagsArray} = React.useContext(TagContext)
+
+      console.log(tagsArray)
       // const editor = useSlate()
 
       // console.log(MetaID)
 
       const content = props.children.props.leaf 
+
+      const tagtype = content.tagtype
+      const istag = content.tag
+
+    //  const getcolor = tagtype && istag? tagsArray.find(item => item.color == tagtype):''
+
+     const getcolor = () => {
+      // console
+
+      if(tagtype && istag){
+       const colorstyelobj = tagsArray.find(item => item.name == tagtype)
+
+      //  console.log(colorstyelobj)
+        return (
+          colorstyelobj.color
+        )
+      }else{
+        return (
+          ''
+        )
+      }
+     }
+
+      // const gettagstylecolor = if (tagtype && istag){
+      //   const tagcolorobj = 
+      // }else{
+
+      // } {
+       
+
+      //  if(tagtype && istag && tagcolorobj){
+      //   return tagcolorobj.color
+      //  }
+     
+      // }
+
+      console.log(getcolor())
+
         const contentStyle = {
           fontWeight: content.bold ? 'bold' : 'normal',
           fontStyle: content.italics? 'italic': 'normal',
           opacity: content.qoutes? '0.5': '1',
           fontSize: content.header1? '32px': content.header2? '20px': content.header3? '18px': '16px',
-          borderBottom: content.tag ?'2px dotted blue':'none'
+          borderBottom: content.tag ?`2px dotted ${getcolor()}`:'none'
           // backgroundColor: content.meta? 'red': 'none',      
         }
 
         const [Metapairidxx, setMetapairidxx] = React.useState(1);
 
         // console.log(Metapairx, 'xd')
-
-        const contentStyleMeta = `${content.meta?'text-green-600 hover:bg-green-500 hover:text-white underline': 'bg-none'}`
-        
         const isMeta = content.meta
+
+        const contentStyleMeta = `${isMeta?'text-green-600 hover:bg-green-500 hover:text-white underline': 'bg-none'}`
+        
+       
+        
 
         const slateMetaId = props.leaf.metaid
       
@@ -171,6 +231,8 @@ import { Input } from '@material-ui/core';
     )
   }
   
+
+  // console.log(currentTagObj)
     
    const Toolbar = (props) => {
   
@@ -185,7 +247,7 @@ import { Input } from '@material-ui/core';
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header1} icon = 'H1' format = 'header1' />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'H2' format = 'header2' /> 
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'M' format = 'meta' formatid = {MetaID} updatMetaId = {updatMetaId}  /> 
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'T' format = 'tag'   /> 
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'T' format = 'tag' currentTagObj={currentTagObj}     /> 
       </div>
     )
    }
@@ -265,11 +327,14 @@ import { Input } from '@material-ui/core';
             setTimeout(() => {
               console.log(Editor.marks(editor))
               setmarkx(Editor.marks(editor))
+              console.log(editor.selection)
+              console.log(value)
+              // gettextproseEditor(editor)
             }, 20);
-            const {selection} = editor
-          const anchoroffset = selection.anchor.offset
-          const focusoffset = selection.focus.offset
-          const focuspath = selection.focus.path
+          //   const {selection} = editor
+          // const anchoroffset = selection.anchor.offset
+          // const focusoffset = selection.focus.offset
+          // const focuspath = selection.focus.path
 
           }}
 
@@ -282,67 +347,54 @@ import { Input } from '@material-ui/core';
             </div>
             </div>
           </div>
-          </Slate>
-
-      
-   
-      
+          </Slate>     
     )
   }
 
 //toggleMark button
 
-  const toggleMark = (editor, format, formatid, updatMetaId) => { 
+  const toggleMark = (editor, format, formatid, updatMetaId, currentTagObj) => { 
     // console.log(active)
     const active = isMarkActive(editor, format)
     console.log(format)
     console.log(active)
     const formatvalue = active? false: true
 
-   const {selection} = editor
+  //  const {selection} = editor
 
-   const anchoroffset = selection.anchor.offset
-   const focusoffset = selection.focus.offset
-   const focuspath = selection.focus.path
+  // Transforms.select(editor, {path: [0, 0], offset: 3});
+
+  //  const anchoroffset = selection.anchor.offset
+  //  const focusoffset = selection.focus.offset
+  //  const focuspath = selection.focus.path
 
 
-
-
-    const point = Editor.start(editor, [0, 0])
-
+    console.log(currentTagObj)
 
   
     if(active){
       editor.removeMark(format)
+      if(formatid){
+        editor.removeMark('metaid')
+        updatMetaId()
+      } 
+      if(currentTagObj){
+        editor.removeMark('tagtype') 
+       }
    
     }else{ 
       editor.addMark(format, formatvalue )
-    }
-
-    ReactEditor.focus(editor);
- 
-  //  const active = false     
       if(formatid){
         editor.addMark('metaid', formatid )
         updatMetaId()
+      }    
+      if(currentTagObj){
+        console.log('swagger back')
+       editor.addMark('tagtype', currentTagObj.name) 
       }
+    }
 
-      // if(anchoroffset == focusoffset){
-      //   console.log(editor)
-      //   console.log(focusoffset)
-      //   console.log(focuspath)
-      //   // editor.autoFocus()
-      //   // Transforms.select(editor, Editor.end(editor, []))
-        
-      //   // setTimeout(() => {
-      //   //   Transforms.select(editor, {path: focuspath, offset: focusoffset});
-      //   // }, 20);
-      //   // Transforms.select(editor, {path: [0, 1], offset: 4});
-      //   // Transforms.select(editor, {path: focuspath, offset: focusoffset})
-       
-        
-      //  }
-      
+    ReactEditor.focus(editor);
 
 } 
 
@@ -363,12 +415,9 @@ const isMarkActive = (editor, format) => {
       Smarkactive = true
      }
    }
-
   
 
-     return (Smarkactive)
-  //  console.log(Boolean(activex.format))
-   
+     return (Smarkactive)   
 }
 
 //tool button i.e bold
@@ -376,15 +425,20 @@ const isMarkActive = (editor, format) => {
     const [format, setformat] = React.useState(props.format);
     const [formatid, setformatid] = React.useState(props.formatid);
 
+    const currentTagObj = props.currentTagObj
+
+    // console.log(currentTagObj, 'current')
     const updatMetaId =  props.updatMetaId
     // console.log(updatMetaId)
     const editor = useSlate();
+
+    // console.log(props.currentTagObj)
 
     return (
       <Button className= {`text-black font-stick  ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={(event)=>{
         // props.updateismarksBtnclicked()
         event.preventDefault()
-        toggleMark(editor, format, formatid, updatMetaId)}}
+        toggleMark(editor, format, formatid, updatMetaId, currentTagObj)}}
       // disabled={isMarkActive(editor)}
       >{props.icon}</Button>
   )
@@ -399,22 +453,13 @@ const isMarkActive = (editor, format) => {
  const openMetaModal = ( isMeta, toggleMetamodal, sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId,slateMetaId, createCurrentMetaObj,updateMetaArray, isSelectedMetalready, event) => {
   // event.preventdefault()
   if(isMeta){
-    // const string = event.target.offsetParent.innerHTML
-    // console.log(event.target)
-    // const bam = string.split('**')
-    // console.log(bam[3], 'bam')
-  //  console.log(slateMetaId, 'again')
-    // console.log(markx, 'markx')
-    // console.log()
     const isMetaalready = isSelectedMetalready(slateMetaId)
 
     if(!isMetaalready){
       createCurrentMetaObj(slateMetaId)
     }
+
     sortSelectedMeta(slateMetaId)
-    
-  
-    // updateMetaArray()
     updateTextProseId(slateMetaId)
     
     toggleMetamodal()
