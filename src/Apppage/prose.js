@@ -67,8 +67,10 @@ function Prose(params) {
 
     return (
 <div className="">    
-    <div 
-    className="w-screen bg-gradient-to-r from-gray-800 via-neutral-800 to-white lg:px-8 md:p-0 h-screen " >
+    <div  style={{
+        background: 'radial-gradient(at 100% 50%, rgb(56, 189, 248), rgb(49, 46, 129))'
+    }}
+    className="w-screen  lg:px-8 md:p-0 h-screen " >
     {/* <div className=" text-lg uppercase border-b-4 font-bold" >header </div> */}
             <div className={`${isLibarymodal?'blur-sm':'blur-none'}  flex flex-col h-full  lg:flex-row    md:flex-row`} > 
 

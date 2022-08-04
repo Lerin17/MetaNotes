@@ -1,6 +1,8 @@
 import React from "react";
+import _ from "lodash"
 
 const TagContext = React.createContext()
+
 
 
 const TagContextProvider = (props) => {
@@ -19,14 +21,17 @@ const TagContextProvider = (props) => {
     const [currentTag, setcurrentTag] = React.useState('important');
     // const test =[]
 
-   
+   //contains tagged objects filtered through textprose value
     const [taggedObjArray, settaggedObjArray] = React.useState();
 
 
     const [textproseValue, settextproseValue] = React.useState();
     const [textproseEditor, settextproseEditor] = React.useState();
+
+    //tracks location in textprose as it changes for additional functionality of tracking back location after changes
     const [textproseLocationObj, settextproseLocationObj] = React.useState();
 
+    //contains path required for switching location for tagged items in textprose text area
     const [currentLocationPath, setcurrentLocationPath] = React.useState();
 
     const gettextproseValues = (value, editor) => {
@@ -49,6 +54,91 @@ const TagContextProvider = (props) => {
     const gettaggedObjArray = () => {
         if(textproseValue){
         let textcontentArray = textproseValue[0].children
+        
+        let n = 0
+        let revised = textproseValue.map(item => {return (
+            {
+             children:item.children,
+             index: n++
+            }
+        ) })
+
+        let revisedContent = revised.map((item,i) => {
+
+
+            
+            const Children = item.children.map((item,i) => 
+                {return (
+                    {
+                        ChildrenitemObj: item,
+                        // location: item.children? item.children.indexOf(item): null,
+                        location: i
+                    }
+                )
+                  })
+
+            // const taggedChildrenRevised = taggedChildren.map(item => {
+            //     return{
+            //         taggedItem: item,
+            //         location: textproseValue[].indexOf("Apple")
+            //     }
+            // })
+
+            return (
+                {
+                Children,
+                index: i
+                
+                }
+            )
+        })
+
+
+     
+
+        revisedContent = revisedContent.filter(item => item.Children.some(item => item.ChildrenitemObj.tag))
+
+        const getTaggedObj = revisedContent.map(item => {
+            return (
+                {
+                    taggedObj: item.Children.filter(item => item.ChildrenitemObj.tag),
+                    index: item.index
+                }
+            )
+        })
+
+        const tax = getTaggedObj.map(item => {
+            const index = item.index
+            return {
+                taggedArray: item.taggedObj.map(item => {
+                    return {
+                        item: item,
+                        index
+
+                    }
+                })
+            }
+        })
+
+        console.log(revisedContent)
+        console.log(getTaggedObj)
+        console.log(tax)
+        console.log(textproseValue)
+
+        let A = tax.map(item => item.taggedArray)
+        console.log(A)
+        A = A.map(item => item)
+        A = _.flatten(A)
+
+        A = A.map(item => ({
+            text: item.item.ChildrenitemObj.text,
+            tagType: item.item.ChildrenitemObj.tagtype,
+            index: item.index,
+            location: item.item.location,
+            path: [item.index, item.item.location]
+        }))
+
+        console.log(A)
         //  console.log(textproseValue[0].children)
 
         let x = textcontentArray.filter(item => item.tag &&item.tagtype)
@@ -59,10 +149,10 @@ const TagContextProvider = (props) => {
         }))
 
         
-        if(!x.length){
+        if(!A.length){
             return null
         }else{
-            return x 
+            return A 
         } 
         }
     }
@@ -108,11 +198,11 @@ const TagContextProvider = (props) => {
 
     const changeCurrentLocation = (Locationpath) => {
         setcurrentLocationPath(Locationpath)
-        console.log(Locationpath)
+        // console.log(Locationpath)
     }
 
-    console.log(textproseLocationObj)
-    // console.log(currentLocationPath)
+    // console.log(textproseLocationObj)
+    // console.log(textproseValue)
 
 
     // console.log(currentTagObj)
@@ -121,7 +211,7 @@ const TagContextProvider = (props) => {
 
 
     return (
-        <TagContext.Provider value={{currentTag, isTagMenu, currentTagObj, toggleisTagMenu, tagsArray, changeCurrentTag, gettextproseValues, taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, settextproseLocationObj, changeCurrentLocation, currentLocationPath}}>
+        <TagContext.Provider value={{currentTag, isTagMenu, currentTagObj, toggleisTagMenu, tagsArray, changeCurrentTag, gettextproseValues, taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, settextproseLocationObj, changeCurrentLocation, currentLocationPath, setcurrentLocationPath}}>
             {props.children}
         </TagContext.Provider>
     )
