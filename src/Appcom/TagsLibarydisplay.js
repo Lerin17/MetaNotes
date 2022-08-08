@@ -22,13 +22,19 @@ function TagsLibary(params) {
 
     const getTagitemArray = taggedObjArray? taggedObjArray.map(item => {
         return {
-            text: item.item.text,
-            tagType: item.item.tagtype,
-            istag: item.item.tag,
-            indexLocation: item.index,
+            text: item.text,
+            tagType: item.tagType,
+            // istag: item.item.tag,
+            index: item.index,
+            location: item.location,
+            path: item.path,
             isPopper: false
         }
-    }): 'No tag items available'
+    }): null
+
+    React.useEffect(() => {
+        setTagItemArray(getTagitemArray)
+    }, [taggedObjArray]);
 
 
     const toggleIsPopper = (text) => {
@@ -53,20 +59,18 @@ function TagsLibary(params) {
         }
     }
 
-    React.useEffect(() => {
-        setTagItemArray(getTagitemArray)
-    }, [taggedObjArray]);
 
-    console.log(taggedObjArray)
+
+    // console.log(taggedObjArray)
 
     const Tagitemcomponent = (props) => {
-        const [isPopperOpen, setisPopperOpen] = React.useState(false);
+        // const [isPopperOpen, setisPopperOpen] = React.useState(false);
         const text = props.text
-        const LocationPath = props.indexLocation
+        const LocationPath = props.path
         const subText =  text.substring(0, 15)
         const propperSubText = text.substring(0, 25)
 
-        console.log(props.isPopper)
+        // console.log(props.isPopper)
         
         return (
             <Popover
@@ -119,26 +123,28 @@ function TagsLibary(params) {
 
 
 
-    let jam = new Array(22)
+    // let jam = new Array(22)
 
-    jam.fill('damn baby')
+    // jam.fill('damn baby')
 
     // console.log(jam)
+    // console.log(TagItemArray, Boolean(TagItemArray))
 
-
-    const TagsLibarydisplayComponent = taggedObjArray? taggedObjArray.map((item,i) => (
+    const TagsLibarydisplayComponent = TagItemArray? TagItemArray.map((item,i) => (
         <Tagitemcomponent
-        text= {item.item.text}
-        tagType = {item.item.tagtype}
-        indexLocation = {item.index}
+        text= {item.text}
+        tagType = {item.tagtype}
+        index = {item.index}
+        location = {item.location}
+        path = {item.path}
         i = {i}
-        isPopper ={item.isPopper}
+        isPopper = {item.isPopper}
         />
     ) ):'No items have been tagged'
 
 
 
-    console.log(taggedObjArray)
+    // console.log(taggedObjArray)
 
 
     // const TagsLibarydisplayComponent = jam.map(item =>(
@@ -149,7 +155,7 @@ function TagsLibary(params) {
 
     
 
-    console.log(TagsLibarydisplayComponent, 'test')
+    // console.log(TagsLibarydisplayComponent, 'test')
 
     return (
         <div className="" >

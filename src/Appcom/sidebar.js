@@ -56,26 +56,33 @@ function Sidebar (params) {
     
   
 
-    const styles = ['absolute top-1/2 md:left-72 lg:left-96   -translate-x-1/2 -translate-y-1/2  bg-transparent border  pb-3 md:ml-5 lg:ml-10']
+    const styles = ['absolute top-1/2 md:left-72 lg:left-96   -translate-x-1/2 -translate-y-1/2 border-2 border-black bg-transparent border  pb-3 md:ml-5 lg:ml-10']
 
 
     const Sidebarbuttoncom = (props) => {
+        const bgColor = props.color
         return (
-        <div className=" lg:mr-0 xl:mr-0 md:mr-0 rounded-lg shadow  lg:border border-gray-600 md:mt-2 lg:mt-2 w-full">
-            <div className= {classes.sidebuttonCon} >
-                <div className= {classes.sidebuttonIcon}>
-                <IconButton  onClick={props.handleClick} className="sm:w-8 mx-auto hover:bg-transparent" >
-                <i className={`${props.icon} text-white`}></i>   
-                </IconButton>             
-                 </div>
+        <div style={{
+            backgroundColor: bgColor
+        }} className={`w-full border-2 cursor-pointer border-black md:mt-4 lg:mt-4 hover:bg-yellow-500 hover:scale-105 transition-all`} >
+            <div className=" lg:mr-0 xl:mr-0 md:mr-0  px-1 ">
+                    <div className= {classes.sidebuttonCon} >
+                        <div className= {classes.sidebuttonIcon}>
+                        <IconButton  onClick={props.handleClick} className="sm:w-8 mx-auto hover:bg-transparent" >
+                        {props.icon}
+                       
+                        </IconButton >             
+                        </div>
 
-                <div className="hidden xl:block self-center justify-start w-full" >
-                <Button sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = 'text-white'  variant= "text" >
-                 {props.text}
-                </Button>
-                </div>
+                        <div className="hidden  xl:block self-center justify-start w-full" >
+                        <div sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = 'text-white uppercase font-header3 font-bold text-sm'  variant= "text" >
+                        {props.text}
+                        </div>
+                        </div>
+                    </div>
             </div>
-      </div>
+        </div>
+       
         )
     }
 
@@ -160,50 +167,76 @@ function Sidebar (params) {
 
 
     return (
-<div className="h-full  flex justify-start  ">
+<div className="h-full flex flex-col w-full  justify-start shadow-2xl ">
 
-           
-        <div className={`flex  md:flex-col lg:flex-col lg:w-full md:w-full md:bg-transparent `}>
+        <div className="bg-white mx-auto  pb-8  text-4xl p-4 font-header2" >
+         <div className="lg:hidden  xl:hidden block" >
+            M
+         </div>
+
+         <div className="lg:block xl:block hidden" >
+            M
+         </div>
+        </div>
+        <div className={`flex  md:flex-col lg:flex-col mx-auto lg:w-fit md:w-fit  `}>
+
+      
               
-          <Sidebarbuttoncom
-        icon = 'ri-home-5-line'
+        <Sidebarbuttoncom
+        icon = {
+            <svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M12 6.453l9 8.375v9.172h-6v-6h-6v6h-6v-9.172l9-8.375zm12 5.695l-12-11.148-12 11.133 1.361 1.465 10.639-9.868 10.639 9.883 1.361-1.465z"/></svg>
+        }
         text = 'home'
+        color = '#224341'
         // handleClick = {}
         />
 
         
         <Sidebarbuttoncom
-        icon = 'ri-timer-2-line'
-        text = ' Recents'
+        icon = {
+            <svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm7 14h-8v-9h2v7h6v2z"/></svg>
+        }
+        text = 'Recents'
+        color = '#3D3FB9'
         // handleClick = {}
         />
 
         <Sidebarbuttoncom
-        icon = 'ri-save-2-line '
+        icon = {    
+        <svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M15.563 22.282l-3.563.718.72-3.562 2.843 2.844zm-2.137-3.552l2.845 2.845 7.729-7.73-2.845-2.845-7.729 7.73zm-3.062 2.27h-7.364v-7h12.327l6.673-6.688v-2.312l-4-4h-18v22h9.953l.411-2zm-5.364-18h12v7h-12v-7zm8.004 6h2.996v-5h-2.996v5z"/></svg>
+                }
         text = 'Save'
         handleClick = {Createbookentry}
+        color = '#0099FF'
         />
 
        {/* <SideButtonacc
        /> */}
 
         <Sidebarbuttoncom
-        icon = 'ri-folder-open-line'
+        icon =  {
+        <svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M7.972 2h-6.972l.714 5h2.021l-.429-3h3.694c1.112 1.388 1.952 2 4.277 2h9.283l-.2 1h2.04l.6-3h-11.723c-1.978 0-2.041-.417-3.305-2zm16.028 7h-24l2 13h20l2-13z"/></svg>
+        }
         text = 'Libary'
         handleClick = {toggleLibaryModal}
+        color = '#0068FF'
         />
 
         <Sidebarbuttoncom
-        icon = 'ri-file-add-line'
-        text = 'New'
-        handleClick = {toggleResetTextareas}
-        />
-
-        <Sidebarbuttoncom
-        icon = 'ri-price-tag-3-line'
+        icon = {<svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M10.606 0h-10.606v10.609l13.393 13.391 10.607-10.606-13.394-13.394zm-7.02 6.414c-.782-.785-.781-2.047 0-2.83.782-.782 2.049-.779 2.829-.001.783.783.782 2.048 0 2.831-.783.781-2.046.781-2.829 0zm9.807 14.757l-8.484-8.484 7.778-7.778 8.486 8.485-7.78 7.777zm3.534-6.36l-5.656-5.656.707-.709 5.656 5.657-.707.708zm-1.414 1.414l-5.656-5.656.707-.707 5.656 5.656-.707.707zm-3.535-.707l-3.534-3.536.707-.706 3.535 3.535-.708.707z"/></svg>}
         text = 'tags'
         handleClick = {toggleisTagMenu}
+        color = '#FB3E2B'
         />
+
+        <Sidebarbuttoncom
+        icon = {<svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M18.5 15c-2.483 0-4.5 2.015-4.5 4.5s2.017 4.5 4.5 4.5 4.5-2.015 4.5-4.5-2.017-4.5-4.5-4.5zm2.5 5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1zm-7.18 4h-12.82v-24h8.409c4.857 0 3.335 8 3.335 8 3.009-.745 8.256-.419 8.256 3v2.501c-.771-.322-1.614-.501-2.5-.501-3.584 0-6.5 2.916-6.5 6.5 0 1.747.696 3.331 1.82 4.5zm-.252-23.925c2.202 1.174 5.938 4.883 7.432 6.881-1.286-.9-4.044-1.657-6.091-1.179.222-1.468-.185-4.534-1.341-5.702z"/></svg>}
+        text = 'New'
+        handleClick = {toggleResetTextareas}
+        color = '#DCD9D8'
+        />
+
+      
 
 
 
@@ -212,12 +245,17 @@ function Sidebar (params) {
         onClose={toggleLibaryModal}
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
+        disableAutoFocus={true}
       >
-        <Box className={styles} sx={{ width: 400 , height: 600 }}>
+        <Box className={styles} sx={{ width: 400 , height: 600, 
+        "& .MuiOutlinedInput-notchedOutline": {
+            border: "0 none",
+          },
+    }}    >
             <div>
                 <div className="bg-gray-800 py-1 text-white font-bold" >Libary</div>
 
-                <div className="flex wrap" > 
+                <div className="flex wrap border-2 border-black" > 
                     {Filedisplay}
                     {/* <div className="w-20 p-2 bg-gray-600 " >
                     <IconButton className="hover:bg-transparent py-0" >

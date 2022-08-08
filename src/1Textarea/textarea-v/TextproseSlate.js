@@ -42,7 +42,7 @@ import { Input } from '@material-ui/core';
 
     const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId,} = React.useContext(Metacontext)
 
-    const {currentTag,  currentTagObj, gettextproseValues, settextproseLocationObj, currentLocationPath } = React.useContext(TagContext)
+    const {currentTag,  currentTagObj, gettextproseValues, settextproseLocationObj, currentLocationPath, setcurrentLocationPath } = React.useContext(TagContext)
     
     
 
@@ -118,14 +118,25 @@ import { Input } from '@material-ui/core';
       
     }, [value]);
 
+    const swtichCursorLocation = () => {
+      ReactEditor.focus(editor)
+      console.log('damn')
+      Transforms.select(editor, {path: currentLocationPath, offset: 0})
+      setcurrentLocationPath(null)
+    }
+
     //handle ui change for finding tagLocation
       React.useEffect(() => {
         console.log('switch')
+        console.log(currentLocationPath,'switch')
         if(currentLocationPath){
-          Transforms.select(editor, {path: [0, 0], offset: 3});
+         
+          swtichCursorLocation();
         }
 
-        
+        // setTimeout(() => {
+        //  
+        // }, 10);
       
       }, [currentLocationPath]);
 
@@ -144,9 +155,10 @@ import { Input } from '@material-ui/core';
     const Leaf = props => {
       const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, updateMetaArray , currentMeta,  sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId, createCurrentMetaObj, isSelectedMetalready} = React.useContext(Metacontext)
 
+      //use tags array to decide colors base on taggs obj for styling
       const {tagsArray} = React.useContext(TagContext)
 
-      console.log(tagsArray)
+      // console.log(tagsArray)
       // const editor = useSlate()
 
       // console.log(MetaID)
@@ -188,7 +200,7 @@ import { Input } from '@material-ui/core';
      
       // }
 
-      console.log(getcolor())
+      // console.log(getcolor())
 
         const contentStyle = {
           fontWeight: content.bold ? 'bold' : 'normal',
@@ -204,7 +216,7 @@ import { Input } from '@material-ui/core';
         // console.log(Metapairx, 'xd')
         const isMeta = content.meta
 
-        const contentStyleMeta = `${isMeta?'text-green-600 hover:bg-green-500 hover:text-white underline': 'bg-none'}`
+        const contentStyleMeta = `${isMeta?'text-green-600  hover:animate-slide underline': 'bg-none'}`
         
        
         
@@ -297,21 +309,26 @@ import { Input } from '@material-ui/core';
               <div 
                 style={{
                 gridTemplateRows: 'auto 1fr'
-                }} className='App w-full h-full  grid grid-flow-row overflow-hidden' >
-                <div className="w-full  p-1 border-b border-black font-bold "> 
-                <div className='border-b border-black border-dashed text-left flex justify-between' >
-                  <input className='border-none bg-transparent outline-none'
-                  onChange={ontitleChange}
-                  value={title}
-                  placeholder={'Enter title'}
-                  />
+                }} className='App w-full h-full bg-blue-100 grid grid-flow-row overflow-hidden' >
+              <div className="w-full rounded  font-bold overflow-hidden px-2"> 
+                  <div className=' text-left flex justify-between py-1' >
+                      <input className='border-none bg-transparent outline-none'
+                      onChange={ontitleChange}
+                      value={title}
+                      placeholder={'Enter title'}
+                      />
 
-                  <div className='text-gray-300 mr-16' >Last saved</div>
-                </div>
-                <Toolbar
-                mark = {markx}
-                />
-          </div>
+                      <div className='text-gray-300 mr-16' >
+                        Last saved
+                        </div>
+                  </div>
+                  <div className=' border-2 border-slate-400' >
+                    <Toolbar
+                    mark = {markx}
+                    />
+                  </div>
+               
+                 </div>
           <div style={{
                 gridTemplateRows: '1fr 0.1fr'
                 }} className=" main-content grid grid-flow-col overflow-hidden  ">
@@ -340,7 +357,7 @@ import { Input } from '@material-ui/core';
 
           style={{
             padding: '10px',
-            border: '1px solid #999',
+            borderTop: '2px solid #94A3B8',
             textAlign: 'start',
           }}
             />
@@ -435,7 +452,7 @@ const isMarkActive = (editor, format) => {
     // console.log(props.currentTagObj)
 
     return (
-      <Button className= {`text-black font-stick  ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={(event)=>{
+      <Button className= {`text-slate-400 font-header3  ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={(event)=>{
         // props.updateismarksBtnclicked()
         event.preventDefault()
         toggleMark(editor, format, formatid, updatMetaId, currentTagObj)}}

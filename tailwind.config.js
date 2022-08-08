@@ -4,9 +4,32 @@ module.exports = {
     fontFamily: {
       hammer: 'Hammersmith One',
       bai: 'Bai Jamjuree',
-      stick: 'Stick No Bills'
+      stick: 'Stick No Bills',
+      header1: 'Righteous',
+      header2: 'Bree Serif',
+      header3: 'Syncopate'
     },
-    extend: {},
+  
+    extend: {
+      animation: {
+        "fade": "fadeOut .2s ease-in-out",
+        "slide": "slideUp .2s ease-in-out"
+      },
+
+      // that is actual animation
+      keyframes: (theme) => ({
+        'fadeOut': {
+          "0%": { transform: "translateX(-100%)"},
+          "100%": {   transform: "translateX(0)" },
+        },
+        'slideUp': {
+          "0%": { transform: "translate(0%, -100%)",
+          backgroundColor: theme("colors.red.400")},
+          "100%": {   transform: "transform: translate(0%, 0)" ,
+                    backgroundColor: theme("colors.blue.600") },
+        },
+      }),
+    },
   },
   plugins: [],
 }
