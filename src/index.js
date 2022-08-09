@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import 'remixicon/fonts/remixicon.css'
+import "react-toastify/dist/ReactToastify.css";
 
 
 import App from './App';
@@ -23,11 +24,11 @@ root.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme = {theme}>
       <MetacontextProvider>
-        <TagContextProvider>
           <LibaryContextProvider>
+          <TagContextProvider>
           <App />
-          </LibaryContextProvider>
-        </TagContextProvider>
+          </TagContextProvider>
+          </LibaryContextProvider>   
       </MetacontextProvider>
     </ThemeProvider >  
     </StyledEngineProvider>

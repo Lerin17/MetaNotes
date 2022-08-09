@@ -44,7 +44,7 @@ import { Input } from '@material-ui/core';
 
     const {currentTag,  currentTagObj, gettextproseValues, settextproseLocationObj, currentLocationPath, setcurrentLocationPath } = React.useContext(TagContext)
     
-    
+    // console.log(currentTagObj)
 
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
@@ -127,16 +127,13 @@ import { Input } from '@material-ui/core';
 
     //handle ui change for finding tagLocation
       React.useEffect(() => {
-        console.log('switch')
-        console.log(currentLocationPath,'switch')
+        // console.log('switch')
+        // console.log(currentLocationPath,'switch')
         if(currentLocationPath){
          
           swtichCursorLocation();
         }
 
-        // setTimeout(() => {
-        //  
-        // }, 10);
       
       }, [currentLocationPath]);
 
@@ -158,7 +155,7 @@ import { Input } from '@material-ui/core';
       //use tags array to decide colors base on taggs obj for styling
       const {tagsArray} = React.useContext(TagContext)
 
-      // console.log(tagsArray)
+      // console.log(tagsArray, 'everything')
       // const editor = useSlate()
 
       // console.log(MetaID)
@@ -171,12 +168,14 @@ import { Input } from '@material-ui/core';
     //  const getcolor = tagtype && istag? tagsArray.find(item => item.color == tagtype):''
 
      const getcolor = () => {
+      // console.log(tagsArray)
       // console
 
       if(tagtype && istag){
        const colorstyelobj = tagsArray.find(item => item.name == tagtype)
-
+        // console.log(tagtype)
       //  console.log(colorstyelobj)
+      if(colorstyelobj){
         return (
           colorstyelobj.color
         )
@@ -185,7 +184,15 @@ import { Input } from '@material-ui/core';
           ''
         )
       }
+       
+      }else{
+        return (
+          ''
+        )
+      }
      }
+
+    //  console.log(getcolor())
 
       // const gettagstylecolor = if (tagtype && istag){
       //   const tagcolorobj = 

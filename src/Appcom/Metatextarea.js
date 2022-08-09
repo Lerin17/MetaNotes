@@ -59,7 +59,7 @@ import { LibaryContext } from '../context/LibaryContext';
         }, 100);
       
       }else{
-        console.log('eee')
+        // console.log('eee')
       }
     }, [isMetamodal]); 
 

@@ -1,11 +1,50 @@
 import React from "react";
 import _ from "lodash"
+import { LibaryContext } from "./LibaryContext";
+
 
 const TagContext = React.createContext()
 
 
 
+
+
 const TagContextProvider = (props) => {
+    const {setcurrentBookCreatedTagArray, currentBookCreatedTagArray, selectedBook, currentBook, isResettextareas, LibaryArray, bookID} = React.useContext(LibaryContext)
+
+
+
+    const tagsColorPool = [{
+        textPaletteColor: 'white',
+       color: 'purple'}, 
+    { textPaletteColor: 'peru',
+    color: 'black'}, 
+    {textPaletteColor: 'white',
+    color: 'green'},
+    {textPaletteColor: 'white',
+    color: 'maroon'},
+    {textPaletteColor: 'navy',
+    color: 'violet'},
+    {textPaletteColor: 'black',
+    color: 'moccasin'},
+    {textPaletteColor: 'white',
+    color: 'teal'},
+    {textPaletteColor: 'royalblue',
+    color: 'lightsteelblue'}
+]
+
+    const [userCreatedTagsArray, setuserCreatedTagsArray] = React.useState([]);
+    
+    const [newCreatedTagObj, setnewCreatedTagObj] = React.useState({
+        name: null,
+        color: null
+    });
+
+    const [newTagError, setnewTagError] = React.useState({
+        message: null,
+        notificationType: null
+    });
+
     const defaulttags = [
         {name: 'important',
         color:'red'},
@@ -15,9 +54,7 @@ const TagContextProvider = (props) => {
         color:'yellow'}
     ]
 
-    const [userCreatedTagsArray, setuserCreatedTagsArray] = React.useState([]);
-
-    const [tagsArray, settagsArray] = React.useState(defaulttags);
+    const [tagsArray, settagsArray] = React.useState([...defaulttags]);
     const [currentTag, setcurrentTag] = React.useState('important');
     // const test =[]
 
@@ -28,22 +65,97 @@ const TagContextProvider = (props) => {
     const [textproseValue, settextproseValue] = React.useState();
     const [textproseEditor, settextproseEditor] = React.useState();
 
-    //tracks location in textprose as it changes for additional functionality of tracking back location after changes
+    //tracks location in textprose as it changes for additional functionality of tracking back location after changes could be scrapped for an easy end and start placement
     const [textproseLocationObj, settextproseLocationObj] = React.useState();
 
     //contains path required for switching location for tagged items in textprose text area
     const [currentLocationPath, setcurrentLocationPath] = React.useState();
+
+
 
     const gettextproseValues = (value, editor) => {
         settextproseValue(value)
         settextproseEditor(editor)    
     }
 
+    
+    //handle updating of libary and loading up of user tags for each file
+    React.useEffect(() => {
+        // console.log(bookID, 'bookid')
+        // console.log(LibaryArray, 'libaryarray')
+        console.log(selectedBook, 'selectedBook')
+        console.log(bookID, 'bookid')
+        // LibaryArray, bookID
+
+        if(selectedBook){
+            // setcurrentBookCreatedTagArray(selectedBook.bookUserTags)
+                console.log(selectedBook.bookUserTags, 'selected booktags')
+                console.log(defaulttags, 'default')
+
+                settagsArray([...defaulttags, ...selectedBook.bookUserTags]) 
+                setuserCreatedTagsArray(selectedBook.bookUserTags)
+        }else{
+            const availableBookIDs = LibaryArray.map(item => item.bookid)
+            console.log(bookID)
+            console.log(availableBookIDs)
+            console.log(LibaryArray)
+            console.log(!availableBookIDs.some(item =>item == bookID))
+            const isIdAvailable = availableBookIDs.some(item =>item == bookID)
+
+            settagsArray([...defaulttags]) 
+            setuserCreatedTagsArray([])
+            
+            // setcurrentBookCreatedTagArray([])
+            // if(!isIdAvailable){
+            //     console.log('reset')
+            //     settagsArray([...defaulttags]) 
+            // }
+           
+        
+        }
+    }, [ isResettextareas]);
+
+    console.log(tagsArray, 'tagsArray')
+
+    React.useEffect(() => {
+        setcurrentBookCreatedTagArray(userCreatedTagsArray) 
+    }, [tagsArray]);
+
+
     React.useEffect(() => {
         settaggedObjArray(()=>gettaggedObjArray()) 
         // console.log(gettaggedObjArray())
         // console.log(taggedObjArray)
     }, [textproseValue]);
+
+
+    // React.useEffect(() => {
+    //     if(selectedBook){
+    //         console.log(selectedBook, 'selectedBook')
+    //         // setcurrentBookCreatedTagArray(selectedBook.bookUserTags)
+    //         settagsArray([...selectedBook.bookUserTags, ...defaulttags])
+    //     }
+        
+    // }, [selectedBook]);
+
+    React.useEffect(() => {
+        if(newCreatedTagObj.color && newCreatedTagObj.name){
+            // const colorPresent = 
+            setuserCreatedTagsArray(prev => [...prev, newCreatedTagObj])
+            setnewCreatedTagObj({
+                name: null,
+                color: null
+            })  
+        }  
+    }, [newCreatedTagObj]);
+
+    React.useEffect(() => {
+        console.log('look down')
+        settagsArray(prev => [...defaulttags, ...userCreatedTagsArray])
+    }, [userCreatedTagsArray]);
+
+    // console.log('user',userCreatedTagsArray)
+    // console.log('usxr',newCreatedTagObj)
 
     // React.useEffect(() => {
     //     console.log(holdtaggedObjArray)
@@ -120,13 +232,13 @@ const TagContextProvider = (props) => {
             }
         })
 
-        console.log(revisedContent)
-        console.log(getTaggedObj)
-        console.log(tax)
-        console.log(textproseValue)
+        // console.log(revisedContent)
+        // console.log(getTaggedObj)
+        // console.log(tax)
+        // console.log(textproseValue)
 
         let A = tax.map(item => item.taggedArray)
-        console.log(A)
+        // console.log(A)
         A = A.map(item => item)
         A = _.flatten(A)
 
@@ -138,15 +250,15 @@ const TagContextProvider = (props) => {
             path: [item.index, item.item.location]
         }))
 
-        console.log(A)
+        // console.log(A)
         //  console.log(textproseValue[0].children)
 
-        let x = textcontentArray.filter(item => item.tag &&item.tagtype)
+        // let x = textcontentArray.filter(item => item.tag &&item.tagtype)
         
-        x = x.map(item => ({
-            item,
-            index: textcontentArray.indexOf(item) 
-        }))
+        // x = x.map(item => ({
+        //     item,
+        //     index: textcontentArray.indexOf(item) 
+        // }))
 
         
         if(!A.length){
@@ -158,7 +270,7 @@ const TagContextProvider = (props) => {
     }
 
     const findCurrentTagObj = () => {
-        const getcurrentObj = defaulttags.find(item => item.name == currentTag)
+        const getcurrentObj = tagsArray.find(item => item.name == currentTag)
         return getcurrentObj
      }
 
@@ -172,7 +284,8 @@ const TagContextProvider = (props) => {
     }, [currentTag]);
 
 
-
+    // console.log(tagsArray, 'damn')
+    // console.log(newCreatedTagObj, 'damn')
  // Transforms.select(editor, {path: [0, 0], offset: 3});
 
 
@@ -189,18 +302,59 @@ const TagContextProvider = (props) => {
     }
 
     const changeCurrentTag = (tag) => {
+       
         setcurrentTag(tag)
     }
 
-    const locateTaggedItem = () => {
+    // const locateTaggedItem = () => {
 
-    }
+    // }
 
     const changeCurrentLocation = (Locationpath) => {
         setcurrentLocationPath(Locationpath)
         // console.log(Locationpath)
     }
 
+    // console.log(newTagError)
+
+    const handleNewTaginput = (nameInput, colorInput) => {
+     const unavailableColors =   userCreatedTagsArray.map(item => item.color)
+
+     const unavailableNames =   [...defaulttags.map(item => item.name) ,...userCreatedTagsArray.map(item => item.name)]
+    
+    //  console.log(unavailableNames)
+
+     if(!nameInput){
+        setnewTagError({message: `Please input a value for name tag`,
+        notificationType: 'error'})
+        return
+     }
+
+     if(!colorInput){
+        setnewTagError({message: `Please input a value for color tag`,
+        notificationType: 'error'})
+        return
+     }
+     
+    //  console.log(unavailableColors, 'everything')
+     if(unavailableColors.includes(colorInput)){
+        setnewTagError({message: `"${colorInput}" is not available, please select a new tag color`,
+            notificationType: 'error'})
+            // console.log('damn')
+     } 
+     
+     if(unavailableNames.includes(nameInput)){
+        setnewTagError({message: `"${nameInput}" is not available, please select a new tag name`,
+        notificationType: 'error'})
+     }
+     else{
+        setnewCreatedTagObj({
+            name: nameInput,
+            color: colorInput
+        })
+     }
+      
+    }
     // console.log(textproseLocationObj)
     // console.log(textproseValue)
 
@@ -211,7 +365,7 @@ const TagContextProvider = (props) => {
 
 
     return (
-        <TagContext.Provider value={{currentTag, isTagMenu, currentTagObj, toggleisTagMenu, tagsArray, changeCurrentTag, gettextproseValues, taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, settextproseLocationObj, changeCurrentLocation, currentLocationPath, setcurrentLocationPath}}>
+        <TagContext.Provider value={{currentTag, isTagMenu, currentTagObj, toggleisTagMenu, tagsArray, changeCurrentTag, gettextproseValues, taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, settextproseLocationObj, changeCurrentLocation, currentLocationPath, setcurrentLocationPath, tagsColorPool, handleNewTaginput, userCreatedTagsArray, setnewTagError, newTagError}}>
             {props.children}
         </TagContext.Provider>
     )

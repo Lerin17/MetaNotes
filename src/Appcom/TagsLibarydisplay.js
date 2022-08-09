@@ -74,6 +74,7 @@ function TagsLibary(params) {
         
         return (
             <Popover
+                    //  key={key} 
                      isOpen={props.isPopper}
                      positions={[ 'left', 'bottom']} // if you'd like, you can limit the positions
                      padding={10} // adjust padding here!
@@ -89,7 +90,7 @@ function TagsLibary(params) {
                      </div>
                    )}
                     >
-            <div key={props.i} className={`${props.isPopper?'text-white bg-gray-500':''} p-2 pr-0 my-2 border-2 border-gray-600 transition-all hover:scale-105 hover:border-none`} >
+            <div className={`${props.isPopper?'text-white bg-gray-500':''} p-2 pr-0 my-2 border-2 border-gray-600 transition-all hover:scale-105 hover:border-none`} >
                 {/* <div className="fixed" >
                     cdd
                 </div> */}
@@ -137,7 +138,7 @@ function TagsLibary(params) {
         index = {item.index}
         location = {item.location}
         path = {item.path}
-        i = {i}
+        key = {i}
         isPopper = {item.isPopper}
         />
     ) ):'No items have been tagged'

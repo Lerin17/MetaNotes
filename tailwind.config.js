@@ -13,7 +13,8 @@ module.exports = {
     extend: {
       animation: {
         "fade": "fadeOut .2s ease-in-out",
-        "slide": "slideUp .2s ease-in-out"
+        "slide": "slideUp .2s ease-in-out",
+        "fadeVertical": 'slideDown .3s ease-in-out'
       },
 
       // that is actual animation
@@ -28,6 +29,12 @@ module.exports = {
           "100%": {   transform: "transform: translate(0%, 0)" ,
                     backgroundColor: theme("colors.blue.600") },
         },
+        'slideDown': {
+          "0%": { transform: "translateY(100%)",
+                opacity: '0%'},
+          "100%": {   transform: "translateY(0)" ,
+                opacity: '100%'},
+        }
       }),
     },
   },
