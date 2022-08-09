@@ -15,6 +15,7 @@ import { LibaryContext } from "../context/LibaryContext";
 import { TagContext } from "../context/tagContext";
 
 import { Accordion, AccordionDetails, AccordionSummary, ClickAwayListener, Grow, Menu, MenuItem, MenuList, Popper } from "@material-ui/core";
+import { Slide, toast, ToastContainer } from "react-toastify";
 
 
 
@@ -48,10 +49,68 @@ function Sidebar (params) {
 
 
     const classes = usestyle()
-    const {Createbookentry, isLibarymodal,  toggleLibaryModal, LibaryArray, toggleResetTextareas, openBook} = React.useContext(LibaryContext)
+    const {Createbookentry, isLibarymodal,  toggleLibaryModal, LibaryArray, toggleResetTextareas, openBook, selectedBook} = React.useContext(LibaryContext)
 
-    const {currentTag, isTagMenu, toggleisTagMenu, tagsArray, changeCurrentTag, taggedObjArray, toggleisTagLibaryDisplay } = React.useContext(TagContext)
+    const {currentTag, isTagMenu, toggleisTagMenu, tagsArray, changeCurrentTag, taggedObjArray, toggleisTagLibaryDisplay,tagsColorPool, handleNewTaginput, userCreatedTagsArray, setnewTagError, newTagError } = React.useContext(TagContext)
 
+    const [currentNewTagColor, setcurrentNewTagColor] = React.useState(null);
+    const [currentNewTagName, setcurrentNewTagName] = React.useState(null);
+
+    //used for ui displaying selecting file in menu
+    const [currentSelectedFileInMenu, setcurrentSelectedFileInMenu] = React.useState();
+    const [isNewtagPalette, setisNewtagPalette] = React.useState(false);
+
+    const notifyNewTagErrors = () => toast.error(newTagError.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        transition: Slide,
+        theme: 'dark'
+        });
+
+
+    const notifySaveFileErrors = () => toast.error(newTagError.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        })
+
+    // React.useEffect(() => {
+        
+    // }, []);
+
+    React.useEffect(() => {
+        if(newTagError.message && newTagError.notificationType){
+            notifyNewTagErrors() 
+            setnewTagError({message: null,
+                notificationType: null})
+        }
+      
+    }, [newTagError]);
+
+    //reset new tag inputs
+    React.useEffect(() => {
+        setcurrentNewTagName('')
+        setcurrentNewTagColor(null)
+        setisNewtagPalette(false)
+    }, [tagsArray]);
+
+    React.useEffect(() => {
+        if(selectedBook){
+            setcurrentSelectedFileInMenu(selectedBook.bookid)
+        }
+       
+    }, [selectedBook]);
+
+   
     // const [open, setOpen] = React.useState(false);
     
   
@@ -88,7 +147,7 @@ function Sidebar (params) {
 
     const Filecomponent = (props) => {
         return (
-            <div className="w-20 px-1 bg-gray-600 flex flex-col " >
+            <div className={`w-20 px-1 bg-gray-600 flex flex-col ${currentSelectedFileInMenu == props.bookid?'border-4':'border-none'}`} >
                 <div className="  self-center "  >
                 <IconButton onClick={()=>openBook(props.bookid)} className="hover:bg-transparent py-0 " >
                 <i className=" ri-file-list-2-line text-gray-300 "></i>
@@ -109,22 +168,24 @@ function Sidebar (params) {
       
 
         const colors = [
-            {name:'red', value: red}, 
-            {name:'blue', value:blue}, 
-            {name:'grey', value:grey}, 
-            {name:'yellow', value:yellow}
+            {name:'red', value: '#ff4500'}, 
+            {name:'blue', value: "#4169e1"}, 
+            // {name:'grey', value:grey}, 
+            {name:'yellow', value:"	#ffd700"},
+            {name: 'purple', value:"#9932cc"},
+            {name: 'black', value:"#000000"}
         ]
 
         const currentcolor = colors.find(item => item.name == tag)
         const iscurrenttag = currentTag == props.name
     
 
-        console.log(currentcolor)
-        const style = `${iscurrenttag?'border-4':'border-none'} w-full px-1`
+        // console.log(currentcolor)
+        const style = `${iscurrenttag?'border-2':'border-none'} w-full px-1`
         // <Box sx={{ color: 'text.secondary' }}>Sessions</Box>
 
         return(
-            <Box  sx={{ backgroundColor: currentcolor.value[700]}} className={style}>
+            <Box  sx={{ backgroundColor: currentcolor.value}} className={style}>
             {/* <div className="  "  >
             <IconButton className="hover:bg-transparent py-0 " >
             <i className=" ri-file-list-2-line text-gray-300 "></i>
@@ -145,6 +206,48 @@ function Sidebar (params) {
         )
     }
 
+    const TagsColorPoolPalette = () => {
+    const unavailableColors = userCreatedTagsArray.map(item => item.color)
+    const unavailableName = userCreatedTagsArray.map(item => item.name)
+
+ 
+    // console.log(unavailableColors)
+  
+
+    // const isColorUnavailable = (color) => {
+    //     if(unavailableColors.includes(color)){
+    //          createError(color)
+    //     }else{
+    //         setcurrentNewTagColor(color)
+    //     } }
+  
+        // const createError = (color, name) => {
+        //     setnewTagError({message: `${color} is not available`,
+        //     notificationType: 'error'
+        // })
+        // }
+
+    const display =  tagsColorPool.map((item,i) => <div key={i} onClick={()=>setcurrentNewTagColor(item.color)} className={`w-1/4 font-header2 text-xs capitalize border ${unavailableColors.includes(item.color)?'opacity-20 ':'opacity-100 hover:scale-105'} transition-all ${currentNewTagColor == item.color? 'border-4 border-white rounded': 'border-none'}`} style={{background: item.color,
+        color: item.textPaletteColor}} >
+            <div style={{
+                borderBottom: `${item.textPaletteColor} 2px solid`
+            }} className="" >
+                 {item.color}
+            </div>
+           
+        </div>)
+        
+        return (
+            <div className="flex flex-wrap w-full  h-32" >
+                {display}
+            </div>
+            // color: 'purple'}, 
+            // { textPaletteColor 
+        )
+    }
+
+    // console.log(TagsColorPoolPalette())
+
     const Tagsdisplay = tagsArray.length? tagsArray.map((item, i)=>{
     return (
         <div key={i} >
@@ -161,6 +264,7 @@ function Sidebar (params) {
         key ={i}
         title= {item.bookTitle}
         bookid = {item.bookid}
+        // isFileSelected = {false}
         />
     </div> ):'No items available'
 
@@ -184,7 +288,8 @@ function Sidebar (params) {
               
         <Sidebarbuttoncom
         icon = {
-            <svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M12 6.453l9 8.375v9.172h-6v-6h-6v6h-6v-9.172l9-8.375zm12 5.695l-12-11.148-12 11.133 1.361 1.465 10.639-9.868 10.639 9.883 1.361-1.465z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M12 6.453l9 8.375v9.172h-6v-6h-6v6h-6v-9.172l9-8.375zm12 5.695l-12-11.148-12 11.133 1.361 1.465 10.639-9.868 10.639 9.883 1.361-1.465z"/>
+            </svg>
         }
         text = 'home'
         color = '#224341'
@@ -223,14 +328,18 @@ function Sidebar (params) {
         />
 
         <Sidebarbuttoncom
-        icon = {<svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M10.606 0h-10.606v10.609l13.393 13.391 10.607-10.606-13.394-13.394zm-7.02 6.414c-.782-.785-.781-2.047 0-2.83.782-.782 2.049-.779 2.829-.001.783.783.782 2.048 0 2.831-.783.781-2.046.781-2.829 0zm9.807 14.757l-8.484-8.484 7.778-7.778 8.486 8.485-7.78 7.777zm3.534-6.36l-5.656-5.656.707-.709 5.656 5.657-.707.708zm-1.414 1.414l-5.656-5.656.707-.707 5.656 5.656-.707.707zm-3.535-.707l-3.534-3.536.707-.706 3.535 3.535-.708.707z"/></svg>}
+        icon = {
+        <svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M10.606 0h-10.606v10.609l13.393 13.391 10.607-10.606-13.394-13.394zm-7.02 6.414c-.782-.785-.781-2.047 0-2.83.782-.782 2.049-.779 2.829-.001.783.783.782 2.048 0 2.831-.783.781-2.046.781-2.829 0zm9.807 14.757l-8.484-8.484 7.778-7.778 8.486 8.485-7.78 7.777zm3.534-6.36l-5.656-5.656.707-.709 5.656 5.657-.707.708zm-1.414 1.414l-5.656-5.656.707-.707 5.656 5.656-.707.707zm-3.535-.707l-3.534-3.536.707-.706 3.535 3.535-.708.707z"/></svg>
+    }
         text = 'tags'
         handleClick = {toggleisTagMenu}
         color = '#FB3E2B'
         />
 
         <Sidebarbuttoncom
-        icon = {<svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M18.5 15c-2.483 0-4.5 2.015-4.5 4.5s2.017 4.5 4.5 4.5 4.5-2.015 4.5-4.5-2.017-4.5-4.5-4.5zm2.5 5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1zm-7.18 4h-12.82v-24h8.409c4.857 0 3.335 8 3.335 8 3.009-.745 8.256-.419 8.256 3v2.501c-.771-.322-1.614-.501-2.5-.501-3.584 0-6.5 2.916-6.5 6.5 0 1.747.696 3.331 1.82 4.5zm-.252-23.925c2.202 1.174 5.938 4.883 7.432 6.881-1.286-.9-4.044-1.657-6.091-1.179.222-1.468-.185-4.534-1.341-5.702z"/></svg>}
+        icon = {
+        <svg xmlns="http://www.w3.org/2000/svg" className="text-white fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M18.5 15c-2.483 0-4.5 2.015-4.5 4.5s2.017 4.5 4.5 4.5 4.5-2.015 4.5-4.5-2.017-4.5-4.5-4.5zm2.5 5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1zm-7.18 4h-12.82v-24h8.409c4.857 0 3.335 8 3.335 8 3.009-.745 8.256-.419 8.256 3v2.501c-.771-.322-1.614-.501-2.5-.501-3.584 0-6.5 2.916-6.5 6.5 0 1.747.696 3.331 1.82 4.5zm-.252-23.925c2.202 1.174 5.938 4.883 7.432 6.881-1.286-.9-4.044-1.657-6.091-1.179.222-1.468-.185-4.534-1.341-5.702z"/></svg>
+        }
         text = 'New'
         handleClick = {toggleResetTextareas}
         color = '#DCD9D8'
@@ -255,7 +364,7 @@ function Sidebar (params) {
             <div>
                 <div className="bg-gray-800 py-1 text-white font-bold" >Libary</div>
 
-                <div className="flex wrap border-2 border-black" > 
+                <div className="flex wrap " > 
                     {Filedisplay}
                     {/* <div className="w-20 p-2 bg-gray-600 " >
                     <IconButton className="hover:bg-transparent py-0" >
@@ -270,12 +379,15 @@ function Sidebar (params) {
 
       <Modal
         open={isTagMenu}
-        onClose={toggleisTagMenu}
+        onClose={()=>{toggleisTagMenu()
+            setisNewtagPalette(false)}}
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >
         <Box className={styles} sx={{ width: 400 , height: 600 }}>
+       
             <div>
+            <ToastContainer />
                 <div className="bg-gray-800 py-1 text-white font-bold" >Tags</div>
 
                 <div className="flex flex-col" > 
@@ -286,15 +398,40 @@ function Sidebar (params) {
                     </IconButton>
                     <div>Name</div>    
                     </div> */}
+                    <div className="px-2 bg-white border-2 border-black border-dashed text-2xl font-bold flex items-center" >
+                        <div className="w-2/3" >
+                            <input type="text" 
+                            className="bg-transparent font-bold w-full"
+                            placeholder="Create new tag"
+                            value={currentNewTagName}
+                            onChange={(event)=>setcurrentNewTagName(event.target.value)}
+                            />
+                        </div>
+                       
+                        <div className="w-1/3" >
+                        <IconButton onClick={()=>setisNewtagPalette(prev => !prev)} className="hover:bg-transparent"  >
+                        <i className="ri-palette-fill text-yellow-500"></i>
+                        </IconButton>
+
+                        <IconButton className="hover:bg-transparent" onClick={()=>handleNewTaginput(currentNewTagName, currentNewTagColor)} >
+                        <i  className="ri-save-2-line text-black"></i>
+                        </IconButton>
+
+                        
+                        </div>
+                        
+                    </div>
+                   <div className={`${isNewtagPalette?'animate-fadeVertical block ':'hidden'}`} >
+                    <TagsColorPoolPalette/>
+                   </div>
+                    
+                    
                 </div>
             </div>
         </Box>
       </Modal>
     </div>
-
-</div>
-    )
-    
+</div>)
 }
 
 export default Sidebar

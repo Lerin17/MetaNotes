@@ -10,6 +10,8 @@ const LibaryContextProvider = (props) => {
     const [currentBookTextProse, setcurrentBookTextProse] = React.useState({});
     const [currentBookMetaArray, setcurrentBookMetaArray] = React.useState([]);
 
+    const [currentBookCreatedTagArray, setcurrentBookCreatedTagArray] = React.useState([]);
+
     const randomnumid = () => Math.floor(Math.random() * 100000000000)
     const [bookID, setbookID] = React.useState(randomnumid());
 
@@ -17,6 +19,11 @@ const LibaryContextProvider = (props) => {
     const [selectedBook, setselectedBook] = React.useState();
     // const [history, sethistory] = React.useState();
 
+    //file save error and notification
+    const [newFileSaveError, setnewFileSaveError] = React.useState({
+        message: null,
+        notificationType: null
+    });
 
 
     //START additional for ui config and reset of textprose
@@ -39,7 +46,7 @@ const LibaryContextProvider = (props) => {
         }else if(currentBook){
         const Libaryarrayids = LibaryArray.map(item => item.bookid ) 
         console.log(currentBook)
-        console.log(Libaryarrayids)
+        // console.log(Libaryarrayids)
 
         console.log(LibaryArray.some(item => Libaryarrayids.includes(item.bookid)), 'does it include')
 
@@ -52,7 +59,8 @@ const LibaryContextProvider = (props) => {
             setLibaryArray(prev => prev.map(item => item.bookid == bookID?{...item,
                 bookTitle:currentBookTitle,
                 bookTextprosecontent:currentBookTextProse,
-                 bookMetaarray:currentBookMetaArray}:item))
+                 bookMetaarray:currentBookMetaArray,
+                 bookUserTags: currentBookCreatedTagArray}:item))
         }else{
             setLibaryArray(prev => [...prev, currentBook])
         }
@@ -103,11 +111,26 @@ const LibaryContextProvider = (props) => {
         // }, 100);
         setTimeout(() => {
          toggleResetTextareas() 
+         
         }, 100);
 
         
         // console.log(book, 'open book')
     }
+
+    //clearText area checks for recent saves and advices on updates before clearing textArea
+
+    const ClearTextArea = () => {
+        const previousSave =  LibaryArray.find(item => item.bookid == bookID)
+
+        // if(){
+
+        // }
+
+        toggleResetTextareas() 
+    }
+
+
 
     // React.useEffect(() => {
     //     setselectedBook()
@@ -161,7 +184,8 @@ const LibaryContextProvider = (props) => {
         bookid: bookID,
         bookTitle:currentBookTitle,
         bookTextprosecontent: currentBookTextProse ,
-        bookMetaarray : currentBookMetaArray      
+        bookMetaarray : currentBookMetaArray,     
+        bookUserTags: currentBookCreatedTagArray
        })
    }
 
@@ -171,7 +195,7 @@ const LibaryContextProvider = (props) => {
     
     
     return (
-        <LibaryContext.Provider value={{LibaryArray,updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal, toggleResetTextareas, isResettextareas, openBook, currentBook, bookID, selectedBook, setselectedBook,  setbookID, currentBookMetaArray}} >
+        <LibaryContext.Provider value={{LibaryArray,updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal, toggleResetTextareas, isResettextareas, openBook, currentBook, bookID, selectedBook, setselectedBook,  setbookID, currentBookMetaArray, setcurrentBookCreatedTagArray, currentBookCreatedTagArray,}} >
              {props.children}
         </LibaryContext.Provider>    
     )
