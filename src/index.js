@@ -15,6 +15,8 @@ import Leftbar from './components/leftbar';
 import { MetacontextProvider } from './context/MetamodalContext';
 import { LibaryContextProvider } from './context/LibaryContext';
 import { TagContextProvider } from './context/tagContext';
+import { DashboardContextProvider } from './context/DashboardContext';
+
 
 
 
@@ -26,7 +28,9 @@ root.render(
       <MetacontextProvider>
           <LibaryContextProvider>
           <TagContextProvider>
-          <App />
+            <DashboardContextProvider>
+            <App />
+            </DashboardContextProvider>
           </TagContextProvider>
           </LibaryContextProvider>   
       </MetacontextProvider>

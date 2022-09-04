@@ -1,10 +1,16 @@
 import React from 'react'
+import _ from "lodash";
+
+
 
 const LibaryContext = React.createContext()
 
 const LibaryContextProvider = (props) => {
 
+ 
+
     const [LibaryArray, setLibaryArray] = React.useState([]);
+    const [FolderArray, setFolderArray] = React.useState([]);
 
     const [currentBookTitle, setcurrentBookTitle] = React.useState('');
     const [currentBookTextProse, setcurrentBookTextProse] = React.useState({});
@@ -19,6 +25,25 @@ const LibaryContextProvider = (props) => {
     const [selectedBook, setselectedBook] = React.useState();
     // const [history, sethistory] = React.useState();
 
+    //hold folder values START
+
+    //current folder is used for saving and loading folder values
+    const [currentFolder, setcurrentFolder] = React.useState({
+        name: null,
+        description: null,
+        folderId: null,
+        content: []
+    });
+    const [selectedFolder, setselectedFolder] = React.useState();
+
+    const [currentFolderName, setcurrentFolderName] = React.useState();
+    const [currentFolderDescription, setcurrentFolderDescription] = React.useState();
+    const [currentFolderID, setcurrentFolderID] = React.useState(randomnumid());
+    const [currentFolderContent, setcurrentFolderContent] = React.useState([]);  
+    //hold folder values END
+
+    // const [selectedBook, setselectedBook] = useState();
+
     //file save error and notification
     const [newFileSaveError, setnewFileSaveError] = React.useState({
         message: null,
@@ -28,6 +53,7 @@ const LibaryContextProvider = (props) => {
 
     //START additional for ui config and reset of textprose
     const [isLibarymodal, setisLibarymodal] = React.useState(false);
+    const [isNewFolderInterface, setisNewFolderInterface] = React.useState(false);
     const [isResettextareas, setisResettextareas] = React.useState(false);
     //additional for ui config and reset of textprose end
 
@@ -53,7 +79,7 @@ const LibaryContextProvider = (props) => {
         console.log(Libaryarrayids.includes(bookID))
         console.log(bookID, 'bookid')
 
-
+      
         if(Libaryarrayids.some(item => item == bookID)){
             // console.log('cothela')
             setLibaryArray(prev => prev.map(item => item.bookid == bookID?{...item,
@@ -80,6 +106,11 @@ const LibaryContextProvider = (props) => {
    
     const toggleLibaryModal = () => {
         setisLibarymodal(prev => !prev)
+    }
+
+
+    const toggleisNewFolderInterface =() => {
+        setisNewFolderInterface(prev => !prev)
     }
 
     const toggleResetTextareas = () => {
@@ -121,9 +152,38 @@ const LibaryContextProvider = (props) => {
     //clearText area checks for recent saves and advices on updates before clearing textArea
 
     const ClearTextArea = () => {
-        const previousSave =  LibaryArray.find(item => item.bookid == bookID)
+        const previousSaveContent =  LibaryArray.find(item => item.bookid == bookID)
 
-        // if(){
+        const currentFileContent = {
+            bookid: bookID,
+            bookTitle:currentBookTitle,
+            bookTextprosecontent: currentBookTextProse ,
+            bookMetaarray : currentBookMetaArray,     
+            bookUserTags: currentBookCreatedTagArray
+           } 
+
+           console.log(previousSaveContent, 'previousSaveContent')
+
+
+        if(!previousSaveContent){
+            console.log('damn')
+            setnewFileSaveError({
+                message: 'This file has never been saved',
+                notificationType: 'Error'
+            })
+            return
+        }
+
+        const isFileSaved = _.isEqual(previousSaveContent , currentFileContent)
+
+        if(!isFileSaved){
+            setnewFileSaveError({
+                message: 'This file has not been saved recently',
+                notificationType: 'Error'
+            })
+            return
+        }
+            // if(){
 
         // }
 
@@ -189,13 +249,134 @@ const LibaryContextProvider = (props) => {
        })
    }
 
+   //code below is responsible for inputing folders values from the sidebar START
+
+   const getFolderName = (nameValue) => {
+    setcurrentFolderName(nameValue)
+   }
+
+   const getFolderDescription = (descriptionValue) => {
+    setcurrentFolderDescription(descriptionValue)
+   }
+
+   //the function below handles the addition and removal of books from current folders 
+
+   const updateCurrentFolderContent = (book) => {
+    const currentFolderContentIDs = currentFolderContent.map(item => item.bookid)
+
+    console.log(currentFolderContentIDs,'ids')
+    // console.log()
+
+    if(currentFolderContentIDs.includes(book.bookid)){
+        console.log('all right')
+        setcurrentFolderContent(prev => prev.filter(item => item.bookid !== book.bookid))
+    }else{
+        setcurrentFolderContent(prev => [...prev, book])
+    }        
+   }
+
+   const saveCurrentFolder = () => {
+    // setcurrentFolderID(randomnumid())
+
+    setcurrentFolder({
+        name: currentFolderName,
+        description: currentFolderDescription,
+        folderId: currentFolderID,
+        content: currentFolderContent
+    })
+   }
+
+   //setting CurrentFolder to null values, so the NewFolderInterfsce is cleared, a change in current folder will prompt an update in the folderArray, but only for a currentFOlder without null values
+
+   const clearCurrentFolder = () => {
+    // const previousFolder = FolderArray.find(item =>item.folderId == currentFolderID)
+
+    // const isFileSaved = _.isEqual(previousSaveContent , currentFileContent)
+
+    // setcurr
+    setcurrentFolderID(randomnumid())
+    setcurrentFolderName('')
+    setcurrentFolderDescription('')
+    setcurrentFolderContent([])
+
+    // setcurrentFolder({
+    //     name: null,
+    //     description: null,
+    //     folderId: null,
+    //     content: []
+    // })
+   }
+
+   const openFolder = (id) => {
+    const getSelectedFolder = FolderArray.find(item =>item.folderId == id)
+
+    setisNewFolderInterface(true)
+    // toggleisNewFolderInterface()
+    setselectedFolder(getSelectedFolder)
+    console.log(getSelectedFolder, 'selectedFolder')
+
+   }
+
+   React.useEffect(() => {
+    if(selectedFolder){
+        // name: currentFolderName,
+        // description: currentFolderDescription,
+        // folderId: currentFolderID,
+        // content: currentFolderContent
+        console.log(selectedFolder, 'truexselected')
+        setcurrentFolderName(selectedFolder.name)
+        setcurrentFolderDescription(selectedFolder.description)
+        setcurrentFolderContent(selectedFolder.content)
+        setcurrentFolderID(selectedFolder.folderId)
+
+        setcurrentFolder(selectedFolder)
+        setselectedFolder(null)
+        
+    }
+   }, [selectedFolder]);
+
+   console.log(currentFolder, 'getselected')
+
+   //effect below checks folders and updates them in the central FolderArray as it is appropriate
+   React.useEffect(() => {
+    //checking if the currentFolder has a name because  other properties can be added later
+
+    if(!FolderArray.length && currentFolder.name){
+        setFolderArray([currentFolder])
+    }else if(currentFolder.name){
+        const FolderArrayIDS = FolderArray.map(item => item.folderId)
+        console.log(currentFolderID, 'current')
+        if(FolderArrayIDS.some(item => item == currentFolderID)){
+            setFolderArray(prev => prev.map(item => item.folderId == currentFolderID?{
+                ...item,
+                name: currentFolderName,
+                description: currentFolderDescription,
+                content: currentFolderContent
+            }:item))
+        }else{
+            setFolderArray(prev => [...prev, currentFolder])
+        }     
+    }
+    
+   }, [currentFolder]);
+
+   console.log(FolderArray, 'folderArray')
+
+   
+//    const [currentFolderName, setcurrentFolderName] = React.useState();
+//    const [currentFolderDescription, setcurrentFolderDescription] = React.useState();
+//    const [currentFolderID, setcurrentFolderID] = React.useState(randomnumid());
+//    const [currentFolderContent, setcurrentFolderContent] = React.useState([]);
+
+   //code below is responsible for inputing folders values from the sidebar END
+ 
 //    console.log(currentBook)
 
 
     
     
     return (
-        <LibaryContext.Provider value={{LibaryArray,updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal, toggleResetTextareas, isResettextareas, openBook, currentBook, bookID, selectedBook, setselectedBook,  setbookID, currentBookMetaArray, setcurrentBookCreatedTagArray, currentBookCreatedTagArray,}} >
+        <LibaryContext.Provider value={{LibaryArray,updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal, toggleResetTextareas, isResettextareas, openBook, currentBook, bookID, selectedBook, setselectedBook,  setbookID, currentBookMetaArray, setcurrentBookCreatedTagArray, currentBookCreatedTagArray, newFileSaveError, setnewFileSaveError, ClearTextArea, getFolderDescription, getFolderName, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, currentFolderContent, saveCurrentFolder, currentFolderName, currentFolderDescription,FolderArray,clearCurrentFolder,openFolder,setcurrentFolderDescription, setcurrentFolderName, currentFolderID }} >
              {props.children}
         </LibaryContext.Provider>    
     )

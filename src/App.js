@@ -55,8 +55,8 @@ function App() {
 
    return(
  <div className='h-screen' >
-     {isLoadingpage &&  <Loadingpage
-    isopen = {isLoadingpage}/>}
+     {/* {isLoadingpage &&  <Loadingpage
+    isopen = {isLoadingpage}/>} */}
    
     {/* {!isLoadingpage && <Landingpage/>} */}
     <Prose

@@ -221,7 +221,9 @@ import { Input } from '@material-ui/core';
         const [Metapairidxx, setMetapairidxx] = React.useState(1);
 
         // console.log(Metapairx, 'xd')
-        const isMeta = content.meta
+        // isMeta is run with cotent.meta noramlly to switch back to istag,  
+        const isMeta = istag
+        // const isMeta = content.meta
 
         const contentStyleMeta = `${isMeta?'text-green-600  hover:animate-slide underline': 'bg-none'}`
         
@@ -265,8 +267,8 @@ import { Input } from '@material-ui/core';
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.qoutes} icon = 'Q' format = 'qoutes' />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header1} icon = 'H1' format = 'header1' />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'H2' format = 'header2' /> 
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'M' format = 'meta' formatid = {MetaID} updatMetaId = {updatMetaId}  /> 
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'T' format = 'tag' currentTagObj={currentTagObj}     /> 
+      {/* <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'M' format = 'meta' formatid = {MetaID} updatMetaId = {updatMetaId}  />  */}
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'T' format = 'tag' currentTagObj={currentTagObj}   formatid = {MetaID} updatMetaId = {updatMetaId} /> 
       </div>
     )
    }
@@ -316,16 +318,16 @@ import { Input } from '@material-ui/core';
               <div 
                 style={{
                 gridTemplateRows: 'auto 1fr'
-                }} className='App w-full h-full bg-blue-100 grid grid-flow-row overflow-hidden' >
+                }} className='App w-full h-full bg-white grid grid-flow-row overflow-hidden' >
               <div className="w-full rounded  font-bold overflow-hidden px-2"> 
                   <div className=' text-left flex justify-between py-1' >
-                      <input className='border-none bg-transparent outline-none'
+                      <input className='border-none bg-transparent outline-none font-header5 font-bold text-gray-300'
                       onChange={ontitleChange}
                       value={title}
                       placeholder={'Enter title'}
                       />
 
-                      <div className='text-gray-300 mr-16' >
+                      <div className='text-gray-300 mr-16 font-header5' >
                         Last saved
                         </div>
                   </div>
@@ -459,7 +461,7 @@ const isMarkActive = (editor, format) => {
     // console.log(props.currentTagObj)
 
     return (
-      <Button className= {`text-slate-400 font-header3  ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={(event)=>{
+      <Button className= {`text-slate-400 font-header3 transition-all hover:scale-105 hover:bg-slate-400 hover:text-white  ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={(event)=>{
         // props.updateismarksBtnclicked()
         event.preventDefault()
         toggleMark(editor, format, formatid, updatMetaId, currentTagObj)}}
