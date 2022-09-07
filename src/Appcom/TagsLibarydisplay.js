@@ -38,24 +38,44 @@ function TagsLibary(params) {
 
 
     const toggleIsPopper = (text) => {
+        console.log('cow')
+
+
         if(TagItemArray.length > 0){
-            setTagItemArray(prev => prev.map(item => item.text == text?{
-                ...item,
-                isPopper: !item.isPopper
-            }:item))
+            const itemswPopperOpen = TagItemArray.some(item => item.isPopper == true)
+
+            console.log(itemswPopperOpen)
+
+            if(itemswPopperOpen){
+                return
+            }else{
+                setTagItemArray(prev => prev.map(item => item.text == text?{
+                    ...item,
+                    isPopper: true
+                }:item))
+            }
+
         }
         
     }
 
     const toggleAllIsPopperFalse = () => {
+
         if(TagItemArray.length > 0){
-            setTagItemArray(prev => prev.map(item => (
-              {
-                ...item,
-                isPopper: false
-              } 
-            )
-              ))
+            const itemswPopperFalse = TagItemArray.some(item => item.isPopper == false)
+
+            if(itemswPopperFalse){
+                return
+            }else{
+                setTagItemArray(prev => prev.map(item => (
+                    {
+                      ...item,
+                      isPopper: false
+                    } 
+                  )))
+            }
+
+            
         }
     }
 
@@ -108,7 +128,7 @@ function TagsLibary(params) {
                 </div>
                 <div className="flex w-1/2 justify-between" >
                  
-                        <div className="cursor-pointer" onMouseLeave={() => toggleAllIsPopperFalse()} onClick={()=>toggleIsPopper(text)} >
+                        <div className="cursor-pointer" onMouseLeave={() => toggleAllIsPopperFalse()} onMouseOver={()=>toggleIsPopper(text)} >
                             {subText} {subText.length > 15?'....':''}
                         </div>
 
