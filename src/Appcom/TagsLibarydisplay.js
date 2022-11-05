@@ -133,7 +133,7 @@ function TagsLibary(params) {
                         </div>
 
                         <div onClick={()=>changeCurrentLocation(LocationPath)} className="hover:text-white cursor-pointer" >
-                        <i class="ri-map-pin-5-line"></i>
+                        <i className="ri-map-pin-5-line"></i>
                         </div>
              
                 </div>   
@@ -142,7 +142,7 @@ function TagsLibary(params) {
         )
     }
 
-
+  
 
     // let jam = new Array(22)
 

@@ -14,6 +14,7 @@ function MetacontextProvider(props) {
  const [MetaArray, setMetaArray] = React.useState([]);
 //  const MetaArrayx =  [...MetaArray]
  const [currentMeta, setcurrentMeta] = React.useState();
+ const [currentMetaPopoverContent, setcurrentMetaPopoverContent] = React.useState('');
  const [currentMetacontent, setcurrentMetacontent] = React.useState('');
 //  const [testNum, settestNum] = React.useState(1);
 
@@ -55,6 +56,28 @@ function createCurrentMetaObj(Metaid) {
   )
 }
 
+React.useEffect(() => {
+  
+}, []);
+
+console.log(MetaArray, 'metaArray')
+
+// const displayMetaContentPopup = (contentData) => {
+//   // console.log(Id, 'id passed')
+
+//   console.log(MetaArray, 'metaArray')
+
+//   const pickedMeta = MetaArray.find(item => item.id == contentData.metaid)
+//   console.log('picked', pickedMeta)
+//   return pickedMeta
+
+//   // if(pickedMeta){
+//   //   setcurrentMetaPopoverContent(pickedMeta)
+//   // }
+ 
+//   // console.log()
+// }
+
 
 
 // function CreateMetaID(isMeta) {
@@ -82,8 +105,8 @@ function createCurrentMetaObj(Metaid) {
   if(MetaArray.length < 1){
     return false
   }
-  const xisSelectedMetalready = MetaArray.some(item => item.id == id)
-  const SelectedMetaobj = MetaArray.find(item => item.id == id)
+  const xisSelectedMetalready = MetaArray.some(item => item.id === id)
+  const SelectedMetaobj = MetaArray.find(item => item.id === id)
 
   if(xisSelectedMetalready){
     setcurrentMeta(SelectedMetaobj)
@@ -133,7 +156,7 @@ setTextproseID(id)
 
 
 return (
-    <Metacontext.Provider value = {{isMetamodal, toggleMetamodal, MetaID, MetaArray, setMetaArray, updateMetaArray, currentMeta, currentMetacontent,  updateCurrentMeta, sortSelectedMeta, MetaID, updateTextProseId, updatMetaId, createCurrentMetaObj, isSelectedMetalready}} >
+    <Metacontext.Provider value = {{isMetamodal, toggleMetamodal, MetaID, MetaArray, setMetaArray, updateMetaArray, currentMeta, currentMetacontent,  updateCurrentMeta, sortSelectedMeta, MetaID, updateTextProseId, updatMetaId, createCurrentMetaObj, isSelectedMetalready, currentMetaPopoverContent }} >
         {props.children}
     </Metacontext.Provider>
 )

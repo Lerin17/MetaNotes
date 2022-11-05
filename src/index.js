@@ -16,6 +16,7 @@ import { MetacontextProvider } from './context/MetamodalContext';
 import { LibaryContextProvider } from './context/LibaryContext';
 import { TagContextProvider } from './context/tagContext';
 import { DashboardContextProvider } from './context/DashboardContext';
+import { BionicContextProvider } from './context/bionicContext';
 
 
 
@@ -29,7 +30,9 @@ root.render(
           <LibaryContextProvider>
           <TagContextProvider>
             <DashboardContextProvider>
-            <App />
+                <BionicContextProvider>
+                  <App />
+                </BionicContextProvider>
             </DashboardContextProvider>
           </TagContextProvider>
           </LibaryContextProvider>   

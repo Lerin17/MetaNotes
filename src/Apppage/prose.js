@@ -16,6 +16,7 @@ import TagsLibary from "../Appcom/TagsLibarydisplay";
 
 import { Box,  Fade } from "@mui/material";
 import Dashboard from "../Appcom/Dashboard";
+import { bionicContext } from "../context/bionicContext";
 
 
 
@@ -26,6 +27,9 @@ function Prose(params) {
     const {isLibarymodal, isResettextareas} = React.useContext(LibaryContext)
 
     const {taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, isTagMenu} = React.useContext(TagContext)
+
+    const {isActivateBionicText} = React.useContext(bionicContext)
+    const [proseKeyValue, setproseKeyValue] = React.useState(1);
 
     // const {taggedObjArray, } = React.useContext(TagContext)
 
@@ -61,7 +65,29 @@ function Prose(params) {
 
     // const [isSlatetexthover, setisSlatetexthover] = React.useState(false);
    
+// const getProseKey = () => {
+//     if(isResettextareas){
 
+//     }
+//     isResettextareas || isActivateBionicText
+// }
+
+React.useEffect(() => {
+    if(isActivateBionicText){
+        setproseKeyValue(2)
+    }else{
+        setproseKeyValue(3)
+    }
+  
+}, [isActivateBionicText]);
+
+React.useEffect(() => {
+    if(isResettextareas){
+        setproseKeyValue(4)
+    }else{
+        setproseKeyValue(5)
+    }
+}, [isResettextareas]);
 
 
  const classes = styles(isMetamodal)
@@ -74,7 +100,9 @@ function Prose(params) {
     }}
     className="w-screen   md:p-0 h-screen " >
     {/* <div className=" text-lg uppercase border-b-4 font-bold" >header </div> */}
-            <div className={`${isLibarymodal || isTagMenu?'blur-md':'blur-none'}  flex flex-col h-full  lg:flex-row    md:flex-row`} > 
+            <div style={{
+                backDropFilter: `${isLibarymodal || isTagMenu? 'blur(10px)':''}`
+            }} className={`${isLibarymodal || isTagMenu?'backdrop-grayscale blur-md':'blur-none'}  flex flex-col h-full  lg:flex-row    md:flex-row`} > 
 
 
                 <div  className= {classes.sidebar} >
@@ -98,7 +126,7 @@ function Prose(params) {
 
                 <div className= {classes.proseContainer} >
                     <Textproseslate
-                    key={isResettextareas? '2':'1'}
+                    key={proseKeyValue}
                     /> 
 
                 {/* {isMetamodal && <div className="lg:w-4/12 md:w-4/12 w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0 " >

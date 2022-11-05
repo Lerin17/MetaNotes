@@ -1,11 +1,15 @@
 import React from 'react'
 import _ from "lodash";
+import { bionicContext } from './bionicContext';
 
 
 
 const LibaryContext = React.createContext()
 
+
 const LibaryContextProvider = (props) => {
+
+   
 
  
 
@@ -60,6 +64,7 @@ const LibaryContextProvider = (props) => {
     //is book already present on reset
     //   const isbookalready = Libaryarrayids.some(item => item == currentBook.bookid)
 
+    console.log(LibaryArray, 'libatyArrau')
 
     React.useEffect(() => {
      
@@ -152,6 +157,7 @@ const LibaryContextProvider = (props) => {
     //clearText area checks for recent saves and advices on updates before clearing textArea
 
     const ClearTextArea = () => {
+        // clearInitialTextProseValue()
         const previousSaveContent =  LibaryArray.find(item => item.bookid == bookID)
 
         const currentFileContent = {
@@ -239,6 +245,8 @@ const LibaryContextProvider = (props) => {
 
    const Createbookentry = () => {
         console.log(bookID)
+
+        
 
        setcurrentBook({
         bookid: bookID,

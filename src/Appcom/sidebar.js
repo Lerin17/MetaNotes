@@ -13,18 +13,23 @@ import '../App.css';
 
 // InputBase
 
+
 import { LibaryContext } from "../context/LibaryContext";
 import { TagContext } from "../context/tagContext";
 import { DashboardContext } from "../context/DashboardContext";
+import { bionicContext } from "../context/bionicContext";
 
 import { Accordion, AccordionDetails, AccordionSummary, ClickAwayListener, Grow, InputBase, Menu, MenuItem, MenuList, Popper } from "@material-ui/core";
 import { Slide, toast, ToastContainer } from "react-toastify";
 
 
 import NewFolderInteface from "./SidebarCom/NewFolderINT";
-
+// bionicContext
 //errors associated with sidebar functions and options are defined here
 import Home from '../svgIcons/home.svg'
+
+
+
 
 
 
@@ -54,12 +59,16 @@ const usestyle = makeStyles((theme)=> ({
 
 
 function Sidebar (params) {
-
+    // const {clearInitialTextProseValue} = React.useContext(bionicContext)
 
     const classes = usestyle()
     const {Createbookentry, isLibarymodal,  toggleLibaryModal, LibaryArray, toggleResetTextareas, openBook, selectedBook, newFileSaveError, setnewFileSaveError, ClearTextArea, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, FolderArray,clearCurrentFolder, openFolder, currentFolderContent, saveCurrentFolder} = React.useContext(LibaryContext)
 
     const {currentTag, isTagMenu, toggleisTagMenu, tagsArray, changeCurrentTag, taggedObjArray, toggleisTagLibaryDisplay,tagsColorPool, handleNewTaginput, userCreatedTagsArray, setnewTagError, newTagError } = React.useContext(TagContext)
+
+    const {isActivateBionicText, setisActivateBionicText, toggleisActivateBionic, clearInitialTextProseValue} = React.useContext(bionicContext)
+
+  
 
     const {addToRecentFiles} = React.useContext(DashboardContext)
 
@@ -222,11 +231,20 @@ function Sidebar (params) {
             // border: `1px solid ${bgColor}`,
             // backgroundColor: bgColor,
             backdropFilter: 'blur(2px)'
-        }} className={`w-full lg:rounded-lg   cursor-pointer  md:mt-4 lg:mt-4 p-1 shadow hover:scale-105 transition-all `} >
+        }} className={`w-full rounded-lg  ${props.isActive?'scale-105 bg-black':''} cursor-pointer  md:mt-4 lg:mt-4 p-1 shadow hover:scale-105 transition-all `} >
            
             <div className=" lg:mr-0 xl:mr-0 md:mr-0  ">
                     <div className= {classes.sidebuttonCon} >
-                        <div  onClick={props.handleClick} className="px-1" >
+                        <div   onClick={()=> {
+                               if(props.text == 'New'){
+                                // console.log('New clicked dammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
+                                // setisActivateBionicText(false)
+                                clearInitialTextProseValue()
+                            }
+                             props.handleClick()
+                        }
+                         
+                           } className="px-1" >
                         {/* <IconButton  className="sm:w-8 mx-auto hover:bg-transparent" > */}
                         {props.icon}
                        
@@ -238,7 +256,7 @@ function Sidebar (params) {
                         //     style={{
                         // WebkitTextStroke : '1px black'
                         // }}
-                 sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = 'text-gray-700 capitalize font-header5'  variant= "text" >
+                 sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = {`${props.isActive?'text-white':'text-gray-700'}  capitalize font-header5`}  variant= "text" >
                             {props.text}
                             </div>
                         </div>
@@ -285,6 +303,7 @@ function Sidebar (params) {
                 <div className="  self-center "  >
                 <IconButton onClick={()=>{
                     addToRecentFiles(props.allbookData)
+                    clearInitialTextProseValue()
                     openBook(props.bookid)}} className="hover:bg-transparent py-0 " >
                 <i className=" ri-file-list-2-line text-gray-300 "></i>
                 </IconButton>
@@ -494,18 +513,20 @@ const Folderdisplay = FolderArray.map((item, i)=>{
         <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-700 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M18.5 15c-2.483 0-4.5 2.015-4.5 4.5s2.017 4.5 4.5 4.5 4.5-2.015 4.5-4.5-2.017-4.5-4.5-4.5zm2.5 5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1zm-7.18 4h-12.82v-24h8.409c4.857 0 3.335 8 3.335 8 3.009-.745 8.256-.419 8.256 3v2.501c-.771-.322-1.614-.501-2.5-.501-3.584 0-6.5 2.916-6.5 6.5 0 1.747.696 3.331 1.82 4.5zm-.252-23.925c2.202 1.174 5.938 4.883 7.432 6.881-1.286-.9-4.044-1.657-6.091-1.179.222-1.468-.185-4.534-1.341-5.702z"/></svg>
         }
         text = 'New'
-        handleClick = {ClearTextArea}
+        handleClick = {
+            ClearTextArea}
         color = '#DCD9D8'
         />
 
-        {/* <Sidebarbuttoncom
+        <Sidebarbuttoncom
         icon = {
-        <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-700 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M18.5 15c-2.483 0-4.5 2.015-4.5 4.5s2.017 4.5 4.5 4.5 4.5-2.015 4.5-4.5-2.017-4.5-4.5-4.5zm2.5 5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1zm-7.18 4h-12.82v-24h8.409c4.857 0 3.335 8 3.335 8 3.009-.745 8.256-.419 8.256 3v2.501c-.771-.322-1.614-.501-2.5-.501-3.584 0-6.5 2.916-6.5 6.5 0 1.747.696 3.331 1.82 4.5zm-.252-23.925c2.202 1.174 5.938 4.883 7.432 6.881-1.286-.9-4.044-1.657-6.091-1.179.222-1.468-.185-4.534-1.341-5.702z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" className={`${isActivateBionicText?'text-white':' text-gray-700'}  fill-current`} width="24" height="24" viewBox="0 0 24 24"><path d="M15 12c0 1.657-1.343 3-3 3s-3-1.343-3-3c0-.199.02-.393.057-.581 1.474.541 2.927-.882 2.405-2.371.174-.03.354-.048.538-.048 1.657 0 3 1.344 3 3zm-2.985-7c-7.569 0-12.015 6.551-12.015 6.551s4.835 7.449 12.015 7.449c7.733 0 11.985-7.449 11.985-7.449s-4.291-6.551-11.985-6.551zm-.015 12c-2.761 0-5-2.238-5-5 0-2.761 2.239-5 5-5 2.762 0 5 2.239 5 5 0 2.762-2.238 5-5 5z"/></svg>
         }
         text = 'Bionic'
-        handleClick = {ClearTextArea}
+        handleClick = {toggleisActivateBionic}
+        isActive = {isActivateBionicText}
         color = '#DCD9D8'
-        /> */}
+        />
 
       
 

@@ -23,9 +23,11 @@ import { withHistory } from 'slate-history';
 import { Metacontext } from '../../context/MetamodalContext';
 import { LibaryContext } from '../../context/LibaryContext';
 import { TagContext } from '../../context/tagContext';
+
 import { Input } from '@material-ui/core';
 
-
+import { Popover } from 'react-tiny-popover';
+import { bionicContext } from '../../context/bionicContext';
 
 
 // const initialValue =!iscurrentMetaempty && currentMeta?currentMeta.content :  [
@@ -40,28 +42,80 @@ import { Input } from '@material-ui/core';
     
     const {updateBookTextProse,  currentBook, bookID, LibaryArray, selectedBook, setselectedBook, isResettextareas,  setbookID, currentBookMetaArray} =  React.useContext(LibaryContext)
 
-    const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID,updateTestNum, updateTextProseId, updatMetaId,} = React.useContext(Metacontext)
+    const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID, updateTestNum, updateTextProseId, updatMetaId, currentMetaPopoverContent } = React.useContext(Metacontext)
 
     const {currentTag,  currentTagObj, gettextproseValues, settextproseLocationObj, currentLocationPath, setcurrentLocationPath } = React.useContext(TagContext)
+
+    const {updateInitialTextProseValue, bionicTextValueAltered, isActivateBionicText, initialTextProseValue} = React.useContext(bionicContext)
     
     // console.log(currentTagObj)
 
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
     let istextprosermpty = true
+    let initialValue
+    let initialTitle = ''
 
-    const initialValue = selectedBook?selectedBook.bookTextprosecontent:[
+    // const initialValue = selectedBook?selectedBook.bookTextprosecontent:[
+    //   {
+    //     type: 'paragraph',
+    //     children: [{ text: '' }],
+    //   },
+    // ]
+
+    // console.log()
+
+    //code below sets the intialtextValue, in the case of a textArea reset
+   if(selectedBook || isActivateBionicText){
+    console.log(initialTextProseValue, 'some')
+      if(selectedBook){
+        console.log(selectedBook.bookTextprosecontent, 'bookera')
+        initialValue = selectedBook.bookTextprosecontent
+      }else if(isActivateBionicText){
+        console.log(bionicTextValueAltered, 'ddddx')
+        // initialValue = [l 
+        
+        //   {
+        //     type: 'paragraph',
+        //     children: [{ text: '' }],
+        //   },
+        // ]
+         initialValue = bionicTextValueAltered
+         initialTitle = initialTextProseValue.title
+      }
+   
+   }else{
+    // console.log(initialTextProseValue, 'some')
+
+  if(!initialTextProseValue){
+    console.log('second')
+    initialValue = [
       {
         type: 'paragraph',
         children: [{ text: '' }],
       },
     ]
+  }
+ else if(initialTextProseValue && !isActivateBionicText){
+  console.log(isActivateBionicText,'false')
+  console.log(initialTextProseValue, 'true')
+
+  // console.log('damn why')
+  // console.log(initialTextProseValue.value)
+  initialValue = initialTextProseValue.value
+  initialTitle = initialTextProseValue.title
   
+ }
    
-    let initialtextobj
+  
+   }
+
+ 
+   
+    // let initialtextobj
     const [markx, setmarkx] = React.useState({xx:'xx'});
     const [value, setValue] = React.useState(initialValue);
-    const [title, settitle] = React.useState('');
+    const [title, settitle] = React.useState(initialTitle);
     // const [currentTag, setcurrentTag] = React.useState();
     // const [ismarksBtnclicked, setismarksBtnclicked] = React.useState(false);
 
@@ -71,9 +125,14 @@ import { Input } from '@material-ui/core';
 
 
 
-    React.useEffect(() => {
-      updateBookTextProse(value, title)
-      gettextproseValues(value, editor)
+    React.useEffect(() => { 
+      // console.log(value, 'damx')
+      if(!isActivateBionicText){
+        gettextproseValues(value, editor)//update content for Tag
+        updateBookTextProse(value, title)//update content for Libary
+        updateInitialTextProseValue(value, title)//update content for Bionic
+      }
+
     }, [value, title]);
 
 
@@ -90,14 +149,15 @@ import { Input } from '@material-ui/core';
         setValue(selectedBook.bookTextprosecontent)
         settitle(selectedBook.bookTitle)
         setMetaArray(currentBookMetaArray)
-        console.log('1st')
+        // console.log('1st')
         
-        console.log(selectedBook.bookid)
+        // console.log(selectedBook.bookid)
       }
 
       setTimeout(() => {
         console.log('when')
-        setselectedBook()
+        // setselectedBook() changed it 
+        setselectedBook(null)
       }, 50);
       
 
@@ -107,6 +167,31 @@ import { Input } from '@material-ui/core';
        
       // }
     }, [isResettextareas]);
+
+    //handle activating bionic start
+
+    // React.useEffect(() => {
+    //   console.log(isActivateBionicText, 'isactivebionic')
+    //   if(isActivateBionicText){
+    //     console.log(bionicTextValueAltered, 'feel hitler stamped on it')
+    //     console.log(value, 'okay okay')
+
+    //     // setTimeout(() => {
+    //     //   // setValue(bionicTextValueAltered)
+    //     // }, 50);
+        
+    //   }
+    // }, [isActivateBionicText]);
+
+    // React.useEffect(() => {
+    //   if(isActivateBionicText){
+    //     console.log(bionicTextValueAltered, 'feel')
+    //     setValue(bionicTextValueAltered)
+    //   }
+    // }, [isResettextareas]);
+
+    
+    //handle activating bionic end
 
 
     //handle the updating of the location needed to switch from tagLocation to initial cursorLocation
@@ -129,13 +214,17 @@ import { Input } from '@material-ui/core';
       React.useEffect(() => {
         // console.log('switch')
         // console.log(currentLocationPath,'switch')
-        if(currentLocationPath){
-         
+        if(currentLocationPath){      
           swtichCursorLocation();
         }
 
       
       }, [currentLocationPath]);
+
+      //should handle MetaPopover when the Metaid of the text Leave is obtained
+      React.useEffect(() => {
+        
+      }, []);
 
 
   
@@ -154,6 +243,8 @@ import { Input } from '@material-ui/core';
 
       //use tags array to decide colors base on taggs obj for styling
       const {tagsArray} = React.useContext(TagContext)
+
+      // const [isPopOver, setisPopOver] = React.useState(false);
 
       // console.log(tagsArray, 'everything')
       // const editor = useSlate()
@@ -210,7 +301,7 @@ import { Input } from '@material-ui/core';
       // console.log(getcolor())
 
         const contentStyle = {
-          fontWeight: content.bold ? 'bold' : 'normal',
+          fontWeight: content.bold ? '600' : 'normal',
           fontStyle: content.italics? 'italic': 'normal',
           opacity: content.qoutes? '0.5': '1',
           fontSize: content.header1? '32px': content.header2? '20px': content.header3? '18px': '16px',
@@ -225,18 +316,100 @@ import { Input } from '@material-ui/core';
         const isMeta = istag
         // const isMeta = content.meta
 
-        const contentStyleMeta = `${isMeta?'text-green-600  hover:animate-slide underline': 'bg-none'}`
+        const contentStyleMeta = `${isMeta?'text-green-600  underline': 'bg-none'}`
         
        
-        
+        const [isPopover, setisPopover] = React.useState(false);
 
         const slateMetaId = props.leaf.metaid
+        let PopoverContent 
+
+        //function below gets PopoverContent
+       const getMetaContentPopover = () => {
+        let getPopover = MetaArray.find(item => item.id == content.metaid)
+        console.log(getPopover)
+
+        if(!getPopover){
+          return {
+            metaText: 'No metaContent assigned',
+            metaTagType: content.tagtype,
+            color: 'gray'
+          }
+        }else{
+          return {
+            //when adding audio and pics to meta, this will need to be revisited
+            metaText: getPopover.content[0].children[0].text,
+            metaTagType: content.tagtype,
+            color: getcolor()
+          }
+        }   
+       }
+
+      //  console.log('coe')
+
+       PopoverContent = getMetaContentPopover()
+
+        //N in this isPopOver, asking whether isPopOver, should change it check out, change isPop back to n if any problems
+        const toggleisPopover = (event, isPop, isMeta) => {
+          // console.log(currentMetaPopoverContent)
+          console.log(content, 'cow')
+          if(isMeta){
+            if(!isPop){
+              PopoverContent = getMetaContentPopover()
+              console.log(PopoverContent)
+              setisPopover(true)
+            }else{
+              return
+            }
+          }
+        }
+
+        const closeIsPopover = (n, isMeta) => {
+          if(isMeta){
+            if(n){
+              setisPopover(false)
+            }else{
+              return
+            }
+          }
+        }
       
              return (
-              <span
-              {...props.attributes} className= {contentStyleMeta} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal ,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, slateMetaId,createCurrentMetaObj,updateMetaArray, isSelectedMetalready, event)}
+              <Popover isOpen={isPopover}
+              reposition={true}
+
+              onClickOutside={()=>setisPopover(false)}
+              content={({ position, nudgedLeft, }) => ( // you can also provide a render function that injects some useful stuff!
+              <div style={{width: 150,
+                backGround: "rgba(255,255,255,0.5)",
+                WebkitBackdropFilter: 'blur(10px)',
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(255,255,255,0.25)"
+              }} className="border rounded" >
+                <div>
+                 {/* {propperSubText}  */}
+                 <div
+                 className='px-2' 
+                 style={{
+                  borderBottom: `solid 2px ${PopoverContent.color}`
+                 }}
+                 >
+                    {PopoverContent.metaTagType}
+                  </div>
+                 <div className='px-2' >
+                   {PopoverContent.metaText}
+                 </div>
+                  
+                </div>
+              </div>
+            )}
+              >
+                     <span
+              {...props.attributes}  className= {contentStyleMeta} onMouseLeave = {() => closeIsPopover(isPopover, isMeta)} onClick ={()=>closeIsPopover(isPopover, isMeta)}  onMouseEnter={(event)=>toggleisPopover(event, isPopover, isMeta)} onDoubleClick = {(event)=> openMetaModal( isMeta, toggleMetamodal ,sortSelectedMeta,updateTestNum, MetaArray, currentMeta,updateTextProseId, slateMetaId,createCurrentMetaObj,updateMetaArray, isSelectedMetalready, event)}
               style={contentStyle}
             >{props.children}</span>
+              </Popover>
+           
              )          
       }
 
@@ -259,16 +432,17 @@ import { Input } from '@material-ui/core';
   
     // console.log(props.mark)
     const buttonActiveStyle = props.mark
+    // console.log(props, 'props')
     // console.log(buttonActiveStyle.bold)
     return (
       <div>
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.bold} icon = 'B' format ='bold'  />
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.italics} icon = 'I' format = 'italics' />
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.qoutes} icon = 'Q' format = 'qoutes' />
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header1} icon = 'H1' format = 'header1' />
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'H2' format = 'header2' /> 
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle? buttonActiveStyle.bold: false} icon = 'B' format ='bold'  />
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle? buttonActiveStyle.italics:false} icon = 'I' format = 'italics' />
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle? buttonActiveStyle.qoutes: false} icon = 'Q' format = 'qoutes' />
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle? buttonActiveStyle.header1: false} icon = 'H1' format = 'header1' />
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle? buttonActiveStyle.header3: false} icon = 'H2' format = 'header2' /> 
       {/* <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'M' format = 'meta' formatid = {MetaID} updatMetaId = {updatMetaId}  />  */}
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'T' format = 'tag' currentTagObj={currentTagObj}   formatid = {MetaID} updatMetaId = {updatMetaId} /> 
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle? buttonActiveStyle.header3: false} icon = 'T' format = 'tag' currentTagObj={currentTagObj}   formatid = {MetaID} updatMetaId = {updatMetaId} /> 
       </div>
     )
    }
@@ -349,6 +523,21 @@ import { Input } from '@material-ui/core';
           renderLeaf={renderLeaf}
           autoFocus
 
+          onMouseEnter={() => {
+            setTimeout(() => {
+              console.log(Editor.marks(editor))
+              // console.log(Editor)
+              setmarkx(Editor.marks(editor))
+
+              // const Metaid = editor.selection.metaid
+              
+              // displayMetaContentPopup(Metaid)
+              // console.log(editor.selection)
+              // console.log(value)
+              // gettextproseEditor(editor)
+            }, 20);
+          }}
+
           onClick={()=>{
             setTimeout(() => {
               console.log(Editor.marks(editor))
@@ -368,6 +557,7 @@ import { Input } from '@material-ui/core';
             padding: '10px',
             borderTop: '2px solid #94A3B8',
             textAlign: 'start',
+            color:'GrayText'
           }}
             />
             </div>
