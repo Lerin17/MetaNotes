@@ -17,7 +17,9 @@ import TagsLibary from "../Appcom/TagsLibarydisplay";
 import { Box,  Fade } from "@mui/material";
 import Dashboard from "../Appcom/Dashboard";
 import { bionicContext } from "../context/bionicContext";
-
+import { TeamsContext } from "../context/teamsContext";
+import { UserContext } from "../context/userContext";
+// import { TeamsContext } from "../context/teamsContext";
 
 
 
@@ -27,6 +29,9 @@ function Prose(params) {
     const {isLibarymodal, isResettextareas} = React.useContext(LibaryContext)
 
     const {taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, isTagMenu} = React.useContext(TagContext)
+
+    const {isLoginModalOpen} = React.useContext(UserContext)
+    const {isTeamsModalOpen} = React.useContext(TeamsContext)
 
     const {isActivateBionicText} = React.useContext(bionicContext)
     const [proseKeyValue, setproseKeyValue] = React.useState(1);
@@ -93,6 +98,8 @@ React.useEffect(() => {
  const classes = styles(isMetamodal)
 //  console.log(classes.sidebar)
 
+console.log(isLoginModalOpen, 'isLoginModal')
+
     return (
 <div className="bg-blue-100 ">    
     <div  style={{
@@ -101,8 +108,8 @@ React.useEffect(() => {
     className="w-screen   md:p-0 h-screen " >
     {/* <div className=" text-lg uppercase border-b-4 font-bold" >header </div> */}
             <div style={{
-                backDropFilter: `${isLibarymodal || isTagMenu? 'blur(10px)':''}`
-            }} className={`${isLibarymodal || isTagMenu?'backdrop-grayscale blur-md':'blur-none'}  flex flex-col h-full  lg:flex-row    md:flex-row`} > 
+                backDropFilter: `${isLibarymodal || isTagMenu || isLoginModalOpen? 'blur(10px)':''}`
+            }} className={`${isLibarymodal || isTagMenu || isLoginModalOpen || isTeamsModalOpen?'backdrop-grayscale blur-md':'blur-none'}  flex flex-col h-full  lg:flex-row    md:flex-row`} > 
 
 
                 <div  className= {classes.sidebar} >
