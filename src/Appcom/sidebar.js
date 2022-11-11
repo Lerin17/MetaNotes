@@ -75,6 +75,8 @@ function Sidebar (params) {
 
     const {isLoginModalOpen, toggleLoginModal, notification, setnotification,userData} = React.useContext(UserContext)
 
+    const {isTeamsModalOpen, toggleTeamsModal} = React.useContext(TeamsContext)
+
   
 
     const {addToRecentFiles} = React.useContext(DashboardContext)
@@ -593,7 +595,7 @@ console.log(userData, 'userData')
             <svg xmlns="http://www.w3.org/2000/svg" className='text-gray-700 fill-current' width="24" height="24" viewBox="0 0 24 24"><path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z"/></svg>
         }
         text = 'Teams'
-        // handleClick = {toggleisActivateBionic}
+        handleClick = {toggleTeamsModal}
         // isActive = {isActivateBionicText}
         color = '#DCD9D8'
         />
@@ -730,6 +732,29 @@ console.log(userData, 'userData')
             </div>
         </Box>
       </Modal>
+
+      <Modal 
+      open={isTeamsModalOpen}
+      onClose={()=>toggleTeamsModal()}
+      >
+    <div className="" >
+        <Box className={MainModalstyles} sx={{ width: 550, height: 400, 
+        "& .MuiOutlinedInput-notchedOutline": {
+            border: "0 none",
+          },
+    }}    >
+            <div className=" " >
+                <div style={{
+                height: 400
+                }} className= 'w-full rounded-full' >
+                ddd
+                </div>
+            </div>
+        </Box>
+
+ 
+    </div>     
+     </Modal>
 
       <Modal 
       open={isLoginModalOpen}

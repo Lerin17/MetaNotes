@@ -12,6 +12,10 @@ const TeamsContextProvider = (props) => {
 
   const [isTeamsModalOpen, setisTeamsModalOpen] = React.useState(false);
 
+  const toggleTeamsModal = () => {
+    setisTeamsModalOpen(prev => !prev)
+  }
+
   // const [userName, setuserName] = React.useState();
 
   // const [userEmail, setuserEmail] = React.useState();
@@ -68,7 +72,7 @@ const TeamsContextProvider = (props) => {
   // }
 
   return (
-    <TeamsContext.Provider value={{isTeamsModalOpen}}>
+    <TeamsContext.Provider value={{isTeamsModalOpen, toggleTeamsModal}}>
         {props.children}
     </TeamsContext.Provider>
   )
