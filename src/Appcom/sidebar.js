@@ -18,15 +18,20 @@ import { LibaryContext } from "../context/LibaryContext";
 import { TagContext } from "../context/tagContext";
 import { DashboardContext } from "../context/DashboardContext";
 import { bionicContext } from "../context/bionicContext";
+import { TeamsContext } from "../context/teamsContext";
+import { UserContext } from "../context/userContext";
 
 import { Accordion, AccordionDetails, AccordionSummary, ClickAwayListener, Grow, InputBase, Menu, MenuItem, MenuList, Popper } from "@material-ui/core";
 import { Slide, toast, ToastContainer } from "react-toastify";
 
 
 import NewFolderInteface from "./SidebarCom/NewFolderINT";
+import { AnimatePresence, motion } from "framer-motion";
+
 // bionicContext
 //errors associated with sidebar functions and options are defined here
 import Home from '../svgIcons/home.svg'
+import LoginSignup from "./SidebarCom/LoginSignup";
 
 
 
@@ -67,6 +72,8 @@ function Sidebar (params) {
     const {currentTag, isTagMenu, toggleisTagMenu, tagsArray, changeCurrentTag, taggedObjArray, toggleisTagLibaryDisplay,tagsColorPool, handleNewTaginput, userCreatedTagsArray, setnewTagError, newTagError } = React.useContext(TagContext)
 
     const {isActivateBionicText, setisActivateBionicText, toggleisActivateBionic, clearInitialTextProseValue} = React.useContext(bionicContext)
+
+    const {isLoginModalOpen, toggleLoginModal, notification, setnotification,userData} = React.useContext(UserContext)
 
   
 
@@ -218,7 +225,7 @@ function Sidebar (params) {
     
   
 
-    const MainModalstyles = ['absolute top-1/2 md:left-96 lg:left-96   -translate-x-1/2 -translate-y-1/2  bg-transparent   pb-3 md:ml-5 lg:ml-10']
+    const MainModalstyles = ['absolute top-32 md:left-96 lg:left-1/6   -translate-x-1/2   bg-transparent   pb-3 md:ml-5 lg:ml-10']
 
     const subModalstyles = ['']
 
@@ -440,18 +447,69 @@ const Folderdisplay = FolderArray.map((item, i)=>{
 
 })
 
+// setTimeout(() => {
+//     setnotification(true)
+// }, 3000);
+
+console.log(userData, 'userData')
 
     return (
 <div className="sidebar h-full flex flex-col w-full  justify-start shadow-2xl ">
         <SaveFileErrorsModal/>
-        <div className="bg-white mx-auto  pb-8  text-4xl p-4 font-header2" >
-         <div className="lg:hidden  xl:hidden block" >
+        <div className="bg-white mx-auto    text-4xl p-4 font-header2 w-16 h-20 flex justify-center items-center" >
+         {/* <div className="lg:hidden  xl:hidden block" >
             M
-         </div>
+         </div> */}
 
-         <div className="lg:block xl:block hidden" >
-            M
-         </div>
+         {/* <AnimatePresence>
+            {notification &&
+                           <motion.div  transition={{type:'spring'}} initial={{y:-20}} animate={notification && {y:20}} className="" >
+                         
+                            M
+                          
+                        
+                        </motion.div>
+            }
+         </AnimatePresence> */}
+
+        <AnimatePresence>
+            {userData &&     
+                <div>
+                {!isLoginModalOpen &&
+
+                <AnimatePresence>
+                    <motion.div initial={!isLoginModalOpen && {y:30}} transition={{type:'spring', stiffness:100}} animate={!isLoginModalOpen &&{y:0}}>
+                        M
+                    </motion.div>
+                </AnimatePresence>
+                
+                }
+            </div>
+            }
+         </AnimatePresence>
+            
+
+    
+
+         <AnimatePresence>
+            {!userData &&     
+                <div>
+                {!isLoginModalOpen &&
+                    <div>
+                        m
+                    </div>
+                }
+            </div>
+            }
+            {/* {Boolean(!userData)   &&
+                           <motion.div transition={{type:'tween', duration:'0.3'}} initial={{y:0}} exit={isLibarymodal && {y:40, zIndex:1}} className={` absolute z-20 `} >
+                           m
+                        </motion.div>
+            } */}
+         </AnimatePresence>
+
+         
+  
         </div>
         <div className={`flex  md:flex-col lg:flex-col mx-auto lg:w-fit md:w-fit  `}>
 
@@ -459,24 +517,26 @@ const Folderdisplay = FolderArray.map((item, i)=>{
               
         <Sidebarbuttoncom
         icon = {
-            // <img src="../svgIcons/home.svg" alt="SVG as an image"></img>
-            <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-700 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M12 6.453l9 8.375v9.172h-6v-6h-6v6h-6v-9.172l9-8.375zm12 5.695l-12-11.148-12 11.133 1.361 1.465 10.639-9.868 10.639 9.883 1.361-1.465z"/>
-            </svg>
+            <svg className="text-gray-700 fill-current" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 7.001c0 3.865-3.134 7-7 7s-7-3.135-7-7c0-3.867 3.134-7.001 7-7.001s7 3.134 7 7.001zm-1.598 7.18c-1.506 1.137-3.374 1.82-5.402 1.82-2.03 0-3.899-.685-5.407-1.822-4.072 1.793-6.593 7.376-6.593 9.821h24c0-2.423-2.6-8.006-6.598-9.819z"/></svg>
+
+            // // <img src="../svgIcons/home.svg" alt="SVG as an image"></img>
+            // <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-700 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M12 6.453l9 8.375v9.172h-6v-6h-6v6h-6v-9.172l9-8.375zm12 5.695l-12-11.148-12 11.133 1.361 1.465 10.639-9.868 10.639 9.883 1.361-1.465z"/>
+            // </svg>
         }
-        text = 'home'
+        text = 'Profile'
         color = '#224341'
-        // handleClick = {}
+        handleClick = {toggleLoginModal}
         />
 
         
-        <Sidebarbuttoncom
+        {/* <Sidebarbuttoncom
         icon = {
             <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-700 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm7 14h-8v-9h2v7h6v2z"/></svg>
         }
         text = 'Recents'
         color = '#3D3FB9'
         // handleClick = {}
-        />
+        /> */}
 
         <Sidebarbuttoncom
         icon = {    
@@ -528,6 +588,16 @@ const Folderdisplay = FolderArray.map((item, i)=>{
         color = '#DCD9D8'
         />
 
+        <Sidebarbuttoncom
+        icon = {
+            <svg xmlns="http://www.w3.org/2000/svg" className='text-gray-700 fill-current' width="24" height="24" viewBox="0 0 24 24"><path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z"/></svg>
+        }
+        text = 'Teams'
+        // handleClick = {toggleisActivateBionic}
+        // isActive = {isActivateBionicText}
+        color = '#DCD9D8'
+        />
+
       
 
 
@@ -548,7 +618,7 @@ const Folderdisplay = FolderArray.map((item, i)=>{
         <div className="flex" >
             <div style={{
             height: 600
-            }} className= 'w-3/5 border' >
+            }} className= 'w-3/5 ' >
                 <div className="bg-gray-800 flex justify-between px-2 py-1 text-white font-header5" >
                     <div>Libary</div>
 
@@ -660,6 +730,43 @@ const Folderdisplay = FolderArray.map((item, i)=>{
             </div>
         </Box>
       </Modal>
+
+      <Modal 
+      open={isLoginModalOpen}
+      onClose={()=>toggleLoginModal()}
+      >
+    <div className="" >
+        <Box className={MainModalstyles} sx={{ width: 550, height: 400, 
+        "& .MuiOutlinedInput-notchedOutline": {
+            border: "0 none",
+          },
+    }}    >
+        <div className=" " >
+            <div style={{
+            height: 400
+            }} className= 'w-full rounded-full' >
+                
+                    <LoginSignup/>
+              
+               
+
+
+                
+
+               
+            </div>
+
+        
+            
+         
+        </div>
+           
+
+        </Box>
+
+ 
+    </div>     
+     </Modal>
     </div>
 </div>)
 }

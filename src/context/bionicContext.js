@@ -36,10 +36,28 @@ const toggleisActivateBionic = () => {
     if(initialTextProseValue && !isActivateBionicText){
         console.log(initialTextProseValue, 'initialTextProseValue')
         bionicContentValue = initialTextProseValue.value.map(item => item.children.map(item => item.text)) 
+        console.log(bionicContentValue, '1Deptgis thrxez')
 
-        bionicContentValue = bionicContentValue.map(item => item[0].split(" "))
+    let textSimplified = ''
 
-      bionicContentValue = bionicContentValue.map(item => {
+        // bionicContentValue.map(item => {
+        //     textSimplified = `${textSimplified}${item}`
+        // })
+
+        textSimplified = bionicContentValue.join('')
+        textSimplified = textSimplified.split(' ')
+
+
+        // bionicContentValue = bionicContentValue.map(item => item[0].split(" "))
+
+        console.log(bionicContentValue, '1Deptgisx')
+        console.log(textSimplified, 'simplified')
+        // bionicContentValue = textSimplified
+
+
+       
+
+      bionicContentValue = [textSimplified].map(item => {
            if(item.length == 1 && item[0] == ''){
                return {
                    TextArray: item,
@@ -52,6 +70,8 @@ const toggleisActivateBionic = () => {
               }
        }
        })
+
+       console.log(bionicContentValue, 'depth')
 
      xbionicContentValue = bionicContentValue.map(item => {
            if(item.TextArray.length == 1 && item.TextArray[0] == ''){

@@ -17,7 +17,8 @@ import { LibaryContextProvider } from './context/LibaryContext';
 import { TagContextProvider } from './context/tagContext';
 import { DashboardContextProvider } from './context/DashboardContext';
 import { BionicContextProvider } from './context/bionicContext';
-
+import { TeamsContextProvider } from './context/teamsContext';
+import { UserContextProvider } from './context/userContext';
 
 
 
@@ -26,7 +27,9 @@ root.render(
   // <React.StrictMode>
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme = {theme}>
-      <MetacontextProvider>
+      <UserContextProvider>
+      <TeamsContextProvider>
+         <MetacontextProvider>
           <LibaryContextProvider>
           <TagContextProvider>
             <DashboardContextProvider>
@@ -36,7 +39,9 @@ root.render(
             </DashboardContextProvider>
           </TagContextProvider>
           </LibaryContextProvider>   
-      </MetacontextProvider>
+        </MetacontextProvider>
+      </TeamsContextProvider>
+      </UserContextProvider>   
     </ThemeProvider >  
     </StyledEngineProvider>
   // </React.StrictMode>
