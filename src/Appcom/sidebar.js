@@ -13,7 +13,7 @@ import '../App.css';
 
 // InputBase
 
-
+// import TeamsModal from "./SidebarCom/TeamsModal";
 import { LibaryContext } from "../context/LibaryContext";
 import { TagContext } from "../context/tagContext";
 import { DashboardContext } from "../context/DashboardContext";
@@ -32,6 +32,7 @@ import { AnimatePresence, motion } from "framer-motion";
 //errors associated with sidebar functions and options are defined here
 import Home from '../svgIcons/home.svg'
 import LoginSignup from "./SidebarCom/LoginSignup";
+import TeamsModal from "./SidebarCom/TeamsModal";
 
 
 
@@ -745,9 +746,9 @@ console.log(userData, 'userData')
     }}    >
             <div className=" " >
                 <div style={{
-                height: 400
-                }} className= 'w-full rounded-full' >
-                ddd
+                // height: 400
+                }} className= 'w-full ' >
+                    <TeamsModal/>
                 </div>
             </div>
         </Box>

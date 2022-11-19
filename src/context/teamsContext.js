@@ -16,6 +16,25 @@ const TeamsContextProvider = (props) => {
     setisTeamsModalOpen(prev => !prev)
   }
 
+  const [isAddNewTeamOpen, setisAddNewTeamOpen] = React.useState(false);
+
+  const [addTeamNameValue, setaddTeamNameValue] = React.useState('');
+  const [addTeamEmailValue, setaddTeamEmailValue] = React.useState('');
+
+  const AddNewTeamMember = () => {
+
+    setisAddNewTeamOpen(false)
+    setaddTeamEmailValue('')
+    setaddTeamNameValue('')
+  
+    console.log('added')
+    // return ('cow')
+  }
+
+//   const jasper = [{jack:'ee'}, {jack:'aa'}, {jack:'qz'}]
+
+// jasper.map(item =>)
+
   // const [userName, setuserName] = React.useState();
 
   // const [userEmail, setuserEmail] = React.useState();
@@ -72,7 +91,7 @@ const TeamsContextProvider = (props) => {
   // }
 
   return (
-    <TeamsContext.Provider value={{isTeamsModalOpen, toggleTeamsModal}}>
+    <TeamsContext.Provider value={{isTeamsModalOpen, toggleTeamsModal, isAddNewTeamOpen, setisAddNewTeamOpen, addTeamNameValue, addTeamEmailValue, setaddTeamEmailValue, setaddTeamNameValue, AddNewTeamMember}}>
         {props.children}
     </TeamsContext.Provider>
   )
