@@ -65,6 +65,7 @@ const LibaryContextProvider = (props) => {
     //   const isbookalready = Libaryarrayids.some(item => item == currentBook.bookid)
 
     console.log(LibaryArray, 'libatyArrau')
+    const [currentFileSelectedInMenu, setcurrentFileSelectedInMenu] = React.useState();
 
     React.useEffect(() => {
      
@@ -175,7 +176,7 @@ const LibaryContextProvider = (props) => {
             console.log('damn')
             setnewFileSaveError({
                 message: 'This file has never been saved',
-                notificationType: 'Error'
+                notificationType: 'error'
             })
             return
         }
@@ -185,7 +186,7 @@ const LibaryContextProvider = (props) => {
         if(!isFileSaved){
             setnewFileSaveError({
                 message: 'This file has not been saved recently',
-                notificationType: 'Error'
+                notificationType: 'error'
             })
             return
         }
@@ -246,6 +247,7 @@ const LibaryContextProvider = (props) => {
    const Createbookentry = () => {
         console.log(bookID)
 
+    setcurrentFileSelectedInMenu(bookID)
         
 
        setcurrentBook({
@@ -384,7 +386,7 @@ const LibaryContextProvider = (props) => {
     
     
     return (
-        <LibaryContext.Provider value={{LibaryArray,updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal, toggleResetTextareas, isResettextareas, openBook, currentBook, bookID, selectedBook, setselectedBook,  setbookID, currentBookMetaArray, setcurrentBookCreatedTagArray, currentBookCreatedTagArray, newFileSaveError, setnewFileSaveError, ClearTextArea, getFolderDescription, getFolderName, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, currentFolderContent, saveCurrentFolder, currentFolderName, currentFolderDescription,FolderArray,clearCurrentFolder,openFolder,setcurrentFolderDescription, setcurrentFolderName, currentFolderID }} >
+        <LibaryContext.Provider value={{LibaryArray,updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal, toggleResetTextareas, isResettextareas, openBook, currentBook, bookID, selectedBook, setselectedBook,  setbookID, currentBookMetaArray, setcurrentBookCreatedTagArray, currentBookCreatedTagArray, newFileSaveError, setnewFileSaveError, ClearTextArea, getFolderDescription, getFolderName, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, currentFolderContent, saveCurrentFolder, currentFolderName, currentFolderDescription,FolderArray,clearCurrentFolder,openFolder,setcurrentFolderDescription, setcurrentFolderName, currentFolderID, currentFileSelectedInMenu, setcurrentFileSelectedInMenu }} >
              {props.children}
         </LibaryContext.Provider>    
     )
