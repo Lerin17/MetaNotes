@@ -19,6 +19,7 @@ function TagsLibary(params) {
     const togglePopper = () => {
 
     }
+    console.log(taggedObjArray,'taggedObjArray')
 
     const getTagitemArray = taggedObjArray? taggedObjArray.map(item => {
         return {
@@ -89,8 +90,19 @@ function TagsLibary(params) {
         const LocationPath = props.path
         const subText =  text.substring(0, 15)
         const propperSubText = text.substring(0, 25)
-
+        console.log(props)
         // console.log(props.isPopper)
+
+        const defaulttags = [
+            {name: 'important',
+            color:'red'},
+            {name: 'revisit',
+            color: 'blue'},
+            {name:'disregard',
+            color:'yellow'}
+        ]
+
+        const TagColor = defaulttags.find(item => item.name == props.tagType).color
         
         return (
             <Popover
@@ -101,42 +113,41 @@ function TagsLibary(params) {
                      reposition={true}
                      onClickOutside={() => toggleAllIsPopperFalse()}
                      content={({ position, nudgedLeft, nudgedTop }) => ( // you can also provide a render function that injects some useful stuff!
-                     <div style={{width: 150}} className="border bg-gray-500" >
+                     <div style={{width: 150}} className="border rounded bg-gray-300" >
                        <div className="px-2" >
                         {propperSubText} 
-                        damn baby whats the iss damm rockdd 
-                        wwmx dmcd ddv f v ccx
+                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dignissimos eius accusamus beatae totam autem corporis id odio.
                        </div>
                      </div>
                    )}
                     >
-            <div className={`${props.isPopper?'text-white bg-gray-500':''} p-2 pr-0 my-2 border-2 border-gray-600 transition-all hover:scale-105 hover:border-none`} >
+            <div className={`${props.isPopper?'text-white ':''}text-white  my-2  transition-all  `} >
                 {/* <div className="fixed" >
                     cdd
                 </div> */}
 
 
 
-                <div className="flex justify-between" >
-                    <div>
-                     Tagitem
-                    </div>
-                   
-                    <div className="bg-red-400 flex items-center pb-1" >
+                <div className="flex border" >
+                    <div 
+                    style={{
+                        backgroundColor:TagColor
+                    }}
+                    className="text-white flex items-center p-1 text-sm" >
                         {props.tagType}
                     </div>
-                </div>
-                <div className="flex w-1/2 justify-between" >
-                 
-                        <div className="cursor-pointer" onMouseLeave={() => toggleAllIsPopperFalse()} onMouseOver={()=>toggleIsPopper(text)} >
-                            {subText} {subText.length > 15?'....':''}
-                        </div>
 
-                        <div onClick={()=>changeCurrentLocation(LocationPath)} className="hover:text-white cursor-pointer" >
+                    <div onClick={()=>changeCurrentLocation(LocationPath)} className="hover:text-white cursor-pointer px-1" >
                         <i className="ri-map-pin-5-line"></i>
-                        </div>
-             
-                </div>   
+                    </div>
+
+                    <div className="flex  justify-between text-sm" >
+                     <div className="cursor-pointer" onMouseLeave={() => toggleAllIsPopperFalse()} onMouseOver={()=>toggleIsPopper(text)} >
+                     {subText} {subText.length > 15?'....':''}
+                     </div>
+                    </div>   
+                </div>
+              
             </div>
             </Popover>
         )
@@ -149,19 +160,23 @@ function TagsLibary(params) {
     // jam.fill('damn baby')
 
     // console.log(jam)
-    // console.log(TagItemArray, Boolean(TagItemArray))
+    console.log(TagItemArray, Boolean(TagItemArray))
+
+
 
     const TagsLibarydisplayComponent = TagItemArray? TagItemArray.map((item,i) => (
         <Tagitemcomponent
         text= {item.text}
-        tagType = {item.tagtype}
+        tagType = {item.tagType}
         index = {item.index}
         location = {item.location}
         path = {item.path}
         key = {i}
         isPopper = {item.isPopper}
         />
-    ) ):'No items have been tagged'
+    ) ):<div className="p-2 text-white">
+        No items have been tagged
+    </div> 
 
 
 
@@ -180,8 +195,8 @@ function TagsLibary(params) {
 
     return (
         <div className="" >
-             <div className="fixed w-full bg-gray-400" >
-                    <div className=" text-white font-bold border-b  border-dashed border-white text-white pb-1" >Tags Libary</div>
+             <div className="fixed w-full bg-black" >
+                    <div className=" text-white font-bold border-b  border-dashed border-white text-white pb-1 px-2" >Tags Libary</div>
                     <div className="flex border-b items-center pb-1
                     justify-center " >     
                         <Button onClick={()=>toggleisTagLibaryDisplay()} >X</Button>
@@ -191,7 +206,17 @@ function TagsLibary(params) {
 
                
 
-            <div className=" h-screen overflow-scroll pt-20 bg-gray-400" >
+            <div className=" h-screen overflow-scroll pt-20 bg-black" >
+                 <div className="text-white border flex">
+                    <div className="bg-red-600 px-2">
+                        x
+                    </div>
+
+                    <div className="bg-blue-600 px-2">
+                        x
+                    </div>
+                 
+                </div>
                 <div className="" >
                 {TagsLibarydisplayComponent}
                 </div>

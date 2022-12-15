@@ -45,11 +45,11 @@ function Prose(params) {
             {
                 sidebar: isMetamodal || isTagLibaryDisplay? 'hidden': '   lg:rounded-none xl:rounded-none w-1/12 border-r-4  border-slate-400 overflow-hidden xl:w-2/12 md:w-1/12 lg:h-full md:h-full   mb-3 md:mb-0 lg:mb-0  bg-blue-200',
 
-                proseContainer: isMetamodal || isTagLibaryDisplay? 'flex flex-col lg:flex-row md:flex-row  mx-auto h-screen bg-blue-100 lg:w-11/12 md:w-12/12 w-full lg:pl-4  rounded':" mx-auto h-full bg-white  md:w-11/12   w-full  rounded-r",
+                proseContainer: isMetamodal || isTagLibaryDisplay? 'flex flex-col lg:flex-row md:flex-row  mx-auto h-screen bg-white lg:w-11/12 md:w-12/12 w-full lg:pl-4 transition-all rounded':" mx-auto h-full bg-white  md:w-11/12   w-full  rounded-r",
 
                Metatextarea: isMetamodal? 'lg:w-4/12 md:w-4/12 w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0 animate-fade': 'hidden',
 
-               TaggeditemsLibary: isTagLibaryDisplay?'lg:w-4/12 md:w-4/12 lg:h-screen overflow-auto md:h-screen w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0 ':'hidden',
+               TaggeditemsLibary: isTagLibaryDisplay?'lg:w-4/12 md:w-4/12 lg:h-screen overflow-auto md:h-screen w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0 transition-all animate-fade':'hidden',
 
                Dashboard: isMetamodal || isTagLibaryDisplay ? 'hidden': "lg:w-3/12 xl:w-3/12 lg:block xl:block hidden bg-white border-r-2 border-slate-400"
             }
@@ -101,7 +101,7 @@ React.useEffect(() => {
 console.log(isLoginModalOpen, 'isLoginModal')
 
     return (
-<div className="bg-blue-100 ">    
+<div className="bg-gray-900">    
     <div  style={{
         // background: 'radial-gradient(at 100% 50%, rgb(56, 189, 248), rgb(49, 46, 129))'
     }}

@@ -1,17 +1,17 @@
 import React from "react";
 import _ from "lodash"
 import { LibaryContext } from "./LibaryContext";
+import { UserContext } from "./userContext";
 
 
 const TagContext = React.createContext()
 
 
 
-
-
 const TagContextProvider = (props) => {
     const {setcurrentBookCreatedTagArray, currentBookCreatedTagArray, selectedBook, currentBook, isResettextareas, LibaryArray, bookID} = React.useContext(LibaryContext)
 
+    const {notification, setnotification} = React.useContext(UserContext)
 
 
     const tagsColorPool = [{
@@ -325,27 +325,31 @@ const TagContextProvider = (props) => {
     //  console.log(unavailableNames)
 
      if(!nameInput){
-        setnewTagError({message: `Please input a value for name tag`,
-        notificationType: 'error'})
+        setnotification({message: `Please input a value for name tag`,
+        notificationtype: 'error',
+        instance:'TAGS'})
         return
      }
 
      if(!colorInput){
-        setnewTagError({message: `Please input a value for color tag`,
-        notificationType: 'error'})
+        setnotification({message: `Please input a value for color tag`,
+        type: 'error',
+        instance:'TAGS'})
         return
      }
      
     //  console.log(unavailableColors, 'everything')
      if(unavailableColors.includes(colorInput)){
-        setnewTagError({message: `"${colorInput}" is not available, please select a new tag color`,
-            notificationType: 'error'})
+        setnotification({message: `"${colorInput}" is not available, please select a new tag color`,
+            type: 'error',
+            instance:'TAGS'})
             // console.log('damn')
      } 
      
      if(unavailableNames.includes(nameInput)){
-        setnewTagError({message: `"${nameInput}" is not available, please select a new tag name`,
-        notificationType: 'error'})
+        setnotification({message: `"${nameInput}" is not available, please select a new tag name`,
+        type: 'error',
+        instance:'TAGS'})
      }
      else{
         setnewCreatedTagObj({

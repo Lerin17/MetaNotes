@@ -2,7 +2,8 @@ import React from 'react'
 
 import {io} from 'socket.io-client'
 import axios from 'axios'
-
+import CryptoJS from 'crypto-js'
+// import  dotenv from 'dotenv'
 // const socket = io('http://localhost:5024')
 const UserContext = React.createContext()
 
@@ -22,6 +23,11 @@ const UserContextProvider = (props) => {
 
   const [userData, setuserData] = React.useState();
 
+  const [TeamMembers, setTeamMembers] = React.useState([]);
+
+  let cipherUserName
+  let cipherPassword
+
   const SignUp =  () => {
 
         axios.post(`http://localhost:5024/api/authorize/createuser`, {
@@ -30,16 +36,18 @@ const UserContextProvider = (props) => {
         password:userPassword
     }).then((res) => {
       console.log(res, 'response')
-      setuserData(res.data)
+      setuserData(res.data.savedUser)
       setnotification({
         type:'success',
-        message: "succesfuly created an Account"
+        message: "sucessfully created an Account",
+        instance:'LOGIN/SIGNUP'
       })
     }).catch((error) => {
       console.log(error, 'error')
           setnotification({
         type:'error',
-        message: error.response.data.message
+        message: error.response.data.message,
+        instance:'LOGIN/SIGNUP'
       })
     })
     // catch (error) {
@@ -50,7 +58,75 @@ const UserContextProvider = (props) => {
     //   })
     //   console.log(error, 'error')
     // }
+  }
+
+  console.log(
+    process.env.REACT_APP_PASS, 'process'
+  )
+
+  
+  React.useEffect(() => {
+
+    // localStorage.getItem('user')
+
+    if(!userData && !cipherPassword && !cipherUserName){
+      const userxData = localStorage.getItem('userData')
+
+      console.log(userxData)
+
+      if(userxData){
+
+        console.log(userxData.cipherPassword)
+          
+      // const userPassword = CryptoJS.AES.decrypt(userxData.cipherPassword, process.env.REACT_APP_PASS)
+
+      // const userName = CryptoJS.AES.decrypt(userxData.cipherUserName, process.env.REACT_APP_PASS)
+
+      // console.log(userName, userPassword)
+      }
+    }
+  }, [userData]);
+
+
+
+  const LogIn =  () => {
+
+    axios.post(`http://localhost:5024/api/authorize/login`, {
+    username: userName,
+    // email:userEmail,
+    password:userPassword
+}).then((res) => {
+  console.log(res, 'response')
+  setuserData(res.data)
+  console.log(process.env.REACT_APP_PASS)
+ cipherUserName = CryptoJS.AES.encrypt(res.data.username, process.env.REACT_APP_PASS).toString();
+ cipherPassword = res.data.password
+  localStorage.setItem('userData', 
+  JSON. stringify(
+    { cipherUserName:cipherUserName,
+      cipherPassword:cipherPassword
+     }
+  ) 
+);
+  setnotification({
+    type:'success',
+    message: "sucessfully logged in",
+    instance:'LOGIN/SIGNUP'
+  })
+}).catch((error) => {
+  // console.log(process.env.REACT_APP_PASS)
+  console.log(error, 'errorxeeeeeeeeeeeeeeeeeeeeeeee')
+  //     setnotification({
+  //   type:'error',
+  //   message: error.response.data.message,
+  //   instance:'LOGIN/SIGNUP'
+  // })
+})
+
 }
+
+
+
 
 
   //   const data = await axios({
@@ -68,7 +144,7 @@ const UserContextProvider = (props) => {
   }
 
   return (
-    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData, setuserData}}>
+    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData, setuserData, LogIn}}>
         {props.children}
     </UserContext.Provider>
   )

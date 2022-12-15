@@ -44,9 +44,16 @@ import { bionicContext } from '../../context/bionicContext';
 
     const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID, updateTestNum, updateTextProseId, updatMetaId, currentMetaPopoverContent } = React.useContext(Metacontext)
 
-    const {currentTag,  currentTagObj, gettextproseValues, settextproseLocationObj, currentLocationPath, setcurrentLocationPath } = React.useContext(TagContext)
+    const {currentTag,  currentTagObj, gettextproseValues, settextproseLocationObj, currentLocationPath, setcurrentLocationPath, toggleisTagLibaryDisplay } = React.useContext(TagContext)
 
     const {updateInitialTextProseValue, bionicTextValueAltered, isActivateBionicText, initialTextProseValue} = React.useContext(bionicContext)
+
+    const HOTKEYS = {
+      'mod+b': 'bold',
+      'mod+i': 'italic',
+      'mod+u': 'underline',
+      'mod+`': 'code',
+    }
     
     // console.log(currentTagObj)
 
@@ -316,7 +323,7 @@ import { bionicContext } from '../../context/bionicContext';
         const isMeta = istag
         // const isMeta = content.meta
 
-        const contentStyleMeta = `${isMeta?'text-green-600  underline': 'bg-none'}`
+        const contentStyleMeta = ` ${isMeta?'text-blue-600 bg_slider': 'bg-none'}`
         
        
         const [isPopover, setisPopover] = React.useState(false);
@@ -385,7 +392,7 @@ import { bionicContext } from '../../context/bionicContext';
                 WebkitBackdropFilter: 'blur(10px)',
                 backdropFilter: "blur(10px)",
                 border: "1px solid rgba(255,255,255,0.25)"
-              }} className="border rounded" >
+              }} className="border rounded bg-gray-500" >
                 <div>
                  {/* {propperSubText}  */}
                  <div
@@ -442,7 +449,8 @@ import { bionicContext } from '../../context/bionicContext';
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle? buttonActiveStyle.header1: false} icon = 'H1' format = 'header1' />
       <ToolbarMarkBtnx activestyle = {buttonActiveStyle? buttonActiveStyle.header3: false} icon = 'H2' format = 'header2' /> 
       {/* <ToolbarMarkBtnx activestyle = {buttonActiveStyle.header3} icon = 'M' format = 'meta' formatid = {MetaID} updatMetaId = {updatMetaId}  />  */}
-      <ToolbarMarkBtnx activestyle = {buttonActiveStyle? buttonActiveStyle.header3: false} icon = 'T' format = 'tag' currentTagObj={currentTagObj}   formatid = {MetaID} updatMetaId = {updatMetaId} /> 
+      <ToolbarMarkBtnx activestyle = {buttonActiveStyle? buttonActiveStyle.header3: false} icon = 'T' format = 'tag' currentTagObj={currentTagObj}  
+      formatid = {MetaID} updatMetaId = {updatMetaId} /> 
       </div>
     )
    }
@@ -651,7 +659,8 @@ const isMarkActive = (editor, format) => {
     // console.log(props.currentTagObj)
 
     return (
-      <Button className= {`text-slate-400 font-header3 transition-all hover:scale-105 hover:bg-slate-400 hover:text-white  ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={(event)=>{
+      <Button
+      className= {`text-slate-400 font-header3 transition-all hover:scale-105 hover:bg-slate-400 hover:text-white  ${props.activestyle?'font-bold':'font-normal'}`}  onMouseDown={(event)=>{
         // props.updateismarksBtnclicked()
         event.preventDefault()
         toggleMark(editor, format, formatid, updatMetaId, currentTagObj)}}

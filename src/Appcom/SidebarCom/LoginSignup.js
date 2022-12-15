@@ -13,7 +13,7 @@ const [isLogin, setisLogin] = React.useState(false);
 
 
 
-   const {setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification, userData, isLoginModalOpen} = React.useContext(UserContext)
+   const {setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification, userData, isLoginModalOpen, LogIn} = React.useContext(UserContext)
 
    
 
@@ -47,13 +47,29 @@ const [isLogin, setisLogin] = React.useState(false);
 
    React.useEffect(() => {
     if(notification){
-        if(notification.type == 'error'){
+        if(notification.type == 'error' && notification.instance=='LOGIN/SIGNUP'){
             notifyerror()
             setnotification(null)
             return
         }
+        if(notification.instance == 'LOGIN/SIGNUP'){
         notify()
         setnotification(null)
+        }  
+    }
+   }, [notification]);
+
+   React.useEffect(() => {
+    if(notification){
+        if(notification.type == 'error' && notification.instance=='TEAMS'){
+            notifyerror()
+            setnotification(null)
+            return
+        }
+        if(notification.instance == 'TEAMS'){
+        notify()
+        setnotification(null)
+        }  
     }
    }, [notification]);
 
@@ -62,14 +78,23 @@ const [isLogin, setisLogin] = React.useState(false);
   return (
     <div>
         <ToastContainer/>
-         <div className="text-5xl font-header5 p-4 flex" >
-                    <div onClick={()=>setisLogin(true)} className='hover:scale-110 transition-all cursor-pointer' >Login/</div>
+         <div className="text-5xl font-header5 p-4 flex font-bold" >
+                    <div onClick={()=>{setisLogin(true)
+                    }} className='hover:scale-110 transition-all cursor-pointer' >{userData?'Profile/':'Login/'}</div>
                     <div onClick={()=>setisLogin(false)} className='hover:scale-110 transition-all cursor-pointer'>Sign up</div>
                 </div>
 
-    {isLogin ? <div className='mt-8 font-header5' >
+    {isLogin ? userData? <div className='text-3xl mx-4 '>
+        <div className='py-1'>
+          Name: John
+        </div>
+
+        <div className='py-1'>
+          SharedBooks: 15
+        </div>
+    </div> : <div className='mt-8 font-header5' >
                 <div className='flex' >
-                    <div className='ml-4 text-2xl'>Naxeme:</div>
+                    <div className='ml-4 text-2xl'>Name:</div>
                     <InputBase
                     onChange={(e)=>setuserName(e.target.value)}
                     className='border-b-2 w-full px-2' />
@@ -83,7 +108,7 @@ const [isLogin, setisLogin] = React.useState(false);
                 </div> */}
 
                 <div className='flex mt-8' >
-                    <div className='ml-4 text-2xl'>Paxessword:</div>
+                    <div className='ml-4 text-2xl'>Password:</div>
                     <InputBase 
                     onChange={(e)=>setuserPassword(e.target.value)}
                     className='border-b-2 w-full px-2' />
@@ -111,13 +136,16 @@ const [isLogin, setisLogin] = React.useState(false);
                 </div>
             </div>}
           
-
-        <div className='mt-8 flex justify-end px-4'>
-            <Button onClick={SignUp}>
-                Sign in
+        {isLogin?   <div onClick={LogIn} className={`mt-8 flex ${userData?'justify-end ':'justify-end '} px-4`}>
+            <Button className={`${userData?'mr-10':''}`}>
+                {userData?'Log Out':'Log In'}         
             </Button>
-        </div>
-            
+        </div>:  <div className='mt-8 flex justify-end px-4'>
+            <Button onClick={SignUp}>
+                Sign Up
+            </Button>
+        </div>}
+      
                 
 
     </div>

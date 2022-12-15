@@ -9,6 +9,11 @@ import { purple, blue, brown, red, grey, yellow } from '@mui/material/colors'
 import { display } from "@mui/system";
 import theme from "../theme";
 
+// import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// import {setTimeout} from 'node:timers/promises';
+// import pTimeout from 'p-timeout';
+
 import '../App.css';
 
 // InputBase
@@ -68,7 +73,7 @@ function Sidebar (params) {
     // const {clearInitialTextProseValue} = React.useContext(bionicContext)
 
     const classes = usestyle()
-    const {Createbookentry, isLibarymodal,  toggleLibaryModal, LibaryArray, toggleResetTextareas, openBook, selectedBook, newFileSaveError, setnewFileSaveError, ClearTextArea, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, FolderArray,clearCurrentFolder, openFolder, currentFolderContent, saveCurrentFolder} = React.useContext(LibaryContext)
+    const {Createbookentry, isLibarymodal,  toggleLibaryModal, LibaryArray, toggleResetTextareas, openBook, selectedBook, newFileSaveError, setnewFileSaveError, ClearTextArea, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, FolderArray,clearCurrentFolder, openFolder, currentFolderContent, saveCurrentFolder, currentFileSelectedInMenu,setcurrentFileSelectedInMenu} = React.useContext(LibaryContext)
 
     const {currentTag, isTagMenu, toggleisTagMenu, tagsArray, changeCurrentTag, taggedObjArray, toggleisTagLibaryDisplay,tagsColorPool, handleNewTaginput, userCreatedTagsArray, setnewTagError, newTagError } = React.useContext(TagContext)
 
@@ -76,7 +81,7 @@ function Sidebar (params) {
 
     const {isLoginModalOpen, toggleLoginModal, notification, setnotification,userData} = React.useContext(UserContext)
 
-    const {isTeamsModalOpen, toggleTeamsModal} = React.useContext(TeamsContext)
+    const {isTeamsModalOpen, toggleTeamsModal, teamMembersArray, setteamMembersArray, AddBookToLibary, sharedLibaryBooksArray} = React.useContext(TeamsContext)
 
   
 
@@ -99,17 +104,108 @@ function Sidebar (params) {
 
     // const [incomingErrorType, setincomingErrorType] = React.useState();
 //components necessary for Errors From Libarycontext and Tagscontext START
-    const notifyNewTagErrors = () => toast.error(newTagError.message, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        transition: Slide,
-        theme: 'dark'
-        });
+    // const notifyNewTagErrors = () => toast.error(newTagError.message, {
+    //     position: "top-right",
+    //     autoClose: 2000,
+    //     hideProgressBar: true,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     transition: Slide,
+    //     theme: 'dark'
+    //     });
+
+    var t = setTimeout(function() {
+        console.log("The timeout has completed");
+      }, 2000);
+      console.log("Timer ID: " + t);
+
+      setTimeout(()=>{
+        console.log('cleared')
+        clearTimeout(t);
+      },1000)
+      
+
+    // const LogOut = () => setTimeout(100, 'result')
+
+
+
+        const notify = () => toast.success(notification.message, {
+            position: "bottom-left",
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            closeButton: true,
+            theme:"dark"
+           })
+        
+           const  notifyerror = () => toast.error(notification.message, {
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            closeButton: true,
+            theme:"dark"
+           })
+        
+           console.log(notification)
+        
+        //    setTimeout(() => {
+        //     notify()
+        //    }, 3000);
+
+        React.useEffect(() => {
+            if(notification){
+                if(notification.type == 'error' && notification.instance == 'TAGS'){
+                    notifyerror()
+                    setnotification(null)
+                    return
+                }
+                if(notification.instance == 'TAGS'){
+                    notify()
+                    console.log('notification run')
+                    setnotification(null)
+                }
+              
+            }
+           }, [notification]);
+        
+           React.useEffect(() => {
+            if(notification){
+                if(notification.type == 'error' && notification.instance == 'TEAMS'){
+                    notifyerror()
+                    setnotification(null)
+                    return
+                }
+                if(notification.instance == 'TEAMS'){
+                    notify()
+                    console.log('notification run')
+                    setnotification(null)
+                }
+              
+            }
+           }, [notification]);
+
+           React.useEffect(() => {
+            if(notification){
+                if(notification.type == 'error' && notification.instance == 'LIBARYSAVE'){
+                    notifyerror()
+                    setnotification(null)
+                    return
+                }
+                if(notification.instance == 'LIBARYSAVE'){
+                    notify()
+                    console.log('notification run')
+                    setnotification(null)
+                }
+              
+            }
+           }, [notification]);
 
 
         const toggleOnClose = () =>{
@@ -183,14 +279,14 @@ function Sidebar (params) {
     // }, []);
 //declaratively prompt Tag Errors and File Save Errors Respectively 
 //START
-    React.useEffect(() => {
-        if(newTagError.message && newTagError.notificationType){
-            notifyNewTagErrors() 
-            setnewTagError({message: null,
-                notificationType: null})
-        }
+    // React.useEffect(() => {
+    //     if(newTagError.message && newTagError.notificationType){
+    //         notifyNewTagErrors() 
+    //         setnewTagError({message: null,
+    //             notificationType: null})
+    //     }
       
-    }, [newTagError]);
+    // }, [newTagError]);
 
 
     React.useEffect(() => {
@@ -218,7 +314,7 @@ function Sidebar (params) {
 
     React.useEffect(() => {
         if(selectedBook){
-            setcurrentSelectedFileInMenu(selectedBook.bookid)
+            setcurrentFileSelectedInMenu(selectedBook.bookid)
         }
        
     }, [selectedBook]);
@@ -228,7 +324,7 @@ function Sidebar (params) {
     
   
 
-    const MainModalstyles = ['absolute top-32 md:left-96 lg:left-1/6   -translate-x-1/2   bg-transparent   pb-3 md:ml-5 lg:ml-10']
+    const MainModalstyles = [`absolute top-32 md:left-96 lg:left-1/6 ${isTagMenu?'left-72':'left-96'}   -translate-x-1/2   bg-transparent   pb-3 md:ml-5 lg:ml-10`]
 
     const subModalstyles = ['']
 
@@ -304,12 +400,21 @@ function Sidebar (params) {
     }
 
     const currentFolderContentIDs = currentFolderContent.map(item => item.bookid)
+  
+    
 
     const Filecomponent = (props) => {
         let fileTitle = props.title
         fileTitle = fileTitle.length > 8? `${fileTitle.substring(0, 8)}...`: fileTitle
+
+        const currentSharedBooksIDs = sharedLibaryBooksArray.map(item => item.bookid)
+
+        console.log(currentSharedBooksIDs.includes(String(props.bookid) ), 'sharedBooksIDs')
+        console.log(props.bookid)
+
+
         return (
-            <div className={`w-20 ${isNewFolderInterface? currentFolderContentIDs.includes(props.bookid)?'opacity-50':'':''}  bg-gray-600 flex flex-col ${currentSelectedFileInMenu == props.bookid?'border-4':'border-none'}`} >
+            <div className={`w-20 ${isNewFolderInterface? currentFolderContentIDs.includes(props.bookid)?'opacity-50':'':''}  bg-gray-600 flex flex-col ${currentFileSelectedInMenu == props.bookid?'border-2':'border-none'}`} >
                 <div className="  self-center "  >
                 <IconButton onClick={()=>{
                     addToRecentFiles(props.allbookData)
@@ -321,17 +426,25 @@ function Sidebar (params) {
                 
                 <div className="text-xs px-1 w-full text-center self-center text-gray-200" >{fileTitle}</div>  
 
-            <div className="w-full flex justify-between" >
+            <div className="w-full flex justify-center  p-1 bg-gray-700" >
                 <div className={`${isNewFolderInterface?'block w-full ':'hidden'}`} onClick={()=>updateCurrentFolderContent(props.allbookData)} >
                     <div className="bg-green-400 hover:bg-green-500 transition-all text-center cursor-pointer font-bold" >
                          ADD
                     </div>
-                      
-                {/* <i className="ri-add-circle-fill"></i> */}
                 </div>
 
-                <div className={`${isNewFolderInterface?'hidden':'block'}`} ><i className="ri-delete-bin-2-line hover:text-red-500"></i></div>  
+                <div className={`${isNewFolderInterface?'hidden':'block'} cursor-pointer`} >
+                    <svg xmlns="http://www.w3.org/2000/svg" className='text-gray-300 hover:text-red-600 transition-all fill-current' width="16" height="16" viewBox="0 0 24 24"><path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/></svg>
+                </div> 
+
+                 <div 
+                 onClick={()=>AddBookToLibary(props.bookid, props.title, props.allbookData )}
+                 className={`${isNewFolderInterface && userData?'hidden':`block`} cursor-pointer ml-4`} >
+                        <svg xmlns="http://www.w3.org/2000/svg" className={`${ currentSharedBooksIDs.includes(String(props.bookid))?'text-blue-600':'text-gray-300 hover:text-blue-600'}  transition-all fill-current`} width="16" height="16" viewBox="0 0 24 24"><path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z"/></svg>
+                </div> 
                 </div>
+
+               
               
             </div>     
         )
@@ -454,12 +567,16 @@ const Folderdisplay = FolderArray.map((item, i)=>{
 //     setnotification(true)
 // }, 3000);
 
-console.log(userData, 'userData')
+// console.log(userData, 'userData')
 
     return (
 <div className="sidebar h-full flex flex-col w-full  justify-start shadow-2xl ">
+        <div className="block z-30">
+        <ToastContainer />
+        </div>
         <SaveFileErrorsModal/>
         <div className="bg-white mx-auto    text-4xl p-4 font-header2 w-16 h-20 flex justify-center items-center" >
+       
          {/* <div className="lg:hidden  xl:hidden block" >
             M
          </div> */}
@@ -612,7 +729,7 @@ console.log(userData, 'userData')
         aria-describedby="parent-modal-description"
         disableAutoFocus={true}
       >
-     <div className="flex bg-red-300" >
+     <div className="flex" >
         <Box className={MainModalstyles} sx={{ width: 650, height: 600, 
         "& .MuiOutlinedInput-notchedOutline": {
             border: "0 none",
@@ -622,7 +739,7 @@ console.log(userData, 'userData')
             <div style={{
             height: 600
             }} className= 'w-3/5 ' >
-                <div className="bg-gray-800 flex justify-between px-2 py-1 text-white font-header5" >
+                <div className="bg-gray-800 flex justify-between px-2 py-1 font-bold text-white font-header5" >
                     <div>Libary</div>
 
                     <div>
@@ -681,13 +798,22 @@ console.log(userData, 'userData')
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >
-        <Box   className={MainModalstyles} sx={{ width: 400 , height: 600, "& .MuiOutlinedInput-notchedOutline": {
+        <div   className={` ${MainModalstyles} `} style={{ width: 400 , height: 500, "& .MuiOutlinedInput-notchedOutline": {
             border: "0 none",
-          } }}>
+          } }}
+          >
        
-            <div style={{height:600}} className="border" >
+            <div style={{height:600}} className="border-none" >
             <ToastContainer />
-                <div className="bg-gray-800 py-1 text-white font-bold" >Tags</div>
+                <div className="bg-gray-800 py-1 text-white font-bold px-2 flex justify-between font-header5" >
+                   <div>
+                     Tags
+                    </div>
+
+                    <div className="cursor-pointer" onClick={()=>toggleisTagLibaryDisplay()}>
+                     TagsLibary
+                    </div>
+                </div>
 
                 <div className="flex flex-col" > 
                     {Tagsdisplay}
@@ -731,7 +857,7 @@ console.log(userData, 'userData')
                     
                 </div>
             </div>
-        </Box>
+        </div>
       </Modal>
 
       <Modal 
@@ -773,24 +899,10 @@ console.log(userData, 'userData')
             }} className= 'w-full rounded-full' >
                 
                     <LoginSignup/>
-              
-               
-
-
-                
-
-               
-            </div>
-
-        
-            
-         
+                            
+            </div>         
         </div>
-           
-
         </Box>
-
- 
     </div>     
      </Modal>
     </div>

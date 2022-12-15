@@ -1,6 +1,7 @@
 import React from 'react'
 import _ from "lodash";
 import { bionicContext } from './bionicContext';
+import { UserContext } from './userContext';
 
 
 
@@ -10,7 +11,7 @@ const LibaryContext = React.createContext()
 const LibaryContextProvider = (props) => {
 
    
-
+    const {notification, setnotification} = React.useContext(UserContext)
  
 
     const [LibaryArray, setLibaryArray] = React.useState([]);
@@ -248,7 +249,17 @@ const LibaryContextProvider = (props) => {
         console.log(bookID)
 
     setcurrentFileSelectedInMenu(bookID)
+
+    console.log(currentBookTitle, 'damn')
         
+        if(!currentBookTitle){
+            setnotification({
+               type:'error',
+               message: "Please Provide a Title",
+               instance:'LIBARYSAVE' 
+            })
+            return
+        }
 
        setcurrentBook({
         bookid: bookID,

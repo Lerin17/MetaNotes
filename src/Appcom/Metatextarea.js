@@ -112,7 +112,7 @@ const Toolbar = ({value}) => {
               <div 
                 style={{
                 gridTemplateRows: 'auto 1fr',
-                backgroundColor: 'grey',
+                backgroundColor: 'black',
                
           
                 }} className='App w-full h-full  grid grid-flow-row overflow-hidden rounded lg:rounded-none md:rounded-none' >
@@ -135,7 +135,7 @@ const Toolbar = ({value}) => {
             padding: '4px',
             border: '1px solid #999',
             textAlign: 'start',
-            fontSize: '10px',
+            fontSize: '12px',
             color: 'white'
           }}
             />
