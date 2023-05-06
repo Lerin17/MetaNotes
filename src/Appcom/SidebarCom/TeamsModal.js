@@ -1,4 +1,4 @@
-import { Button, InputBase, IconButton } from '@mui/material'
+import { Button, InputBase, IconButton, Switch } from '@mui/material'
 import React from 'react'
 import { TeamsContext } from '../../context/teamsContext'
 import { UserContext } from '../../context/userContext'
@@ -15,11 +15,15 @@ const TeamsModal = () => {
 
    const randomColor = () => (uniqolor.random().color)
 
-    const {isAddNewTeamOpen, setisAddNewTeamOpen,  setaddTeamEmailValue, setaddTeamNameValue,addTeamNameValue, addTeamEmailValue, AddNewTeamMember,teamMembersArray,sharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu, OpenBook, selectedBook, setselectedBook,writersToAddArray, setwritersToAddArray, AddWriterToBook} = React.useContext(TeamsContext)
+    const {isAddNewTeamOpen, setisAddNewTeamOpen,  setaddTeamEmailValue, setaddTeamNameValue,addTeamNameValue, addTeamEmailValue, AddNewTeamMember,teamMembersArray,sharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu, OpenBook, selectedBook, setselectedBook,writersToAddArray, setwritersToAddArray, AddWriterToBook, isWaiting} = React.useContext(TeamsContext)
 
     const {LibaryArray} = React.useContext(LibaryContext)
 
-    const {notification, setnotification} = React.useContext(UserContext)   
+    const {notification, setnotification} = React.useContext(UserContext)  
+    
+    const [issharedWriterLibary, setissharedWriterLibary] = React.useState(false);
+
+    
 
     
    const notify = () => toast.success(notification.message, {
@@ -178,7 +182,7 @@ const TeamsModal = () => {
              book={item}
              />
         </div>   
-    )):<div>
+    )):<div className='px-2'>
     Books Libary
     </div>
 
@@ -196,13 +200,23 @@ const TeamsModal = () => {
 
   return (
     <div className="flex" >
-        <div className={`${isAddNewTeamOpen?'w-5/6':'w-32'} ${isAddWriterToBookMenu?' w-3/6':'block'} transition-all`}>
+        <div className={`${isAddNewTeamOpen?'w-5/6':'w-5/6'} ${isAddWriterToBookMenu?' w-3/6':'block'} transition-all`}>
         <div className={`flex ${selectedBook?'justify-between':''} border-r-2  border-b-2`}>
-        <div className=" text-3xl px-2  " >Teams
+
+        <div className=" px-2 flex items-end" >
+            <div onClick={()=>setisAddNewTeamOpen(false)} className={`${isAddNewTeamOpen?'text-xl':' text-3xl'}`}>
+                Teams
+            </div>
+                /
+            <div  onClick={()=>setisAddNewTeamOpen(true)} className={`${isAddNewTeamOpen?'text-3xl':'text-xl'}`}>
+            Add to team
+            </div>
+           {/* {isAddNewTeamOpen?'Teams/':'Add to team'}  */}
         <span className='cursor-pointer' onClick={()=>setisAddNewTeamOpen(prev => !prev)}>
             +
         </span>
         </div>
+    
 
         <div 
         className={`${!selectedBook?'hidden':'block'}`}
@@ -214,8 +228,11 @@ const TeamsModal = () => {
         </div>
         </div>
         
+        
+        {!isWaiting? 
+        isAddNewTeamOpen ?
 
-        {isAddNewTeamOpen ?
+                
              <div style={{
                 height:400
             }} className="h-full border-r-2 pt-4">
@@ -250,19 +267,31 @@ const TeamsModal = () => {
             >
                {TeamMemberDisplay}
             </div>
-        }
+        :<div
+        style={{
+            // height:400
+        }}
+        className=' flex border-r-2 px-4 pt-4'>
+            <div className='text-2xl w-fit '>
+            <svg className='animate-spin' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg>
+            </div>
+           
+        </div>}
+
        
         </div>
    
    <div className={`${isAddNewTeamOpen?'w-32':'w-5/6'} ${isAddWriterToBookMenu?'w-3/6':''} transition-all`}>
         <div className={`${isAddWriterToBookMenu?'flex justify-between':''}  border-b-2 px-2`}>
-            <div onClick={()=>setisAddNewTeamOpen(prev => !prev)} className=" text-3xl px-1" >Libary+</div>
+            <div onClick={()=>setisAddNewTeamOpen(prev => !prev)} className=" text-3xl px-1 flex" >
+                Libary+
+            </div>
 
             <div onClick={()=>{setisAddWriterToBookMenu(false)
             setselectedBook(null)
             }} className={`${isAddWriterToBookMenu?'block':'hidden'}`} >
                 <Button>
-                    x
+                    xxxx
                 </Button>
             </div>
         </div>
@@ -273,6 +302,25 @@ const TeamsModal = () => {
             height:400,
             overflowY:'auto'
         }}>
+            <div>
+
+            <div className='border-b text-sm items-center flex'>
+            <Switch
+                onClick={()=>setissharedWriterLibary(prev => !prev)}
+                value={issharedWriterLibary}
+                />
+
+                    <div className={`${isAddNewTeamOpen?'hidden':''}`}>
+                    {issharedWriterLibary?'books shared with you':' books shared with others'}
+                    </div>
+               
+               </div>
+                
+               
+             
+            </div>
+
+          
             <div className={`flex flex-wrap transition-all ${selectedBook?'':''}`}>
             {LibaryBooksDisplay}
             

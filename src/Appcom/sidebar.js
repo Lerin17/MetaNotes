@@ -381,12 +381,16 @@ function Sidebar (params) {
         // folderId: currentFolderID,
         // content: currentFolderContent
         // FolderArray
+
+        const badgeContent = props.content.length 
+
         return (
             <div className="w-20 h-20 cursor-pointer  transition-all hover:scale-105 hover:bg-white  flex flex-col items-center" >
                 <div onClick={()=>{
+                     setisActivateBionicText(false)
                     saveCurrentFolder()
                     openFolder(props.folderid)}} className="p-2" >
-                    <Badge  badgeContent={5}>
+                    <Badge  badgeContent={badgeContent}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 21a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7.414l2 2H20a1 1 0 0 1 1 1v3h-2V7h-7.414l-2-2H4v11.998L5.5 11h17l-2.31 9.243a1 1 0 0 1-.97.757H3zm16.938-8H7.062l-1.5 6h12.876l1.5-6z"/>
                         </svg>
                     </Badge>
@@ -427,7 +431,10 @@ function Sidebar (params) {
                 <div className="text-xs px-1 w-full text-center self-center text-gray-200" >{fileTitle}</div>  
 
             <div className="w-full flex justify-center  p-1 bg-gray-700" >
-                <div className={`${isNewFolderInterface?'block w-full ':'hidden'}`} onClick={()=>updateCurrentFolderContent(props.allbookData)} >
+                <div className={`${isNewFolderInterface?'block w-full ':'hidden'}`} onClick={()=>{
+                    setisActivateBionicText(false)
+                    updateCurrentFolderContent(props.allbookData)
+                }} >
                     <div className="bg-green-400 hover:bg-green-500 transition-all text-center cursor-pointer font-bold" >
                          ADD
                     </div>
@@ -542,7 +549,9 @@ function Sidebar (params) {
         allbookData = {item}
         // isFileSelected = {false}
         />
-    </div> ):'No items available'
+    </div> ):<div className="border-t text-xl">
+    Empty, No Docs available
+    </div>
 
 const Folderdisplay = FolderArray.map((item, i)=>{
         // name: currentFolderName,
@@ -756,9 +765,31 @@ const Folderdisplay = FolderArray.map((item, i)=>{
 
                 
 
-                <div className="flex flex-wrap" > 
+                <div
+                style={{
+                    height:500,
+                    overflowY:'auto'
+                }}
+                className={` flex-wrap ${LibaryArray.length?'flex':'flex-col'}`} > 
+
+                <div>
+                <div className="">
+                        Hide folders
+                    </div>
+
+                    <div className="flex flex-wrap">    
+                   {Folderdisplay}
+                    </div> 
+                </div>
+
+                  
+                
+
                     {Filedisplay}
-                    {Folderdisplay}
+                    
+                   
+
+                  
                     {/* <div className="w-20 p-2 bg-gray-600 " >
                     <IconButton className="hover:bg-transparent py-0" >
                     <i className=" ri-file-list-2-line text-white"></i>
@@ -804,7 +835,11 @@ const Folderdisplay = FolderArray.map((item, i)=>{
           >
        
             <div style={{height:600}} className="border-none" >
-            <ToastContainer />
+                <div className="text-2xl">
+                Tags
+                </div>
+               
+            {/* <ToastContainer /> */}
                 <div className="bg-gray-800 py-1 text-white font-bold px-2 flex justify-between font-header5" >
                    <div>
                      Tags

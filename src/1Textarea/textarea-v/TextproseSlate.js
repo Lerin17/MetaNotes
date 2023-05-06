@@ -28,7 +28,7 @@ import { Input } from '@material-ui/core';
 
 import { Popover } from 'react-tiny-popover';
 import { bionicContext } from '../../context/bionicContext';
-
+import isHotkey from 'is-hotkey';
 
 // const initialValue =!iscurrentMetaempty && currentMeta?currentMeta.content :  [
 //   {
@@ -48,10 +48,11 @@ import { bionicContext } from '../../context/bionicContext';
 
     const {updateInitialTextProseValue, bionicTextValueAltered, isActivateBionicText, initialTextProseValue} = React.useContext(bionicContext)
 
+    //set hotkey properly
     const HOTKEYS = {
       'mod+b': 'bold',
-      'mod+i': 'italic',
-      'mod+u': 'underline',
+      'mod+i': 'italics',
+      'mod+1': 'tag',
       'mod+`': 'code',
     }
     
@@ -128,6 +129,10 @@ import { bionicContext } from '../../context/bionicContext';
 
     const ontitleChange = (event) => {
       settitle(event.target.value)
+    }
+
+    const syncingEditor = {
+      
     }
 
 
@@ -235,6 +240,7 @@ import { bionicContext } from '../../context/bionicContext';
 
 
   
+      let runtimeout
   // React.useEffect(() => {
     
   // }, []);
@@ -290,22 +296,8 @@ import { bionicContext } from '../../context/bionicContext';
       }
      }
 
-    //  console.log(getcolor())
 
-      // const gettagstylecolor = if (tagtype && istag){
-      //   const tagcolorobj = 
-      // }else{
 
-      // } {
-       
-
-      //  if(tagtype && istag && tagcolorobj){
-      //   return tagcolorobj.color
-      //  }
-     
-      // }
-
-      // console.log(getcolor())
 
         const contentStyle = {
           fontWeight: content.bold ? '600' : 'normal',
@@ -315,6 +307,8 @@ import { bionicContext } from '../../context/bionicContext';
           borderBottom: content.tag ?`2px dotted ${getcolor()}`:'none'
           // backgroundColor: content.meta? 'red': 'none',      
         }
+
+   
 
         const [Metapairidxx, setMetapairidxx] = React.useState(1);
 
@@ -356,7 +350,9 @@ import { bionicContext } from '../../context/bionicContext';
 
        PopoverContent = getMetaContentPopover()
 
-        //N in this isPopOver, asking whether isPopOver, should change it check out, change isPop back to n if any problems
+
+
+    
         const toggleisPopover = (event, isPop, isMeta) => {
           // console.log(currentMetaPopoverContent)
           console.log(content, 'cow')
@@ -364,16 +360,27 @@ import { bionicContext } from '../../context/bionicContext';
             if(!isPop){
               PopoverContent = getMetaContentPopover()
               console.log(PopoverContent)
-              setisPopover(true)
+              console.log(isMeta, 'isMeta')
+              // runPopovertimeout()
+              
+              runtimeout = setTimeout(() => {
+        setisPopover(true)
+       }, 540);
+                // setisPopover(true)
+          
+             
             }else{
               return
             }
           }
         }
 
-        const closeIsPopover = (n, isMeta) => {
+        const closeIsPopover = (isPopover, isMeta) => {
           if(isMeta){
-            if(n){
+            clearTimeout(runtimeout)
+            if(isPopover){
+              console.log(runtimeout, 'runtimeout')
+          
               setisPopover(false)
             }else{
               return
@@ -387,12 +394,19 @@ import { bionicContext } from '../../context/bionicContext';
 
               onClickOutside={()=>setisPopover(false)}
               content={({ position, nudgedLeft, }) => ( // you can also provide a render function that injects some useful stuff!
-              <div style={{width: 150,
+              <div
+              style={{
+                marginBottom:5
+              }}
+              className=''>
+                     <div style={{width: 150,
+                height:90,
+                overflow:'hidden',
                 backGround: "rgba(255,255,255,0.5)",
                 WebkitBackdropFilter: 'blur(10px)',
                 backdropFilter: "blur(10px)",
-                border: "1px solid rgba(255,255,255,0.25)"
-              }} className="border rounded bg-gray-500" >
+                border: "1px solid black"
+              }} className="border  border-black rounded text-sm" >
                 <div>
                  {/* {propperSubText}  */}
                  <div
@@ -403,12 +417,37 @@ import { bionicContext } from '../../context/bionicContext';
                  >
                     {PopoverContent.metaTagType}
                   </div>
-                 <div className='px-2' >
+                 <div
+                 style={{
+                  overflowWrap:'break-word'
+                 }}
+                 className='px-2' >
                    {PopoverContent.metaText}
                  </div>
                   
                 </div>
+                  </div>
+                  <div 
+                  style={{
+                    bottom:5
+                  }}
+                  className='absolute  font-header5 text-black bg-white text-white right-1/2 flex flex-col z-10'>
+                    x
+                  </div>
+                  <div
+                  style={{
+                    // width:10,
+                    // height:10
+                    bottom:-5
+                  }}
+                  className='absolute  font-header5 text-black text-lg  right-1/2 flex flex-col'>
+                      <div>
+                        v
+                      </div>
+                    
+                  </div>
               </div>
+             
             )}
               >
                      <span
@@ -466,24 +505,24 @@ import { bionicContext } from '../../context/bionicContext';
       }
     }
 
-    // console.log(markx)
+
     
    
-    const toggleMark = (value, togglevaue, style, active) => { 
-      console.log(value)
+  //   const toggleMark = (value, togglevaue, style, active) => { 
+  //     console.log(value)
     
-      if(active){
-        const changevalue = active? false: true
-        editor.addMark( style, changevalue ) 
-      }else{
-        // togglevaue()
-        editor.addMark( style, value )
-      }
+  //     if(active){
+  //       const changevalue = active? false: true
+  //       editor.addMark( style, changevalue ) 
+  //     }else{
+  //       // togglevaue()
+  //       editor.addMark( style, value )
+  //     }
   
-      console.log(
-        Editor.end
-      )
-  }
+  //     console.log(
+  //       Editor.end
+  //     )
+  // }
 
 
        const renderLeaf = useCallback(props => {
@@ -530,6 +569,23 @@ import { bionicContext } from '../../context/bionicContext';
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           autoFocus
+          onKeyDown={(event) => {
+            for (const hotkey in HOTKEYS) {
+              if(isHotkey(hotkey, event)){
+                console.log(event, 'hotKeys')
+                event.preventDefault()
+                const format = HOTKEYS[hotkey]
+                console.log(format)
+                if(format == 'tag'){
+                  toggleMark(editor, format, MetaID, updatMetaId, currentTagObj)
+                }else{
+                  toggleMark(editor, format)
+                }
+               
+              }
+              // console.log(`obj.${prop} = ${obj[prop]}`);
+            }
+          }}
 
           onMouseEnter={() => {
             setTimeout(() => {

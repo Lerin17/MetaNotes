@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {io} from 'socket.io-client'
+import {io, Socket} from 'socket.io-client'
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
 // import  dotenv from 'dotenv'
@@ -10,6 +10,10 @@ const UserContext = React.createContext()
 const UserContextProvider = (props) => {
 
   const [isLoginModalOpen, setisLoginModalOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const scoket = io('http://localhost/a')
+  }, []);
 
 //   const [isSharedModalOpen, setisSharedModalOpen] = React.useState(false);
 
@@ -114,6 +118,11 @@ const UserContextProvider = (props) => {
     instance:'LOGIN/SIGNUP'
   })
 }).catch((error) => {
+  setnotification({
+    type:'error',
+    message: error.message,
+    instance:'LOGIN/SIGNUP'
+  })
   // console.log(process.env.REACT_APP_PASS)
   console.log(error, 'errorxeeeeeeeeeeeeeeeeeeeeeeee')
   //     setnotification({

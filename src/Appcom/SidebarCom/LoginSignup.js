@@ -28,7 +28,7 @@ const [isLogin, setisLogin] = React.useState(false);
     theme:"dark"
    })
 
-   const  notifyerror = () => toast.error(notification.message, {
+   const  notifyerrorx = () => toast.error(notification.message, {
     position: "bottom-left",
     autoClose: 3000,
     hideProgressBar: true,
@@ -48,7 +48,7 @@ const [isLogin, setisLogin] = React.useState(false);
    React.useEffect(() => {
     if(notification){
         if(notification.type == 'error' && notification.instance=='LOGIN/SIGNUP'){
-            notifyerror()
+            notifyerrorx()
             setnotification(null)
             return
         }
@@ -62,7 +62,7 @@ const [isLogin, setisLogin] = React.useState(false);
    React.useEffect(() => {
     if(notification){
         if(notification.type == 'error' && notification.instance=='TEAMS'){
-            notifyerror()
+            notifyerrorx()
             setnotification(null)
             return
         }

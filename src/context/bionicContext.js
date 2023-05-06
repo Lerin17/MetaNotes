@@ -26,6 +26,10 @@ const updateInitialTextProseValue = (value, title) => {
     })
 }
 
+React.useEffect(() => {
+    setisActivateBionicText(false)
+}, [isResettextareas]);
+
 const clearInitialTextProseValue = () => {
     setinitialTextProseValue(false)
 }

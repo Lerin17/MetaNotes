@@ -131,7 +131,7 @@ function NewFolderInteface(props) {
                 Name: 
             </div> */}
            
-            <TextField id="outlined-basic" label="Name" variant="outlined"
+            <TextField id="outlined-basic" label="Folder Name" variant="outlined"
             value={currentFolderName}
             onChange={handleUpdateName}
             />
@@ -142,7 +142,7 @@ function NewFolderInteface(props) {
                 Description: 
             </div> */}
            
-            <TextField  id="margin-none" label="Description" variant="outlined" 
+            <TextField  id="margin-none" label="Folder Description" variant="outlined" 
             value={currentFolderDescription}
             onChange={handleUpdateDescription}
             multiline={true}

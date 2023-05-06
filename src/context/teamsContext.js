@@ -32,9 +32,13 @@ const TeamsContextProvider = (props) => {
   const [selectedBook, setselectedBook] = React.useState();
   const [writersToAddArray, setwritersToAddArray] = React.useState([]);
 
+  const [isWaiting, setisWaiting] = React.useState(false);
+
   const AddNewTeamMember = () => {
 
     console.log(addTeamEmailValue)
+
+    setisWaiting(true)
 
     axios.post(`http://localhost:5024/api/teams/addTeam/${addTeamEmailValue}/${userData._id}`).then((res) => {
     console.log(res, 'response')
@@ -44,6 +48,7 @@ const TeamsContextProvider = (props) => {
       message: "sucessfully Added TeamMember",
       instance:'TEAMS'
     })
+    setisWaiting(false)
   }).catch((error) => {
     console.log(error, 'error')
         setnotification({
@@ -205,7 +210,7 @@ const OpenBook = (book) => {
 console.log(selectedBook, 'selectedbook')
 
   return (
-    <TeamsContext.Provider value={{isTeamsModalOpen, toggleTeamsModal, isAddNewTeamOpen, setisAddNewTeamOpen, addTeamNameValue, addTeamEmailValue, setaddTeamEmailValue, setaddTeamNameValue, AddNewTeamMember, teamMembersArray, setteamMembersArray, AddBookToLibary,sharedLibaryBooksArray, setsharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu,OpenBook, selectedBook, setselectedBook, writersToAddArray, setwritersToAddArray, AddWriterToBook}}>
+    <TeamsContext.Provider value={{isTeamsModalOpen, toggleTeamsModal, isAddNewTeamOpen, setisAddNewTeamOpen, addTeamNameValue, addTeamEmailValue, setaddTeamEmailValue, setaddTeamNameValue, AddNewTeamMember, teamMembersArray, setteamMembersArray, AddBookToLibary,sharedLibaryBooksArray, setsharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu,OpenBook, selectedBook, setselectedBook, writersToAddArray, setwritersToAddArray, AddWriterToBook, isWaiting, setisWaiting}}>
         {props.children}
     </TeamsContext.Provider>
   )

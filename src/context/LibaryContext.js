@@ -159,6 +159,7 @@ const LibaryContextProvider = (props) => {
     //clearText area checks for recent saves and advices on updates before clearing textArea
 
     const ClearTextArea = () => {
+        
         // clearInitialTextProseValue()
         const previousSaveContent =  LibaryArray.find(item => item.bookid == bookID)
 
