@@ -8,8 +8,7 @@ import { LibaryContext } from "../../context/LibaryContext";
 
 
 function NewFolderInteface(props) {
-    // const classes = usestyle()
-    // const {Createbookentry, isLibarymodal,  toggleLibaryModal, LibaryArray, toggleResetTextareas, openBook, selectedBook, newFileSaveError, setnewFileSaveError, ClearTextArea, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent} = React.useContext(LibaryContext)
+  
 
     const {getFolderDescription, getFolderName, currentFolderContent, openBook, isNewFolderInterface, toggleisNewFolderInterface, updateCurrentFolderContent, saveCurrentFolder, currentFolderName, currentFolderDescription, setcurrentFolderDescription, setcurrentFolderName , openFolder, FolderArray, currentFolderID} = React.useContext(LibaryContext)
 

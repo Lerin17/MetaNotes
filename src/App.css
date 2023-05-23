@@ -25,6 +25,17 @@
   color: rgb(104, 75, 75);
 }
 
+
+.blurred{
+    background-color: rgb(255 255 255 / 0.3);
+    /* backdrop-filter: blur(25px); */
+  
+    filter:blur(5px) hue-rotate(20deg) ;
+    /* filter: opacity(50%); */
+  
+  color: #79838b;
+}
+
 .sidebar {
   background-color: #e5e5f7;
   /* opacity: 0.8; */
@@ -33,6 +44,9 @@
   background-position: 0 0, 0 0, 4px 7px, 4px 7px, 0 0, 4px 7px;
 }
 
+.apsz{
+  left: ;
+}
 /* .App-link {
   color: #61dafb;
 }  */

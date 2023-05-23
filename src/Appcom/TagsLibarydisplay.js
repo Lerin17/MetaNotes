@@ -6,14 +6,20 @@ import { Box, Button, Fade, Popper } from "@mui/material";
 
 
 import { Popover } from 'react-tiny-popover'
+import { LibaryContext } from "../context/LibaryContext";
+
 
 
 function TagsLibary(params) {
-    const {taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, changeCurrentLocation} = React.useContext(TagContext)
+    const {taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, changeCurrentLocation, tagsArray} = React.useContext(TagContext)
 
+    const {setcurrentBookCreatedTagArray, currentBookCreatedTagArray, currentBook, isResettextareas, LibaryArray, bookID} = React.useContext(LibaryContext)
 
     const [TagItemArray, setTagItemArray] = React.useState([]);
 
+    React.useEffect(() => {
+        setTagItemArray([])
+    }, [isResettextareas]);
 
     // console.log(isPopperOpen, 'poperopen')
     const togglePopper = () => {
@@ -31,12 +37,25 @@ function TagsLibary(params) {
             path: item.path,
             isPopper: false
         }
-    }): null
+    }): []
+
+    console.log(getTagitemArray, 'getTaggedItem')
 
     React.useEffect(() => {
+        console.log('rest TagsItems')
         setTagItemArray(getTagitemArray)
     }, [taggedObjArray]);
 
+    React.useEffect(() => {
+        console.log('face it')
+    }, []);
+
+
+    React.useEffect(() => {
+        console.log('tealy')
+    }, [taggedObjArray]);
+
+    console.log(TagItemArray, 'taggeditemArray')
 
     const toggleIsPopper = (text) => {
         console.log('cow')
@@ -99,10 +118,12 @@ function TagsLibary(params) {
             {name: 'revisit',
             color: 'blue'},
             {name:'disregard',
-            color:'yellow'}
+            color:'yellow'},
         ]
 
-        const TagColor = defaulttags.find(item => item.name == props.tagType).color
+        console.log(tagsArray, 'tagsArray')
+
+        const TagColor = tagsArray.find(item => item.name == props.tagType).color
         
         return (
             <Popover
@@ -162,6 +183,7 @@ function TagsLibary(params) {
     // console.log(jam)
     console.log(TagItemArray, Boolean(TagItemArray))
 
+    console.log(TagItemArray, 'tags')
 
 
     const TagsLibarydisplayComponent = TagItemArray? TagItemArray.map((item,i) => (

@@ -35,9 +35,36 @@
     background-position: -100% 100%;
   }
 
+  .red{
+    background: -moz-linear-gradient(-45deg, #f85032 0%, #f16f5c 50%, #f6290c 51%, #f02f17 71%, #e73827 100%);
+}
+
+
+.platnium{
+  background: -moz-linear-gradient(-45deg, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%)
+}
+
+.black{
+  background: -moz-linear-gradient(-45deg, #aebcbf 0%, #6e7774 50%, #0a0e0a 51%, #0a0809 100%);
+}
   /* .popover {
     animation: name duration timing-function delay iteration-count direction fill-mode;
   } */
+.bx{
+  background: rgb(40,41,41);
+  background: linear-gradient(0deg, rgba(40,41,41,1) 0%, rgba(35,36,38,1) 0%, rgba(36,37,39,1) 30%, rgba(25,26,28,1) 47%, rgba(30,31,33,1) 71%, rgba(87,85,85,1) 90%, rgba(109,106,106,1) 95%, rgba(113,107,107,1) 100%); 
+}
+
+.btn{
+  background: rgb(251,251,251);
+background: linear-gradient(0deg, rgba(251,251,251,1) 0%, rgba(252,252,252,1) 0%, rgba(252,252,252,1) 30%, rgba(251,251,251,1) 47%, rgba(250,250,250,1) 71%, rgba(247,247,247,0.9540148823201156) 90%, rgba(247,247,247,0.9091969551492471) 95%, rgba(247,247,247,0.9512137618719363) 100%); 
+}
+
+.shadowxl{
+  box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+}
 
   
 
@@ -64,6 +91,7 @@ ort url("~@flaticon/flaticon-uicons/css/all/all"); */
   font-family: arial;
   position: relative;
 }
+
 
 .sb8:after {
   content: "";
