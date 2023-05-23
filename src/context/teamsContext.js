@@ -22,17 +22,35 @@ const TeamsContextProvider = (props) => {
 
   const [isAddNewTeamOpen, setisAddNewTeamOpen] = React.useState(false);
 
+  const [isMessagesOpen, setisMessagesOpen] = React.useState(false);
+
   const [addTeamNameValue, setaddTeamNameValue] = React.useState('');
   const [addTeamEmailValue, setaddTeamEmailValue] = React.useState('');
   const [teamMembersArray, setteamMembersArray] = React.useState([]);
   const [sharedLibaryBooksArray, setsharedLibaryBooksArray] = React.useState([]);
+  const [userLibaryData, setuserLibaryData] = React.useState();
+
   const [teamsNotification, setteamsNotification] = React.useState();
 
   const [isAddWriterToBookMenu, setisAddWriterToBookMenu] = React.useState(false);
   const [selectedBook, setselectedBook] = React.useState();
   const [writersToAddArray, setwritersToAddArray] = React.useState([]);
 
+
+
   const [isWaiting, setisWaiting] = React.useState(false);
+
+  const AcceptBook = ({bookid}) => {
+
+    console.log(bookid, bookid)
+
+    axios.patch(`http://localhost:5024/api/teams/acceptBookInvite/${bookid}/${userData._id}`).then((res) => {
+         console.log(res, 'response')
+      setuserLibaryData(res.data)
+    }).catch((error) => {
+       console.log(error, 'error')
+    })
+  }
 
   const AddNewTeamMember = () => {
 
@@ -57,6 +75,8 @@ const TeamsContextProvider = (props) => {
       instance:'TEAMS'
     })
   })
+
+  setisWaiting(false)
     // setisAddNewTeamOpen(false)
     // setaddTeamEmailValue('')
     // setaddTeamNameValue('')
@@ -65,15 +85,23 @@ const TeamsContextProvider = (props) => {
     // return ('cow')
   }
 
+  const openBookSharedWithMe = () => {
+
+  }
+
 
   const AddBookToLibary = (id, title, bookData) => {
+
+    console.log(bookData, 'bookData')
+
     axios.post(`http://localhost:5024/api/libary/addBook/${userData._id}`, {
       name: title,
-      bookContent:bookData,
+      bookData,
       bookid:id
 }).then((res) => {
   console.log(res, 'response')
-  setsharedLibaryBooksArray(res.data.sharedBooks)
+  // setsharedLibaryBooksArray(res.data.sharedBooks)
+  setuserLibaryData(res.data)
   setnotification({
     type:'success',
     message: "sucessfully AddedBook to userLibary",
@@ -90,17 +118,38 @@ const TeamsContextProvider = (props) => {
   }
 
   const AddWriterToBook = (book) => {
-    axios.put(`http://localhost:5024/api/teams/addWritersToBook/${selectedBook.bookid}/${userData._id}`, {
+
+    console.log(writersToAddArray, 'writerrss')
+
+    if(!writersToAddArray.length){
+      setnotification({
+        type:'error',
+        message: "No writers selected",
+        instance:'TEAMS'
+      })
+
+      return
+    }
+
+    axios.patch(`http://localhost:5024/api/teams/addWritersToBook/${selectedBook.bookid}/${userData._id}`, {
       writers:writersToAddArray,
       bookData:selectedBook,
       bookName:selectedBook.name,
       senderData:userData
 }).then((res) => {
   console.log(res, 'response')
-  setsharedLibaryBooksArray(res.data.sharedBooks)
+  // setsharedLibaryBooksArray(res.data.sharedBooks)
+  setuserLibaryData(res.data)
+
+  const updatedSelectedBook = res.data.sharedBooks.find(item => (item.bookid == selectedBook.bookid))
+
+  console.log(updatedSelectedBook, 'updatedselectedBook')
+
+  setselectedBook(updatedSelectedBook)
+
   setnotification({
     type:'success',
-    message: "sucessfully AddedBook to userLibary",
+    message: "sucessfully attached writer to Book",
     instance:'TEAMS'
   })
 }).catch((error) => {
@@ -124,7 +173,14 @@ const TeamsContextProvider = (props) => {
       axios.get(`http://localhost:5024/api/libary/getUser/${userData._id}`).then((res) => {
         console.log(res)
          setsharedLibaryBooksArray(res.data.sharedBooks)
-        setteamMembersArray(res.data.sharedWriters)
+        
+         setteamMembersArray(res.data.sharedWriters)
+
+        console.log(res.data, 'serUserLibaryData')
+        setuserLibaryData(res.data)
+
+       
+
         // setnotification({
         //   type:'success',
         //   message: "Libaries Added",
@@ -210,7 +266,7 @@ const OpenBook = (book) => {
 console.log(selectedBook, 'selectedbook')
 
   return (
-    <TeamsContext.Provider value={{isTeamsModalOpen, toggleTeamsModal, isAddNewTeamOpen, setisAddNewTeamOpen, addTeamNameValue, addTeamEmailValue, setaddTeamEmailValue, setaddTeamNameValue, AddNewTeamMember, teamMembersArray, setteamMembersArray, AddBookToLibary,sharedLibaryBooksArray, setsharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu,OpenBook, selectedBook, setselectedBook, writersToAddArray, setwritersToAddArray, AddWriterToBook, isWaiting, setisWaiting}}>
+    <TeamsContext.Provider value={{isTeamsModalOpen, toggleTeamsModal, isAddNewTeamOpen, setisAddNewTeamOpen, addTeamNameValue, addTeamEmailValue, setaddTeamEmailValue, setaddTeamNameValue, AddNewTeamMember, teamMembersArray, setteamMembersArray, AddBookToLibary,sharedLibaryBooksArray, setsharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu,OpenBook, selectedBook, setselectedBook, writersToAddArray, setwritersToAddArray, AddWriterToBook, isWaiting, setisWaiting, userLibaryData, isMessagesOpen, setisMessagesOpen, AcceptBook, openBookSharedWithMe }}>
         {props.children}
     </TeamsContext.Provider>
   )

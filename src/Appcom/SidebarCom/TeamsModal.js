@@ -1,4 +1,4 @@
-import { Button, InputBase, IconButton, Switch } from '@mui/material'
+import { Button, InputBase, IconButton, Switch, Badge } from '@mui/material'
 import React from 'react'
 import { TeamsContext } from '../../context/teamsContext'
 import { UserContext } from '../../context/userContext'
@@ -7,6 +7,7 @@ import uniqolor from 'uniqolor';
 import { LibaryContext } from '../../context/LibaryContext'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import WaitingIcon from '../Utility/WaitingIcon';
 
 
 
@@ -15,11 +16,11 @@ const TeamsModal = () => {
 
    const randomColor = () => (uniqolor.random().color)
 
-    const {isAddNewTeamOpen, setisAddNewTeamOpen,  setaddTeamEmailValue, setaddTeamNameValue,addTeamNameValue, addTeamEmailValue, AddNewTeamMember,teamMembersArray,sharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu, OpenBook, selectedBook, setselectedBook,writersToAddArray, setwritersToAddArray, AddWriterToBook, isWaiting} = React.useContext(TeamsContext)
+    const {isAddNewTeamOpen, setisAddNewTeamOpen,  setaddTeamEmailValue, setaddTeamNameValue,addTeamNameValue, addTeamEmailValue, AddNewTeamMember,teamMembersArray,sharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu, OpenBook, selectedBook, setselectedBook,writersToAddArray, setwritersToAddArray, AddWriterToBook, isWaiting, isMessagesOpen, setisMessagesOpen, userLibaryData, AcceptBook } = React.useContext(TeamsContext)
 
-    const {LibaryArray} = React.useContext(LibaryContext)
+    const {LibaryArray, openBook} = React.useContext(LibaryContext)
 
-    const {notification, setnotification} = React.useContext(UserContext)  
+    const {notification, setnotification, userData} = React.useContext(UserContext)  
     
     const [issharedWriterLibary, setissharedWriterLibary] = React.useState(false);
 
@@ -102,19 +103,67 @@ const TeamsModal = () => {
     //     )
     // }
 
+    const selectWriter = (id) => {
+        const isWriter = writersToAddArray.find(item => (item.writerid == id))
+
+        if(isWriter){
+            setwritersToAddArray(prev => prev.filter(item => (item.writerid !== id)))
+        }else{
+            setwritersToAddArray(prev => [...prev, {writerid:id}]) 
+        }
+    }
+
+    React.useEffect(() => {
+       if (!selectedBook){
+            setwritersToAddArray([])
+        }
+    }, [selectedBook]);
+
+    console.log(userLibaryData, 'goddman')
+
+    const unansweredInviteMessages = userLibaryData?userLibaryData.booksReceivedArray.filter(item => (!item.Accepted)):[]
+
+    const InviteMessages = unansweredInviteMessages.map(item => {
+        if(!item.Accepted){
+            return     (<div className='flex items-center justify-between py-1 border-b text-black px-1'>
+            <div className=''>
+          join  {item.From.username}'s book: <span className='font-bold'>
+            {item.bookName}
+                </span> 
+            </div>
+        
+        
+            <Button onClick={()=>AcceptBook({bookid:item.bookData.bookid})} className=''>
+                Accept
+            </Button>
+           
+        </div>)
+        }
+    } )
+
     const SingleTeamMemberAvatar = (props) => {
 
+        const id = props.id
         const writersToAddArrayIds = writersToAddArray.map(item => (item.writerid))
         
         return (
-            <div 
-            onClick={()=>setwritersToAddArray(prev => [...prev, {writerid:props.id}])}
+            <div className={`flex flex-col justify-center items-center p-1 ${writersToAddArrayIds.includes(props.id)?'':''}`}>
+                        <div 
+            onClick={()=>{selectedBook? selectWriter(id): console.log('do nothing')}}
             style={{
                 backgroundColor:randomColor({lightness: [50, 80]})
             }}
-            className={`rounded-full w-10 h-10 bg-white text-white cursor-pointer hover:scale-125 transition-all ${writersToAddArrayIds.includes(props.id)?'border border-2':''}  mt-2 flex items-center justify-center uppercase text-xl font-bold`}>
+            className={`rounded-full w-10 h-10 bg-white text-white cursor-pointer hover:scale-125 transition-all ${writersToAddArrayIds.includes(props.id)?'border border-black border-2':''}  mt-2 flex items-center justify-center uppercase text-xl font-bold`}>
                 {props.name[0]}
             </div>
+
+            <div>
+                {selectedBook && <div className='text-xs text-white'>
+                    {props.name}
+                    </div>}
+            </div>
+            </div>
+        
         )
     }
 
@@ -122,28 +171,47 @@ const TeamsModal = () => {
 
     }
 
+
+    // useEffect(() => {
+        
+    // }, []);
+
     // const jack = selectedBook.writers.
 
-    const currentBook = selectedBook? sharedLibaryBooksArray.find(item => (item.bookid == selectedBook.bookid)):null
+    // const currentBook = selectedBook? sharedLibaryBooksArray.find(item => (item.bookid == selectedBook.bookid)):null
 
-    const SelectedBookWritersDisplay = selectedBook? currentBook.writers.length? currentBook.writers.map(writer => (<div>
-        {teamMembersArray.find(item => (item.writerid == writer.writerid )).name}
+    console.log(selectedBook, 'selectedBooks')
+
+    // React.useEffect(() => {
+        
+    // }, []);
+
+    // console.log(currentBook, 'currentBook')
+
+    const SelectedBookWritersDisplay = selectedBook?.writers.length? selectedBook.writers.map(writer => (<div>
+        {writer.name}
     </div>)):<div  className='text-red-800 font-bold px-2'>
     No writers Assigned to this book
-    </div>:<div className='text-red-800 font-bold px-2'>
-        No writers Assigned to this book
     </div>
+
+    // React.useEffect(() => {
+    //     const updatedSelectedBook
+    //     setselectedBook()
+    // }, [userLibaryData]);
+    // console.log(selectedBook)
+
+
 
     const SingleLibaryBook = (props) => {
         let fileTitle = props.title
         fileTitle = fileTitle.length > 8? `${fileTitle.substring(0, 8)}...`: fileTitle
      
         return (
-            <div>
+            <div className='border'>
                 {(!selectedBook || selectedBook.bookid == props.id) &&
-                      <div className={`${isAddNewTeamOpen?'w-24':'w-20'} transition-all  bg-gray-600 flex flex-col `} >
+                      <div className={`${isAddNewTeamOpen?'w-24':'w-20'} transition-all  bg-gray-500 flex flex-col `} >
                       <div className="  self-center "  >
-                      <IconButton onClick={()=>OpenBook(props.book)}  className="hover:bg-transparent py-0 " >
+                      <IconButton   className="hover:bg-transparent py-0 " >
                       <i className=" ri-file-list-2-line text-gray-300 "></i>
                       </IconButton>
                       </div>
@@ -172,8 +240,31 @@ const TeamsModal = () => {
         )
     }
 
-    const LibaryBooksDisplay = sharedLibaryBooksArray.length? sharedLibaryBooksArray.map((item,i) => (
-        <div>
+    const AcceptedBooksArray = userLibaryData? userLibaryData.booksReceivedArray.filter(item => (item.Accepted)):[]
+
+    console.log(userLibaryData,'l;;')
+    console.log(AcceptedBooksArray, 'accepted')
+
+    const LibaryBooksShareWithMe = AcceptedBooksArray.length?  AcceptedBooksArray.map(item => {
+        
+           return  (<div onClick={()=>{openBook(null ,true, item)}}
+         
+        
+           className=' m-1 cursor-pointer border border-red-400'>
+              <SingleLibaryBook
+              title={item.bookData.name}
+              book = {item}
+              id={item.bookData.bookid}
+              />
+           
+        </div>)
+        
+    }):<div className='text-red-600 bg-white  px-2'>
+       $#!@, No books shared with you 
+    </div>
+
+    const LibaryBooksDisplay = userLibaryData?.sharedBooks.length? userLibaryData.sharedBooks.map ((item,i) => (
+        <div onClick={()=>OpenBook(item)} className=''>
              <SingleLibaryBook
              key={i}
              title={item.name}
@@ -183,49 +274,64 @@ const TeamsModal = () => {
              />
         </div>   
     )):<div className='px-2'>
-    Books Libary
+      {!userData?' Books Libary available on login':'No books in books libary'}
+  
     </div>
 
-    const TeamMemberDisplay = teamMembersArray.length? teamMembersArray.map((item,i) => (<div>
+    console.log(LibaryBooksDisplay, 'Libary')
+
+    const TeamMemberDisplay = teamMembersArray.length? teamMembersArray.map((item,i) => (<div className='mx-1'>
         <SingleTeamMemberAvatar
         key={i}
         name= {item.name}
         id={item.writerid}
         writer ={item}
         />
-    </div>)): <div>
-        Teams available on login
+    </div>)): <div
+    style={{
+        
+    }}
+    className=' font-bold'>
+         {!userData?'':!'! No cells created yet'}
+        
     </div>
 
 
   return (
-    <div className="flex" >
+    <div className="flex " >
         <div className={`${isAddNewTeamOpen?'w-5/6':'w-5/6'} ${isAddWriterToBookMenu?' w-3/6':'block'} transition-all`}>
-        <div className={`flex ${selectedBook?'justify-between':''} border-r-2  border-b-2`}>
+        <div className={`flex ${selectedBook?'justify-between':''} border-r-4  border-black`}>
 
-        <div className=" px-2 flex items-end" >
-            <div onClick={()=>setisAddNewTeamOpen(false)} className={`${isAddNewTeamOpen?'text-xl':' text-3xl'}`}>
+        <div className="h-12 border-b-4 border-black px-2 flex w-full items-center justify-between" >
+            <div
+             style={{
+
+                // color:'#4C4D52'
+            
+        }} 
+            onClick={()=>setisAddNewTeamOpen(false)} className={` cursor-pointer font-header5 text-black  mb-1 ${isAddNewTeamOpen?'text-4xl':' text-3xl'}`}>
                 Teams
             </div>
-                /
-            <div  onClick={()=>setisAddNewTeamOpen(true)} className={`${isAddNewTeamOpen?'text-3xl':'text-xl'}`}>
-            Add to team
+
+            
+            <div className='cursor-pointer  p-1 rounded-lg bg-gradient-to-l from-gray-300 via-gray-200 to-gray-300  shadow-md   transition-all relative' onClick={()=>setisMessagesOpen(prev => !prev)}>
+
+                    <div className='absolute text-sm text-white font-bold top-0 right-0 -mt-4'>
+                        4
+                    </div>
+                  
+                    <svg className=' h-6 fill-current hover:bg-none text-black font-header5 transition-all   w-6 ' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
+                
+           
+              
+               
             </div>
-           {/* {isAddNewTeamOpen?'Teams/':'Add to team'}  */}
-        <span className='cursor-pointer' onClick={()=>setisAddNewTeamOpen(prev => !prev)}>
-            +
-        </span>
+           
+         
         </div>
     
 
-        <div 
-        className={`${!selectedBook?'hidden':'block'}`}
-        onClick={()=>AddWriterToBook()}
-        >
-            <Button className=''>
-                 +
-            </Button>
-        </div>
+     
         </div>
         
         
@@ -235,18 +341,30 @@ const TeamsModal = () => {
                 
              <div style={{
                 height:400
-            }} className="h-full border-r-2 pt-4">
+            }} className="h-full border-black border-r-4 pt-4">
                 <div className='flex items-center' >
-                    <div className='text-xl' >Name:</div> 
+                    <div
+                     style={{
+
+                        color:'#4C4D52'
+                    
+                }}
+                    className='text-xl font-header5 px-2' >Name:</div> 
                     <InputBase
                     value={addTeamNameValue}
                     onChange={(e)=>setaddTeamNameValue(e.target.value)}
-                    className='border-b-2 w-full px-2' 
+                    className='border-b-2  w-full px-2' 
                     />
                 </div>
 
-                <div className='flex items-center pt-4' >
-                    <div className='text-xl' >Email:</div> 
+                <div className='flex font-header5 items-center pt-4' >
+                    <div 
+                     style={{
+
+                        // color:'#4C4D52'
+                    
+                }}
+                    className='px-2 text-xl text-slate-700' >Email:</div> 
                     <InputBase
                     value={addTeamEmailValue}
                     onChange={(e)=>setaddTeamEmailValue(e.target.value)}
@@ -254,44 +372,111 @@ const TeamsModal = () => {
                     />
                 </div>
 
-                <div className='flex justify-end m-4' >
-                    <Button 
+                <div className='flex flex-col  m-4' >
+                    
+                <button 
+                style={{
+                    color:'#4C4D52'
+                }}
+                    className=' font-header5 transition-all btn p-1  text-white 
+                     border-l-2 border-b-2 border-slate-800  rounded-md self-end'
                     onClick={()=>{AddNewTeamMember()}} >
-                        Add Team Member
-                    </Button>
+                        <div className=' py-1 px-2 rounded text-sm '> 
+                                 Add Team Member
+                        </div>
+                       
+                    </button>
+
+                    <button
+                    style={{
+                        
+                    }}
+                    onClick={()=>setisAddNewTeamOpen(false)}
+                    className='transition-all shadow-md btn text-red-500 py-2 px-3  font-header5 text-sm self-start border-l-2 border-b-2 border-slate-800  rounded-md'>
+                        Go Back
+                    </button>
+
                 </div>
-            </div>:<div className='h-full border-r-2 flex flex-col items-center'
+            </div>:<div className='h-full border-r-4 border-black '
             style={{
                 height:400
             }}
-            >
-               {TeamMemberDisplay}
+            >   {isMessagesOpen?<div>
+                Messages
+                <div className='bg-white text-slate-600 p-1 border-b text-sm'>
+                    <span
+                    style={{
+                        
+                    }}
+                    className='  border  mx-1'>
+                        1
+                    </span>
+                    join lerin's book: PATH FINDER
+                </div>
+
+                {InviteMessages}
+            </div>:<div className=''>
+                <div 
+        className={`${!selectedBook?'hidden':'block'} `}
+        onClick={()=>AddWriterToBook()}
+        >
+            <Button className=''>
+                 Add Selected Writers to book
+            </Button>
+        </div>
+
+<div className='flex px-4 w-full   justify-start'>
+                    
+        
+        <button 
+        style={{
+            color:'#4C4D52'
+        }}
+        onClick={()=>setisAddNewTeamOpen(true)} className={`${userData?'':''} ${selectedBook?'hidden':''}  self-end text-stone-500 px-3 py-2 rounded-md hover:border-b hover:border-l transition-all   mt-2  font-header5 transition-all text-sm
+       btn  border-b-2 border-l-2 border-stone-700  `}>
+           Add New Cells
+            </button>
+
+</div>
+       
+        
+        <div className='flex'>
+       
+          {TeamMemberDisplay}
+        </div>
+                </div>}
+       
+            
+              
             </div>
         :<div
         style={{
             // height:400
         }}
         className=' flex border-r-2 px-4 pt-4'>
-            <div className='text-2xl w-fit '>
-            <svg className='animate-spin' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg>
-            </div>
-           
+             <WaitingIcon/>
         </div>}
 
        
         </div>
    
    <div className={`${isAddNewTeamOpen?'w-32':'w-5/6'} ${isAddWriterToBookMenu?'w-3/6':''} transition-all`}>
-        <div className={`${isAddWriterToBookMenu?'flex justify-between':''}  border-b-2 px-2`}>
-            <div onClick={()=>setisAddNewTeamOpen(prev => !prev)} className=" text-3xl px-1 flex" >
-                Libary+
+        <div className={`${isAddWriterToBookMenu?'flex justify-between':''} h-12 border-black border-b-4 px-2`}>
+            <div 
+            style={{
+
+                    // color:'#4C4D52'
+                
+            }}
+            onClick={()=>setisAddNewTeamOpen(prev => !prev)} className=" text-4xl   cursor-pointer flex font-header5 text-black" >
+                Libary
             </div>
 
             <div onClick={()=>{setisAddWriterToBookMenu(false)
             setselectedBook(null)
             }} className={`${isAddWriterToBookMenu?'block':'hidden'}`} >
                 <Button>
-                    xxxx
+                    x
                 </Button>
             </div>
         </div>
@@ -304,13 +489,15 @@ const TeamsModal = () => {
         }}>
             <div>
 
-            <div className='border-b text-sm items-center flex'>
+            <div className={` ${selectedBook?'hidden':''} text-sm items-center flex`}>
             <Switch
-                onClick={()=>setissharedWriterLibary(prev => !prev)}
+                onClick={()=>{setissharedWriterLibary(prev => !prev)
+                setselectedBook(null)
+                }}
                 value={issharedWriterLibary}
                 />
 
-                    <div className={`${isAddNewTeamOpen?'hidden':''}`}>
+                    <div className={`font-header5 ${isAddNewTeamOpen?'hidden':''}`}>
                     {issharedWriterLibary?'books shared with you':' books shared with others'}
                     </div>
                
@@ -321,17 +508,34 @@ const TeamsModal = () => {
             </div>
 
           
-            <div className={`flex flex-wrap transition-all ${selectedBook?'':''}`}>
-            {LibaryBooksDisplay}
+            <div className={`flex flex-wrap transition-all ${selectedBook?'':''} font-header5`}>
+
+                {issharedWriterLibary? LibaryBooksShareWithMe:LibaryBooksDisplay}
+          
             
             {selectedBook &&
                 <div>
                     <div>Name: {selectedBook.name}</div>
+
+                    <div>
+                        No of Writers: {selectedBook.writers.length}
+                    </div>
                     </div>}
             </div>
 
             {selectedBook && <div className='border-t border-white w-full p-2'>
+                <div>
+                    <Button>
+                        Go Back
+                    </Button>
+                </div>
+                <div>
+                    Books Writers
+                </div>
+                <div>
                 {SelectedBookWritersDisplay}
+                </div>
+             
             </div>
 
             }

@@ -79,6 +79,7 @@ import isHotkey from 'is-hotkey';
       if(selectedBook){
         console.log(selectedBook.bookTextprosecontent, 'bookera')
         initialValue = selectedBook.bookTextprosecontent
+        initialTitle = selectedBook.bookTitle
       }else if(isActivateBionicText){
         console.log(bionicTextValueAltered, 'ddddx')
         // initialValue = [l 
@@ -94,7 +95,7 @@ import isHotkey from 'is-hotkey';
    
    }else{
     // console.log(initialTextProseValue, 'some')
-
+//No values have been entered and you activate bionnic text
   if(!initialTextProseValue){
     console.log('second')
     initialValue = [
@@ -105,6 +106,8 @@ import isHotkey from 'is-hotkey';
     ]
   }
  else if(initialTextProseValue && !isActivateBionicText){
+
+  //when you swith bionic text off it restores the normal text
   console.log(isActivateBionicText,'false')
   console.log(initialTextProseValue, 'true')
 
@@ -160,6 +163,8 @@ import isHotkey from 'is-hotkey';
         console.log('jam')
         setValue(selectedBook.bookTextprosecontent)
         settitle(selectedBook.bookTitle)
+        console.log(selectedBook)
+        console.log(currentBookMetaArray)
         setMetaArray(currentBookMetaArray)
         // console.log('1st')
         
@@ -542,7 +547,7 @@ import isHotkey from 'is-hotkey';
                 }} className='App w-full h-full bg-white grid grid-flow-row overflow-hidden' >
               <div className="w-full rounded  font-bold overflow-hidden px-2"> 
                   <div className=' text-left flex justify-between py-1' >
-                      <input className='border-none bg-transparent outline-none font-header5 font-bold text-gray-300'
+                      <input className='border-none bg-transparent outline-none font-header5 font-bold text-slate-800'
                       onChange={ontitleChange}
                       value={title}
                       placeholder={'Enter title'}

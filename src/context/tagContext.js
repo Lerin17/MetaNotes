@@ -33,6 +33,12 @@ const TagContextProvider = (props) => {
     color: 'lightsteelblue'}
 ]
 
+    //REPLACE
+
+    // const [currentNewTagName, setcurrentNewTagName] = React.useState('')
+
+    // const [currentNewTagColor, setcurrentNewTagColor] = React.useState(null);
+
     const [userCreatedTagsArray, setuserCreatedTagsArray] = React.useState([]);
     
     const [newCreatedTagObj, setnewCreatedTagObj] = React.useState({
@@ -61,6 +67,7 @@ const TagContextProvider = (props) => {
    //contains tagged objects filtered through textprose value
     const [taggedObjArray, settaggedObjArray] = React.useState();
 
+    // const [, set] = useState();
 
     const [textproseValue, settextproseValue] = React.useState();
     const [textproseEditor, settextproseEditor] = React.useState();
@@ -121,12 +128,27 @@ const TagContextProvider = (props) => {
         setcurrentBookCreatedTagArray(userCreatedTagsArray) 
     }, [tagsArray]);
 
+    React.useEffect(() => {
+        setTimeout(() => {
+            settaggedObjArray(null)
+            console.log('top notch')
+        }, 3000);
+    }, []);
+
 
     React.useEffect(() => {
-        settaggedObjArray(()=>gettaggedObjArray()) 
+        settaggedObjArray(()=>gettaggedObjArray())
+        
+        console.log('run GetTagged')
         // console.log(gettaggedObjArray())
         // console.log(taggedObjArray)
     }, [textproseValue]);
+
+    React.useEffect(() => {
+        settaggedObjArray(null)
+
+        console.log('run ResetTagged')
+    }, [isResettextareas]);
 
 
     // React.useEffect(() => {

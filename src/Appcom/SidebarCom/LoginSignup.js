@@ -13,7 +13,7 @@ const [isLogin, setisLogin] = React.useState(false);
 
 
 
-   const {setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification, userData, isLoginModalOpen, LogIn} = React.useContext(UserContext)
+   const {setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification, userData, isLoginModalOpen, LogIn, isWaitingUserContext, setisWaitingUserContext} = React.useContext(UserContext)
 
    
 
@@ -77,43 +77,49 @@ const [isLogin, setisLogin] = React.useState(false);
 
   return (
     <div>
-        <ToastContainer/>
-         <div className="text-5xl font-header5 p-4 flex font-bold" >
+        {/* <ToastContainer/> */}
+         <div className=" font-header5 p-4 flex items-center font-bold" >
                     <div onClick={()=>{setisLogin(true)
-                    }} className='hover:scale-110 transition-all cursor-pointer' >{userData?'Profile/':'Login/'}</div>
-                    <div onClick={()=>setisLogin(false)} className='hover:scale-110 transition-all cursor-pointer'>Sign up</div>
+                    }} className={`${isLogin?'text-2xl bg-gradient-to-l from-gray-400 via-gray-200 to-gray-300':'text-2xl'} hover:scale-110 transition-all px-2 py-1cursor-pointer`} >{userData?'Profile':'Login'}</div>
+
+                        <span className='text-4xl px-1'>
+                            /
+                        </span>
+
+                    <button onClick={()=>setisLogin(false)} className={` transition-all ${isLogin?'':' bg-gradient-to-l from-gray-400 via-gray-200 to-gray-300 '} cursor-pointer rounded-xl text-3xl flex items-center px-2 py-1 font-header5`}>Sign up</button>
                 </div>
 
-    {isLogin ? userData? <div className='text-3xl mx-4 '>
+    {isLogin ? 
+    userData? <div className='text-3xl mx-4 '>
         <div className='py-1'>
-          Name: John
+          Name: {userData.username}
         </div>
 
         <div className='py-1'>
           SharedBooks: 15
         </div>
-    </div> : <div className='mt-8 font-header5' >
-                <div className='flex' >
+    </div> :  <div className='mt-8 font-header5' >
+                    {isWaitingUserContext?<div className='text-2xl px-4 pt-2'>
+                        <svg className='animate-spin' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg>
+                    </div>:<div>
+                    <div className='flex' >
                     <div className='ml-4 text-2xl'>Name:</div>
                     <InputBase
                     onChange={(e)=>setuserName(e.target.value)}
                     className='border-b-2 w-full px-2' />
                 </div>
 
-                {/* <div className='flex mt-8' >
-                    <div className='ml-4 text-2xl'>Email:</div>
-                    <InputBase
-                    onChange={(e)=>setuserEmail(e.target.value)}
-                    type='mail' className='border-b-2 w-full px-2' />
-                </div> */}
-
                 <div className='flex mt-8' >
                     <div className='ml-4 text-2xl'>Password:</div>
                     <InputBase 
                     onChange={(e)=>setuserPassword(e.target.value)}
                     className='border-b-2 w-full px-2' />
-                </div>
+                </div></div>}
+          
             </div>:  <div className='mt-8 font-header5' >
+                {isWaitingUserContext?<div className='text-2xl px-4 pt-2'>
+                        <svg className='animate-spin' xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg>
+                    </div>: <div>
                 <div className='flex' >
                     <div className='ml-4 text-2xl'>Name:</div>
                     <InputBase
@@ -134,13 +140,15 @@ const [isLogin, setisLogin] = React.useState(false);
                     onChange={(e)=>setuserPassword(e.target.value)}
                     className='border-b-2 w-full px-2' />
                 </div>
+                    </div>}
+             
             </div>}
           
-        {isLogin?   <div onClick={LogIn} className={`mt-8 flex ${userData?'justify-end ':'justify-end '} px-4`}>
-            <Button className={`${userData?'mr-10':''}`}>
+        {isLogin?   <div onClick={LogIn} className={`mt-8 ${isWaitingUserContext?'hidden':''} flex ${userData?'justify-end ':'justify-end '} font-header5 px-4`}>
+            <button className={`${userData?'mr-10':''} px-2 py-1 rounded-lg bg-gradient-to-l from-gray-300 via-gray-200 to-gray-400 `}>
                 {userData?'Log Out':'Log In'}         
-            </Button>
-        </div>:  <div className='mt-8 flex justify-end px-4'>
+            </button>
+        </div>:  <div className={`${isWaitingUserContext?'hidden':''} mt-8 flex justify-end px-4`}>
             <Button onClick={SignUp}>
                 Sign Up
             </Button>

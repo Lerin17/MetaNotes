@@ -2,6 +2,8 @@ import React from 'react'
 import _ from "lodash";
 import { bionicContext } from './bionicContext';
 import { UserContext } from './userContext';
+import axios from 'axios';
+import { io, socketHook } from './socketContext';
 
 
 
@@ -9,6 +11,8 @@ const LibaryContext = React.createContext()
 
 
 const LibaryContextProvider = (props) => {
+
+    const {userData} = React.useContext(UserContext)
 
    
     const {notification, setnotification} = React.useContext(UserContext)
@@ -65,7 +69,7 @@ const LibaryContextProvider = (props) => {
     //is book already present on reset
     //   const isbookalready = Libaryarrayids.some(item => item == currentBook.bookid)
 
-    console.log(LibaryArray, 'libatyArrau')
+    console.log(LibaryArray, 'libatyArray')
     const [currentFileSelectedInMenu, setcurrentFileSelectedInMenu] = React.useState();
 
     React.useEffect(() => {
@@ -104,6 +108,51 @@ const LibaryContextProvider = (props) => {
         }       
     }, [currentBook]);
 
+    React.useEffect(() => {
+
+        const userLocalLibary = JSON.parse(localStorage.getItem('userLocalLibary')) 
+
+        console.log(userLocalLibary, 'courage')
+
+        if(!userLocalLibary){
+            setLibaryArray([])
+        }else{
+            setLibaryArray(userLocalLibary)
+        }
+
+        
+    }, []);
+
+
+    // localStorage.clear()
+
+    React.useEffect(() => {
+
+        //save userLibaryData Locally
+        localStorage.setItem('userLocalLibary', JSON.stringify(LibaryArray))
+
+ 
+
+      //save userData to onlineDataBase
+
+     if(userData){
+        axios.post(`http://localhost:5024/api/libary/saveLibaryArray/${userData._id}`, {
+            LibaryArrayData:LibaryArray
+        }).then((res) => {
+            console.log(res, 'MybooksOnline')
+         }).catch((error) => {
+            console.log(error, 'error')
+         })
+    }
+    }, [LibaryArray]);
+
+    // React.useEffect(() => {
+    //     console.log('current book log changes')
+    // }, [currentBook]);
+
+
+ 
+
 
 
     
@@ -131,9 +180,29 @@ const LibaryContextProvider = (props) => {
 
 
     //handle mounting an already existing book start
-    const openBook = (id) => {
+    const openBook = (id, isBookFromMyOnlineLibary, bookSharedWithMe) => {
+
+        // console.log(bookSharedWithMe.bookData.bookData, 'rookdata')
+
         console.log(id)
         const book = LibaryArray.find(item => item.bookid == id)
+
+        if(isBookFromMyOnlineLibary){
+
+            socketHook.emit('joinroom', 'xex')
+            
+
+            //should fix the bookData.bookData
+
+            setselectedBook(bookSharedWithMe.bookData.bookData)
+        
+            setTimeout(() => {
+                toggleResetTextareas() 
+                
+               }, 100);
+
+            return
+        }
         
         setselectedBook(book)
         console.log(book)
@@ -235,7 +304,7 @@ const LibaryContextProvider = (props) => {
      console.log(selectedBook, 'selcted book')
       updateBookID()
 
-      if(selectedBook && currentBook){
+      if(selectedBook || currentBook){
         console.log('2nd')
         setbookID(selectedBook.bookid)
       }
@@ -262,6 +331,12 @@ const LibaryContextProvider = (props) => {
             return
         }
 
+        // if (currentBook.bookid == setbookID){
+
+        // }
+
+        //if userData available save LibaryArray to dataBase
+       
        setcurrentBook({
         bookid: bookID,
         bookTitle:currentBookTitle,

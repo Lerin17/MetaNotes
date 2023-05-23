@@ -38,6 +38,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Home from '../svgIcons/home.svg'
 import LoginSignup from "./SidebarCom/LoginSignup";
 import TeamsModal from "./SidebarCom/TeamsModal";
+import ModalCustom from "./Custom/ModalCustom";
 
 
 
@@ -73,7 +74,7 @@ function Sidebar (params) {
     // const {clearInitialTextProseValue} = React.useContext(bionicContext)
 
     const classes = usestyle()
-    const {Createbookentry, isLibarymodal,  toggleLibaryModal, LibaryArray, toggleResetTextareas, openBook, selectedBook, newFileSaveError, setnewFileSaveError, ClearTextArea, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, FolderArray,clearCurrentFolder, openFolder, currentFolderContent, saveCurrentFolder, currentFileSelectedInMenu,setcurrentFileSelectedInMenu} = React.useContext(LibaryContext)
+    const {Createbookentry, isLibarymodal,  toggleLibaryModal, LibaryArray, toggleResetTextareas, openBook, selectedBook, newFileSaveError, setnewFileSaveError, ClearTextArea, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, FolderArray,clearCurrentFolder, openFolder, currentFolderContent, saveCurrentFolder, currentFileSelectedInMenu,setcurrentFileSelectedInMenu,} = React.useContext(LibaryContext)
 
     const {currentTag, isTagMenu, toggleisTagMenu, tagsArray, changeCurrentTag, taggedObjArray, toggleisTagLibaryDisplay,tagsColorPool, handleNewTaginput, userCreatedTagsArray, setnewTagError, newTagError } = React.useContext(TagContext)
 
@@ -81,7 +82,7 @@ function Sidebar (params) {
 
     const {isLoginModalOpen, toggleLoginModal, notification, setnotification,userData} = React.useContext(UserContext)
 
-    const {isTeamsModalOpen, toggleTeamsModal, teamMembersArray, setteamMembersArray, AddBookToLibary, sharedLibaryBooksArray} = React.useContext(TeamsContext)
+    const {isTeamsModalOpen, toggleTeamsModal, teamMembersArray, setteamMembersArray, AddBookToLibary, sharedLibaryBooksArray, userLibaryData} = React.useContext(TeamsContext)
 
   
 
@@ -324,7 +325,7 @@ function Sidebar (params) {
     
   
 
-    const MainModalstyles = [`absolute top-32 md:left-96 lg:left-1/6 ${isTagMenu?'left-72':'left-96'}   -translate-x-1/2   bg-transparent   pb-3 md:ml-5 lg:ml-10`]
+    const MainModalstyles = [`absolute top-28 md:left-96  z-20 ${isTagMenu?'left-72':'left-96'}   -translate-x-1/2   bg-transparent   pb-3 md:ml-5 lg:ml-28`]
 
     const subModalstyles = ['']
 
@@ -337,10 +338,13 @@ function Sidebar (params) {
             // border: `1px solid ${bgColor}`,
             // backgroundColor: bgColor,
             backdropFilter: 'blur(2px)'
-        }} className={`w-full rounded-lg  ${props.isActive?'scale-105 bg-black':''} cursor-pointer  md:mt-4 lg:mt-4 p-1 shadow hover:scale-105 transition-all `} >
+        }} className={`w-full rounded-lg  ${props.isActive?'scale-105 bg-black':''} cursor-pointer  md:mt-4 lg:mt-4 p-1 relative shadow hover:scale-105 transition-all `} >
+
+
            
             <div className=" lg:mr-0 xl:mr-0 md:mr-0  ">
                     <div className= {classes.sidebuttonCon} >
+                    
                         <div   onClick={()=> {
                                if(props.text == 'New'){
                                 // console.log('New clicked dammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
@@ -356,8 +360,11 @@ function Sidebar (params) {
                        
                         {/* </IconButton >              */}
                         </div>
+                      
+                       
 
-                        <div className="hidden  xl:block self-center justify-start w-full" >
+                        <div className="hidden  xl:block self-center justify-start w-full " >
+                         
                             <div 
                         //     style={{
                         // WebkitTextStroke : '1px black'
@@ -385,18 +392,18 @@ function Sidebar (params) {
         const badgeContent = props.content.length 
 
         return (
-            <div className="w-20 h-20 cursor-pointer  transition-all hover:scale-105 hover:bg-white  flex flex-col items-center" >
+            <div className="w-16 h-20 cursor-pointer  transition-all hover:scale-105 hover:bg-white bg-gradient-to-l from-gray-400 via-gray-300 to-gray-500 rounded-r mt-1 mr-1 border-r border-white flex flex-col items-center" >
                 <div onClick={()=>{
                      setisActivateBionicText(false)
                     saveCurrentFolder()
                     openFolder(props.folderid)}} className="p-2" >
                     <Badge  badgeContent={badgeContent}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 21a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7.414l2 2H20a1 1 0 0 1 1 1v3h-2V7h-7.414l-2-2H4v11.998L5.5 11h17l-2.31 9.243a1 1 0 0 1-.97.757H3zm16.938-8H7.062l-1.5 6h12.876l1.5-6z"/>
+                        <svg className="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 21a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7.414l2 2H20a1 1 0 0 1 1 1v3h-2V7h-7.414l-2-2H4v11.998L5.5 11h17l-2.31 9.243a1 1 0 0 1-.97.757H3zm16.938-8H7.062l-1.5 6h12.876l1.5-6z"/>
                         </svg>
                     </Badge>
                    
                 </div>
-                <div className="text-sm" >
+                <div className="text-xs border-t border-black" >
                     {folderName}
                 </div>
             </div>
@@ -405,7 +412,11 @@ function Sidebar (params) {
 
     const currentFolderContentIDs = currentFolderContent.map(item => item.bookid)
   
-    
+    const randomxe = () => Math.floor( Math.random() * 10)
+
+    const degree = String(randomxe() * 100) 
+
+    console.log(degree, 'random')
 
     const Filecomponent = (props) => {
         let fileTitle = props.title
@@ -416,27 +427,28 @@ function Sidebar (params) {
         console.log(currentSharedBooksIDs.includes(String(props.bookid) ), 'sharedBooksIDs')
         console.log(props.bookid)
 
+        console.log(typeof(degree))
 
         return (
-            <div className={`w-20 ${isNewFolderInterface? currentFolderContentIDs.includes(props.bookid)?'opacity-50':'':''}  bg-gray-600 flex flex-col ${currentFileSelectedInMenu == props.bookid?'border-2':'border-none'}`} >
+            <div className={`w-16 border-gray-300 border-r border-b ${isNewFolderInterface? currentFolderContentIDs.includes(props.bookid)?'opacity-50':'':''}  bg-gradient-to-l from-gray-700 via-gray-700 to-gray-900 mr-1 mt-1  flex flex-col ${currentFileSelectedInMenu == props.bookid?'text-blue-600 border':''}`} >
                 <div className="  self-center "  >
                 <IconButton onClick={()=>{
                     addToRecentFiles(props.allbookData)
                     clearInitialTextProseValue()
-                    openBook(props.bookid)}} className="hover:bg-transparent py-0 " >
+                    openBook(props.bookid, false, null)}} className="hover:bg-transparent py-0 " >
                 <i className=" ri-file-list-2-line text-gray-300 "></i>
                 </IconButton>
                 </div>
                 
-                <div className="text-xs px-1 w-full text-center self-center text-gray-200" >{fileTitle}</div>  
+                <div className="text-xs px-1 w-full text-center self-center  text-gray-200" >{fileTitle}</div>  
 
             <div className="w-full flex justify-center  p-1 bg-gray-700" >
                 <div className={`${isNewFolderInterface?'block w-full ':'hidden'}`} onClick={()=>{
                     setisActivateBionicText(false)
                     updateCurrentFolderContent(props.allbookData)
                 }} >
-                    <div className="bg-green-400 hover:bg-green-500 transition-all text-center cursor-pointer font-bold" >
-                         ADD
+                    <div className="bg-gradient-to-l from-gray-400 via-gray-200 to-gray-300 text-sm hover:bg-green-500 transition-all text-center font-header5 cursor-pointer font-bold" >
+                         Add
                     </div>
                 </div>
 
@@ -446,7 +458,7 @@ function Sidebar (params) {
 
                  <div 
                  onClick={()=>AddBookToLibary(props.bookid, props.title, props.allbookData )}
-                 className={`${isNewFolderInterface && userData?'hidden':`block`} cursor-pointer ml-4`} >
+                 className={`${isNewFolderInterface?'hidden':`block`} cursor-pointer ml-4`} >
                         <svg xmlns="http://www.w3.org/2000/svg" className={`${ currentSharedBooksIDs.includes(String(props.bookid))?'text-blue-600':'text-gray-300 hover:text-blue-600'}  transition-all fill-current`} width="16" height="16" viewBox="0 0 24 24"><path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z"/></svg>
                 </div> 
                 </div>
@@ -469,7 +481,14 @@ function Sidebar (params) {
             // {name:'grey', value:grey}, 
             {name:'yellow', value:"	#ffd700"},
             {name: 'purple', value:"#9932cc"},
-            {name: 'black', value:"#000000"}
+            {name: 'black', value:"#000000"},
+            {name:'green', value:'#06c034'},
+            {name:"violet", value:""},
+            {name:"moccasin", value:""},
+            {name:"maroon", value:""},
+            {name:'teal', value:''},
+            {name:'loghtsteelblue', value:''}
+
         ]
 
         const currentcolor = colors.find(item => item.name == tag)
@@ -549,7 +568,7 @@ function Sidebar (params) {
         allbookData = {item}
         // isFileSelected = {false}
         />
-    </div> ):<div className="border-t text-xl">
+    </div> ):<div className=" text-xl">
     Empty, No Docs available
     </div>
 
@@ -580,8 +599,8 @@ const Folderdisplay = FolderArray.map((item, i)=>{
 
     return (
 <div className="sidebar h-full flex flex-col w-full  justify-start shadow-2xl ">
-        <div className="block z-30">
-        <ToastContainer />
+        <div className="absolute z-30">
+        {/* <ToastContainer /> */}
         </div>
         <SaveFileErrorsModal/>
         <div className="bg-white mx-auto    text-4xl p-4 font-header2 w-16 h-20 flex justify-center items-center" >
@@ -717,7 +736,14 @@ const Folderdisplay = FolderArray.map((item, i)=>{
         color = '#DCD9D8'
         />
 
-        <Sidebarbuttoncom
+        <div className="relative">
+                {userLibaryData &&   <div className="absolute font-bold -right-2 text-sm z-10 px-1 text-white cursor-pointer hover:scale-110 transition-all bg-green-600  top-2 ">
+                               {userLibaryData.  booksReceivedArray.length}
+                            </div>}
+               
+
+
+                            <Sidebarbuttoncom
         icon = {
             <svg xmlns="http://www.w3.org/2000/svg" className='text-gray-700 fill-current' width="24" height="24" viewBox="0 0 24 24"><path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z"/></svg>
         }
@@ -726,8 +752,13 @@ const Folderdisplay = FolderArray.map((item, i)=>{
         // isActive = {isActivateBionicText}
         color = '#DCD9D8'
         />
-
+        </div>
       
+
+        
+
+
+    
 
 
 
@@ -738,8 +769,8 @@ const Folderdisplay = FolderArray.map((item, i)=>{
         aria-describedby="parent-modal-description"
         disableAutoFocus={true}
       >
-     <div className="flex" >
-        <Box className={MainModalstyles} sx={{ width: 650, height: 600, 
+     
+        <Box className={MainModalstyles} sx={{ width: 700, height: 600, 
         "& .MuiOutlinedInput-notchedOutline": {
             border: "0 none",
           },
@@ -747,13 +778,11 @@ const Folderdisplay = FolderArray.map((item, i)=>{
         <div className="flex" >
             <div style={{
             height: 600
-            }} className= 'w-3/5 ' >
-                <div className="bg-gray-800 flex justify-between px-2 py-1 font-bold text-white font-header5" >
+            }} className= 'w-4/5 ' >
+                <div className=" flex justify-between px-2 py-1 border-b-4 border-black text-black text-3xl font-header5" >
                     <div>Libary</div>
 
-                    <div>
-                    Search
-                    </div>
+                   
                     {/* clearCurrentFolder */}
                     {!isNewFolderInterface?   <div className="cursor-pointer hover:text-green-400 transition-all" onClick={()=>
                     {clearCurrentFolder()
@@ -770,22 +799,45 @@ const Folderdisplay = FolderArray.map((item, i)=>{
                     height:500,
                     overflowY:'auto'
                 }}
-                className={` flex-wrap ${LibaryArray.length?'flex':'flex-col'}`} > 
+                className={` flex-wrap ${LibaryArray.length? FolderArray.length?'flex':'flex-col':""}`} > 
 
-                <div>
-                <div className="">
-                        Hide folders
+                <div className="w-full">
+                <div  className={`${FolderArray.length?'':'hidden'} mt-1 w-full flex`}>
+                        <button
+                        style={{
+                            // background:'#79838b'
+                        }}
+                        className="px-2 py-1 bg-gradient-to-l from-blue-700 via-cyan-600 to-blue-900 
+                        w-3/12 text-white
+                        shadow-md font-header5 rounded ">
+                        Hide Folders
+                            </button>
+
+                            <div className="w-8/12 border-b-2 flex ml-2">
+                            <button className=" transition-all   rounded ml-2  font-header5 flex  text-white justify-start">
+                            Search
+                            </button>
+                            <input
+                            className="w-full bg-transparent"
+                            />
+                            </div>
+                       
                     </div>
 
-                    <div className="flex flex-wrap">    
+                    <div className="flex mt-2 flex-wrap">    
                    {Folderdisplay}
+                   {Filedisplay}
                     </div> 
+
+                    {/* <div className="flex flex-wrap">    
+             
+                    </div> */}
                 </div>
 
                   
                 
-
-                    {Filedisplay}
+           
+                 
                     
                    
 
@@ -817,7 +869,7 @@ const Folderdisplay = FolderArray.map((item, i)=>{
         </Box>
 
  
-    </div>
+  
         
       </Modal>
 
@@ -829,7 +881,7 @@ const Folderdisplay = FolderArray.map((item, i)=>{
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >
-        <div   className={` ${MainModalstyles} `} style={{ width: 400 , height: 500, "& .MuiOutlinedInput-notchedOutline": {
+        <div   className={` ${MainModalstyles} border-none`} style={{ width: 400 , height: 500, "& .MuiOutlinedInput-notchedOutline": {
             border: "0 none",
           } }}
           >
@@ -900,13 +952,18 @@ const Folderdisplay = FolderArray.map((item, i)=>{
       onClose={()=>toggleTeamsModal()}
       >
     <div className="" >
-        <Box className={MainModalstyles} sx={{ width: 550, height: 400, 
+        <Box className={MainModalstyles} sx={{ width: 600, height: 550, 
         "& .MuiOutlinedInput-notchedOutline": {
             border: "0 none",
           },
     }}    >
-            <div className=" " >
+            <div
+          
+            className="" >
                 <div style={{
+                      
+                        // background: '#4C4D52'
+                    
                 // height: 400
                 }} className= 'w-full ' >
                     <TeamsModal/>
