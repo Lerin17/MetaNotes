@@ -29,6 +29,11 @@ import { Input } from '@material-ui/core';
 import { Popover } from 'react-tiny-popover';
 import { bionicContext } from '../../context/bionicContext';
 import isHotkey from 'is-hotkey';
+import {  socketContext } from '../../context/socketContext';
+import { UserContext } from '../../context/userContext';
+import { Socket } from 'socket.io-client';
+
+
 
 // const initialValue =!iscurrentMetaempty && currentMeta?currentMeta.content :  [
 //   {
@@ -41,6 +46,10 @@ import isHotkey from 'is-hotkey';
   const Textproseslate = () => {
     
     const {updateBookTextProse,  currentBook, bookID, LibaryArray, selectedBook, setselectedBook, isResettextareas,  setbookID, currentBookMetaArray} =  React.useContext(LibaryContext)
+
+    const { socketClient} = React.useContext(socketContext)
+
+    const {userData} = React.useContext(UserContext)
 
     const {isMetamodal, toggleMetamodal, CreateMetaID, CreateMetaObj, MetaArray, setMetaArray, currentMeta, sortSelectedMeta, MetaID, updateTestNum, updateTextProseId, updatMetaId, currentMetaPopoverContent } = React.useContext(Metacontext)
 
@@ -55,7 +64,8 @@ import isHotkey from 'is-hotkey';
       'mod+1': 'tag',
       'mod+`': 'code',
     }
-    
+
+
     // console.log(currentTagObj)
 
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
@@ -529,6 +539,16 @@ import isHotkey from 'is-hotkey';
   //     )
   // }
 
+    const handleChangeSlate = (value) => {
+
+      // console.log(socketHook.rooms)
+      
+ 
+      
+      
+      setValue(value)
+    } 
+
 
        const renderLeaf = useCallback(props => {
         return <Leaf {...props}
@@ -540,7 +560,13 @@ import isHotkey from 'is-hotkey';
 
     return (       
       // <div className='flex flex-col lg:flex-row md:flex-row' >
-        <Slate editor={editor} value={value} onChange={value => setValue(value)} >
+        <Slate editor={editor} value={value} onChange={value => {setValue(value)
+        if(userData){
+          
+         
+        }
+        }
+        } >
               <div 
                 style={{
                 gridTemplateRows: 'auto 1fr'

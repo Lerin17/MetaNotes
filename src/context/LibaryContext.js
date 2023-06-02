@@ -3,7 +3,12 @@ import _ from "lodash";
 import { bionicContext } from './bionicContext';
 import { UserContext } from './userContext';
 import axios from 'axios';
-import { io, socketHook } from './socketContext';
+import { socketContext } from './socketContext';
+
+// import { emitx } from './socket';
+
+// import { io, socketHook } from './socketContext';
+
 
 
 
@@ -13,6 +18,8 @@ const LibaryContext = React.createContext()
 const LibaryContextProvider = (props) => {
 
     const {userData} = React.useContext(UserContext)
+
+    const {socket, joinRoom} = React.useContext(socketContext)
 
    
     const {notification, setnotification} = React.useContext(UserContext)
@@ -189,15 +196,24 @@ const LibaryContextProvider = (props) => {
 
         if(isBookFromMyOnlineLibary){
 
-            socketHook.emit('joinroom', 'xex')
+            console.log('joinroom')
+
+            // console.log(bookSharedWithMe.bookData.bookData.bookid)
+
+           
+            
             
 
             //should fix the bookData.bookData
 
             setselectedBook(bookSharedWithMe.bookData.bookData)
+
+            joinRoom(bookSharedWithMe.bookData.bookData.bookid)
         
             setTimeout(() => {
                 toggleResetTextareas() 
+
+                // socketClient.emit('sendroomsdata')
                 
                }, 100);
 

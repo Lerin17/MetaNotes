@@ -19,6 +19,7 @@ import { DashboardContextProvider } from './context/DashboardContext';
 import { BionicContextProvider } from './context/bionicContext';
 import { TeamsContextProvider } from './context/teamsContext';
 import { UserContextProvider } from './context/userContext';
+import { SocketContextProvider } from './context/socketContext';
 
 
 
@@ -28,7 +29,8 @@ root.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme = {theme}>
       <UserContextProvider>
-      <TeamsContextProvider>
+        <SocketContextProvider>
+        <TeamsContextProvider>
          <MetacontextProvider>
           <LibaryContextProvider>
           <TagContextProvider>
@@ -41,6 +43,7 @@ root.render(
           </LibaryContextProvider>   
         </MetacontextProvider>
       </TeamsContextProvider>
+        </SocketContextProvider> 
       </UserContextProvider>   
     </ThemeProvider >  
     </StyledEngineProvider>

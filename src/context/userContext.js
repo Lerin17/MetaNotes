@@ -1,9 +1,12 @@
 import React from 'react'
 
-import {io, Socket} from 'socket.io-client'
+
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
-import { socketHook } from './socketContext'
+import { socketClient } from './socket'
+// import { connect } from 'socket.io-client'
+
+
 
 
 
@@ -15,6 +18,8 @@ const UserContext = React.createContext()
 const UserContextProvider = (props) => {
 
   const [isLoginModalOpen, setisLoginModalOpen] = React.useState(false);
+
+  // const {socketClient} = React.useContext(socketContext)
 
 
 //   const [isSharedModalOpen, setisSharedModalOpen] = React.useState(false);
@@ -82,14 +87,27 @@ const UserContextProvider = (props) => {
   )
 
   
-  React.useEffect(() => {
-    //first
-    // const socket = io('http://localhost:5024/')
 
-    socketHook.on('me', (id) => {
-      console.log(id, 'socketid')
-    })
-  }, [userData]);
+    React.useEffect(() => {
+
+      if(userData){
+
+  
+        // socketClient.connect()
+    
+        // socketClient.on('me', (id) => {
+        //   console.log(id, 'socketid')
+        // })
+    
+        // socketClient.emit('jam', '33x')
+    
+        // socketClient.on('roomsdata', (data) => {
+        //   console.log(data, 'socketroom')
+        // })
+      }
+    
+    }, [userData]);
+
 
   
   React.useEffect(() => {
