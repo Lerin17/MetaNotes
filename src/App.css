@@ -36,6 +36,18 @@
   color: #79838b;
 }
 
+
+@font-face {
+  font-family: 'EN';
+  src: url('../public/fonts/enchanted_land/Enchanted\ Land.otf');
+}
+
+@font-face {
+  font-family: 'MINE';
+  src: url('../public/fonts/minercraftory/Minercraftory.ttf');
+}
+
+
 .sidebar {
   background-color: #e5e5f7;
   /* opacity: 0.8; */
@@ -44,9 +56,6 @@
   background-position: 0 0, 0 0, 4px 7px, 4px 7px, 0 0, 4px 7px;
 }
 
-.apsz{
-  left: ;
-}
 /* .App-link {
   color: #61dafb;
 }  */
