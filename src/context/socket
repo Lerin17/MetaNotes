@@ -1,0 +1,25 @@
+import { io } from "socket.io-client";
+
+const socketClient = io( 'http://localhost:5024/', {
+    autoConnect: false
+  });
+
+const connect = () => {
+    socketClient.connect()
+
+    socketClient.on('me', (id) => {
+        console.log(id, 'socketid')
+      })
+
+      socketClient.on('roomsdata', (data) => {
+        console.log(data, 'socketroom')
+      })
+}
+
+const emitx = (id) => {
+    socketClient.emit('room', id)
+}
+
+
+
+export  {socketClient, connect, emitx}
