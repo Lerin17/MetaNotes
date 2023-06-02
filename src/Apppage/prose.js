@@ -23,7 +23,10 @@ import { toast, ToastContainer } from "react-toastify";
 import ModalCustom from "../Appcom/Custom/ModalCustom";
 // import { TeamsContext } from "../context/teamsContext";
 
+
+
 import TeamsModal from "../Appcom/SidebarCom/TeamsModal";
+import { motion } from "framer-motion";
 
 
 function Prose(params) {
@@ -33,14 +36,14 @@ function Prose(params) {
 
     const {taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, isTagMenu} = React.useContext(TagContext)
 
-    const {isLoginModalOpen, setnotification, notification} = React.useContext(UserContext)
+    const {isLoginModalOpen, setnotification, notification, isDarkMode} = React.useContext(UserContext)
     const {isTeamsModalOpen} = React.useContext(TeamsContext)
 
     const {isActivateBionicText} = React.useContext(bionicContext)
     const [proseKeyValue, setproseKeyValue] = React.useState(1);
 
     const [natif, setnatif] = React.useState(null);
-
+    const [isOpenSideBar, setisOpenSideBar] = React.useState(false);
     // const {taggedObjArray, } = React.useContext(TagContext)
 
 
@@ -48,15 +51,15 @@ function Prose(params) {
     const styles = () => {
         return (
             {
-                sidebar: isMetamodal || isTagLibaryDisplay? 'hidden': '   lg:rounded-none xl:rounded-none w-1/12 border-r-4  border-slate-400 overflow-hidden xl:w-2/12 md:w-1/12 lg:h-full md:h-full   mb-3 md:mb-0 lg:mb-0  bg-blue-200',
+                sidebar: isMetamodal || isTagLibaryDisplay? 'hidden': ' relative  lg:rounded-none xl:rounded-none    xl:w-2/12 md:w-1/12 lg:h-full md:h-full w-fit  mb-3 md:mb-0 lg:mb-0 ',
 
-                proseContainer: isMetamodal || isTagLibaryDisplay? 'flex flex-col lg:flex-row md:flex-row  mx-auto h-screen bg-white xl:w-7/12 lg:w-10/12 md:w-12/12 w-full lg:pl-4 transition-all rounded':" mx-auto h-full bg-white  md:w-11/12 xl:w-10/12  w-full  rounded-r",
+                proseContainer: isMetamodal || isTagLibaryDisplay? 'flex flex-col lg:flex-row md:flex-row  mx-auto h-screen bg-white  lg:pl-4 transition-all rounded':` mx-auto h-full    ${isOpenSideBar?'w-full md:11/12  xl:w-10/12 lg:w-10/12 ':'xl:w-10/12 lg:w-10/12 md:w-11/12 w-full '}  bg-transparent   rounded-r`,
 
                Metatextarea: isMetamodal? 'lg:w-4/12 md:w-4/12 w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0 animate-fade': 'hidden',
 
                TaggeditemsLibary: isTagLibaryDisplay?'lg:w-4/12 md:w-4/12 lg:h-screen overflow-auto md:h-screen w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0 transition-all animate-fade':'hidden',
 
-               Dashboard: isMetamodal || isTagLibaryDisplay ? 'hidden': "lg:w-3/12 xl:w-3/12 lg:block xl:block hidden bg-white border-r-2 border-slate-400"
+               Dashboard: isMetamodal || isTagLibaryDisplay ? 'hidden': `  ${isOpenSideBar?' xl:w-3/12 lg:w-3/12':'lg:w-3/12  xl:w-3/12'} bg-white   lg:block xl:block hidden`
             }
            
         )   
@@ -155,15 +158,21 @@ React.useEffect(() => {
 
 console.log(isLoginModalOpen, 'isLoginModal')
 
+const openSideBar = () => {
+    setisOpenSideBar(prev => !prev)
+}
+
     return (
 <div className="">   
 
         
 
     <div  style={{
+        backdropFilter:'contrast(1)',
+        // background:'black'
         // background: 'radial-gradient(at 100% 50%, rgb(56, 189, 248), rgb(49, 46, 129))'
     }}
-    className="w-screen   md:p-0 h-screen " >
+    className={`w-screen transition-all ${isDarkMode?'bg-black':'bg-white'}  md:p-0 h-screen `} >
          <ToastContainer />
 
          {/* <ModalCustom
@@ -188,56 +197,66 @@ console.log(isLoginModalOpen, 'isLoginModal')
                 backdropFilter: `${isLibarymodal || isTagMenu || isLoginModalOpen? '':''}`
             }} className={`${isLibarymodal || isTagMenu || isLoginModalOpen || isTeamsModalOpen?'blur-md ':''} relative  flex flex-col h-full  lg:flex-row   md:flex-row`} > 
 
+        
+                <div 
+                style={{
+                    background:''
+                }}
+                className= {classes.sidebar} >
 
-                <div   className= {classes.sidebar} >
+                    <div  className=" z-10  font-header6  font-bold text-4xl px-2 w-10/12 relative">
+                        <div
+                        style={{
+                            textSize:'6(px)',
+                            // color:'#94B4E4'
+                        }}
+                        className="flex justify-end font-header5 text-emerald-700  w-full text-xs absolute">
+                            
+
+                            <div className="">
+                                  (V:1.10)
+                            </div>
+                        </div>
+                        {/* <div 
+                        style={{
+                            // color:"#699D98"
+                        }}
+                        className="w-full top-20 text-white  absolute" >
+                                  what is the truth of the matter
+                        </div>
+                      
+                       <div 
+                       style={{
+                        // color:'#90D6CF'
+                       }}
+                       className="w-full text-xl  text-white text-right font-header7 z-10 top-48 absolute" >
+                                  The first thing you should know about me is
+                        </div> */}
+                    </div>
+              
                 <Sidebar
+    
+                isOpenSideBar = {isOpenSideBar}
+                openSideBar = {openSideBar}
                 key={2}
                 />
                 </div>
+             
+                
 
-                <div 
-                style={{
-                    left:'13.33%',
-                    // background:'#79838b'
-                }}
-                className="absolute hidden  w-5/12 bg-slate-200 border-r  border-black  h-full z-10 ">
-                     <div className="pt-2 pb-6 border-b text-4xl text-white font-header5">
-                        Once upon a time....
+              
+
+                
+                      <div  style={{
+                        
+                        
+                      }}
+                      className={classes.Dashboard} >
+                            <Dashboard/>
                     </div>
+                
 
-                    <div className="text-xs absolute ml-20 w-7/12 text-right  font-header4 text-slate-100">
-                    "It doesn’t matter what Ares wants, you baboon.
-Never mind the science. His physical and mental dexterity is probably
-daft as a damn bowl cleaner’s. And his tangibles won’t match. He’s not
-their species! He’s a Ruster!”
-                    </div>
-
-
-                    <div className="text-3xl absolute mr-32 w-9/12 text-left  font-header2 mt-32 text-white">
-                    "The first thing you should know about me is I am my father’s son. And
-when they came for him, I did as he asked. I did not cry. Not when the
-Society televised the arrest. Not when the Golds tried him. Not when the
-Grays hanged him"
-                    </div>
-
-                    <div className="text-xs absolute mr-20 w-9/12 text-right  font-header2 mt-96 text-white">
-                    "The first thing you should know about me is I am my father’s son. And
-when they came for him, I did as he asked. I did not cry. Not when the
-Society televised the arrest. Not when the Golds tried him. Not when the
-Grays hanged him"
-                    </div>
-
-                    <div className="pt-2 pb-6 border-b">
-                        xx
-                    </div>
-                    xxex
-                </div>
-
-                <div className={classes.Dashboard} >
-
-                <Dashboard/>
-          
-                </div>
+                
 
 
                 <div className={classes.Metatextarea} >

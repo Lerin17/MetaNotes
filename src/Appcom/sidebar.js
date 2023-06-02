@@ -9,6 +9,8 @@ import { purple, blue, brown, red, grey, yellow } from '@mui/material/colors'
 import { display } from "@mui/system";
 import theme from "../theme";
 
+
+
 // import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // import {setTimeout} from 'node:timers/promises';
@@ -39,6 +41,7 @@ import Home from '../svgIcons/home.svg'
 import LoginSignup from "./SidebarCom/LoginSignup";
 import TeamsModal from "./SidebarCom/TeamsModal";
 import ModalCustom from "./Custom/ModalCustom";
+import SliderCustom from "../components/CustomComponents/DarKModeSlider";
 
 
 
@@ -70,7 +73,7 @@ const usestyle = makeStyles((theme)=> ({
     }))
 
 
-function Sidebar (params) {
+function Sidebar (props) {
     // const {clearInitialTextProseValue} = React.useContext(bionicContext)
 
     const classes = usestyle()
@@ -337,8 +340,10 @@ function Sidebar (params) {
         style={{
             // border: `1px solid ${bgColor}`,
             // backgroundColor: bgColor,
-            backdropFilter: 'blur(2px)'
-        }} className={`w-full rounded-lg  ${props.isActive?'scale-105 bg-black':''} cursor-pointer  md:mt-4 lg:mt-4 p-1 relative shadow hover:scale-105 transition-all `} >
+            // backdropFilter: 'blur(2px)',
+            // background:'#5c8c4e7f'
+            background:'#ffffff54'
+        }} className={`w-full  rounded-lg  ${props.isActive?'scale-105 bg-black':''} cursor-pointer   md:mt-4 lg:mt-4 p-1 relative shadow-md hover:scale-105 transition-all `} >
 
 
            
@@ -366,10 +371,14 @@ function Sidebar (params) {
                         <div className="hidden  xl:block self-center justify-start w-full " >
                          
                             <div 
+
+                            style={{
+                                //  webkitTextStroke:"1px black"
+                            }}
                         //     style={{
                         // WebkitTextStroke : '1px black'
                         // }}
-                 sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = {`${props.isActive?'text-white':'text-gray-700'}  capitalize font-header5`}  variant= "text" >
+                 sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = {`${props.isActive?'text-white':'text-slate-700'}  capitalize font-header5`}  variant= "text" >
                             {props.text}
                             </div>
                         </div>
@@ -598,37 +607,64 @@ const Folderdisplay = FolderArray.map((item, i)=>{
 // console.log(userData, 'userData')
 
     return (
-<div className="sidebar h-full flex flex-col w-full  justify-start shadow-2xl ">
+<div 
+style={{
+    // background:'#699D98'
+}}
+className={`h-full  flex flex-col w-full  justify-start redx relative  ${props.isOpenSideBar?'':''}`}>
+
+
+{/* SIDEBAR BORDER */}
+<motion.div
+        animate={props.isOpenSideBar ? {
+            x: 200,
+            
+    
+        }:{
+            x:'0%',
+          
+        }}
+
+        initial={{
+            
+        }}
+
+        transition={{
+            // type:'tween',        
+        }}
+
+        style={{
+            width: props.isOpenSideBar?600:'2px'
+        }}
+        className={`h-full  top-0 absolute  z-30 ${props.isOpenSideBar?' blurred':'right-0 '}  border-r  shadow`}
+        >
+            
+        </motion.div>
+        {/* SIDEBAR BORDER */}
+
+
         <div className="absolute z-30">
         {/* <ToastContainer /> */}
         </div>
         <SaveFileErrorsModal/>
-        <div className="bg-white mx-auto    text-4xl p-4 font-header2 w-16 h-20 flex justify-center items-center" >
+        <div className="bg-white text-gray-400 mx-auto    text-6xl p-4 font-header1 w-16 h-20 z-20 relative flex justify-center items-center" >
        
-         {/* <div className="lg:hidden  xl:hidden block" >
-            M
-         </div> */}
-
-         {/* <AnimatePresence>
-            {notification &&
-                           <motion.div  transition={{type:'spring'}} initial={{y:-20}} animate={notification && {y:20}} className="" >
-                         
-                            M
-                          
-                        
-                        </motion.div>
-            }
-         </AnimatePresence> */}
+        
 
         <AnimatePresence>
             {userData &&     
-                <div>
+                <div
+                className="font-header2"
+                >
                 {!isLoginModalOpen &&
 
                 <AnimatePresence>
-                    <motion.div initial={!isLoginModalOpen && {y:30}} transition={{type:'spring', stiffness:100}} animate={!isLoginModalOpen &&{y:0}}>
-                        M
-                    </motion.div>
+                    <motion.div 
+                    style={{
+                        webkitTextStroke:"1px gray"
+                    }}
+                    initial={!isLoginModalOpen && {y:30}} transition={{type:'spring', stiffness:100}} animate={!isLoginModalOpen &&{y:0}}>
+                        M                    </motion.div>
                 </AnimatePresence>
                 
                 }
@@ -643,7 +679,11 @@ const Folderdisplay = FolderArray.map((item, i)=>{
             {!userData &&     
                 <div>
                 {!isLoginModalOpen &&
-                    <div>
+                    <div
+                       style={{
+                        webkitTextStroke:"1px black"
+                    }}
+                    >
                         m
                     </div>
                 }
@@ -659,13 +699,13 @@ const Folderdisplay = FolderArray.map((item, i)=>{
          
   
         </div>
-        <div className={`flex  md:flex-col lg:flex-col mx-auto lg:w-fit md:w-fit  `}>
+        <div className={`flex relative z-20 md:flex-col lg:flex-col mx-auto  lg:w-fit md:w-fit `}>
 
       
               
         <Sidebarbuttoncom
         icon = {
-            <svg className="text-gray-700 fill-current" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 7.001c0 3.865-3.134 7-7 7s-7-3.135-7-7c0-3.867 3.134-7.001 7-7.001s7 3.134 7 7.001zm-1.598 7.18c-1.506 1.137-3.374 1.82-5.402 1.82-2.03 0-3.899-.685-5.407-1.822-4.072 1.793-6.593 7.376-6.593 9.821h24c0-2.423-2.6-8.006-6.598-9.819z"/></svg>
+            <svg className="text-slate-800 fill-current" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 7.001c0 3.865-3.134 7-7 7s-7-3.135-7-7c0-3.867 3.134-7.001 7-7.001s7 3.134 7 7.001zm-1.598 7.18c-1.506 1.137-3.374 1.82-5.402 1.82-2.03 0-3.899-.685-5.407-1.822-4.072 1.793-6.593 7.376-6.593 9.821h24c0-2.423-2.6-8.006-6.598-9.819z"/></svg>
 
             // // <img src="../svgIcons/home.svg" alt="SVG as an image"></img>
             // <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-700 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M12 6.453l9 8.375v9.172h-6v-6h-6v6h-6v-9.172l9-8.375zm12 5.695l-12-11.148-12 11.133 1.361 1.465 10.639-9.868 10.639 9.883 1.361-1.465z"/>
@@ -688,7 +728,7 @@ const Folderdisplay = FolderArray.map((item, i)=>{
 
         <Sidebarbuttoncom
         icon = {    
-        <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-700 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M15.563 22.282l-3.563.718.72-3.562 2.843 2.844zm-2.137-3.552l2.845 2.845 7.729-7.73-2.845-2.845-7.729 7.73zm-3.062 2.27h-7.364v-7h12.327l6.673-6.688v-2.312l-4-4h-18v22h9.953l.411-2zm-5.364-18h12v7h-12v-7zm8.004 6h2.996v-5h-2.996v5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" className="text-slate-800 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M15.563 22.282l-3.563.718.72-3.562 2.843 2.844zm-2.137-3.552l2.845 2.845 7.729-7.73-2.845-2.845-7.729 7.73zm-3.062 2.27h-7.364v-7h12.327l6.673-6.688v-2.312l-4-4h-18v22h9.953l.411-2zm-5.364-18h12v7h-12v-7zm8.004 6h2.996v-5h-2.996v5z"/></svg>
                 }
         text = 'Save'
         handleClick = {Createbookentry}
@@ -700,7 +740,7 @@ const Folderdisplay = FolderArray.map((item, i)=>{
 
         <Sidebarbuttoncom
         icon =  {
-        <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-700 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M7.972 2h-6.972l.714 5h2.021l-.429-3h3.694c1.112 1.388 1.952 2 4.277 2h9.283l-.2 1h2.04l.6-3h-11.723c-1.978 0-2.041-.417-3.305-2zm16.028 7h-24l2 13h20l2-13z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" className="text-slate-800 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M7.972 2h-6.972l.714 5h2.021l-.429-3h3.694c1.112 1.388 1.952 2 4.277 2h9.283l-.2 1h2.04l.6-3h-11.723c-1.978 0-2.041-.417-3.305-2zm16.028 7h-24l2 13h20l2-13z"/></svg>
         }
         text = 'Libary'
         handleClick = {toggleLibaryModal}
@@ -709,7 +749,7 @@ const Folderdisplay = FolderArray.map((item, i)=>{
 
         <Sidebarbuttoncom
         icon = {
-        <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-700 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M10.606 0h-10.606v10.609l13.393 13.391 10.607-10.606-13.394-13.394zm-7.02 6.414c-.782-.785-.781-2.047 0-2.83.782-.782 2.049-.779 2.829-.001.783.783.782 2.048 0 2.831-.783.781-2.046.781-2.829 0zm9.807 14.757l-8.484-8.484 7.778-7.778 8.486 8.485-7.78 7.777zm3.534-6.36l-5.656-5.656.707-.709 5.656 5.657-.707.708zm-1.414 1.414l-5.656-5.656.707-.707 5.656 5.656-.707.707zm-3.535-.707l-3.534-3.536.707-.706 3.535 3.535-.708.707z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" className="text-slate-800 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M10.606 0h-10.606v10.609l13.393 13.391 10.607-10.606-13.394-13.394zm-7.02 6.414c-.782-.785-.781-2.047 0-2.83.782-.782 2.049-.779 2.829-.001.783.783.782 2.048 0 2.831-.783.781-2.046.781-2.829 0zm9.807 14.757l-8.484-8.484 7.778-7.778 8.486 8.485-7.78 7.777zm3.534-6.36l-5.656-5.656.707-.709 5.656 5.657-.707.708zm-1.414 1.414l-5.656-5.656.707-.707 5.656 5.656-.707.707zm-3.535-.707l-3.534-3.536.707-.706 3.535 3.535-.708.707z"/></svg>
     }
         text = 'tags'
         handleClick = {toggleisTagMenu}
@@ -718,7 +758,7 @@ const Folderdisplay = FolderArray.map((item, i)=>{
 
         <Sidebarbuttoncom
         icon = {
-        <svg xmlns="http://www.w3.org/2000/svg" className="text-gray-700 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M18.5 15c-2.483 0-4.5 2.015-4.5 4.5s2.017 4.5 4.5 4.5 4.5-2.015 4.5-4.5-2.017-4.5-4.5-4.5zm2.5 5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1zm-7.18 4h-12.82v-24h8.409c4.857 0 3.335 8 3.335 8 3.009-.745 8.256-.419 8.256 3v2.501c-.771-.322-1.614-.501-2.5-.501-3.584 0-6.5 2.916-6.5 6.5 0 1.747.696 3.331 1.82 4.5zm-.252-23.925c2.202 1.174 5.938 4.883 7.432 6.881-1.286-.9-4.044-1.657-6.091-1.179.222-1.468-.185-4.534-1.341-5.702z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" className="text-slate-800 fill-current" width="24" height="24" viewBox="0 0 24 24"><path d="M18.5 15c-2.483 0-4.5 2.015-4.5 4.5s2.017 4.5 4.5 4.5 4.5-2.015 4.5-4.5-2.017-4.5-4.5-4.5zm2.5 5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1zm-7.18 4h-12.82v-24h8.409c4.857 0 3.335 8 3.335 8 3.009-.745 8.256-.419 8.256 3v2.501c-.771-.322-1.614-.501-2.5-.501-3.584 0-6.5 2.916-6.5 6.5 0 1.747.696 3.331 1.82 4.5zm-.252-23.925c2.202 1.174 5.938 4.883 7.432 6.881-1.286-.9-4.044-1.657-6.091-1.179.222-1.468-.185-4.534-1.341-5.702z"/></svg>
         }
         text = 'New'
         handleClick = {
@@ -728,7 +768,7 @@ const Folderdisplay = FolderArray.map((item, i)=>{
 
         <Sidebarbuttoncom
         icon = {
-            <svg xmlns="http://www.w3.org/2000/svg" className={`${isActivateBionicText?'text-white':' text-gray-700'}  fill-current`} width="24" height="24" viewBox="0 0 24 24"><path d="M15 12c0 1.657-1.343 3-3 3s-3-1.343-3-3c0-.199.02-.393.057-.581 1.474.541 2.927-.882 2.405-2.371.174-.03.354-.048.538-.048 1.657 0 3 1.344 3 3zm-2.985-7c-7.569 0-12.015 6.551-12.015 6.551s4.835 7.449 12.015 7.449c7.733 0 11.985-7.449 11.985-7.449s-4.291-6.551-11.985-6.551zm-.015 12c-2.761 0-5-2.238-5-5 0-2.761 2.239-5 5-5 2.762 0 5 2.239 5 5 0 2.762-2.238 5-5 5z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" className={`${isActivateBionicText?'text-white':' text-slate-800'}  fill-current`} width="24" height="24" viewBox="0 0 24 24"><path d="M15 12c0 1.657-1.343 3-3 3s-3-1.343-3-3c0-.199.02-.393.057-.581 1.474.541 2.927-.882 2.405-2.371.174-.03.354-.048.538-.048 1.657 0 3 1.344 3 3zm-2.985-7c-7.569 0-12.015 6.551-12.015 6.551s4.835 7.449 12.015 7.449c7.733 0 11.985-7.449 11.985-7.449s-4.291-6.551-11.985-6.551zm-.015 12c-2.761 0-5-2.238-5-5 0-2.761 2.239-5 5-5 2.762 0 5 2.239 5 5 0 2.762-2.238 5-5 5z"/></svg>
         }
         text = 'Bionic'
         handleClick = {toggleisActivateBionic}
@@ -737,7 +777,7 @@ const Folderdisplay = FolderArray.map((item, i)=>{
         />
 
         <div className="relative">
-                {userLibaryData &&   <div className="absolute font-bold -right-2 text-sm z-10 px-1 text-white cursor-pointer hover:scale-110 transition-all bg-green-600  top-2 ">
+                {userLibaryData &&   <div className="absolute font-bold -right-2 text-sm z-10 px-1 text-slate-100 cursor-pointer hover:scale-110 transition-all bg-green-600  top-2 ">
                                {userLibaryData.  booksReceivedArray.length}
                             </div>}
                
@@ -745,18 +785,30 @@ const Folderdisplay = FolderArray.map((item, i)=>{
 
                             <Sidebarbuttoncom
         icon = {
-            <svg xmlns="http://www.w3.org/2000/svg" className='text-gray-700 fill-current' width="24" height="24" viewBox="0 0 24 24"><path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" className='text-slate-800 fill-current' width="24" height="24" viewBox="0 0 24 24"><path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z"/></svg>
         }
         text = 'Teams'
         handleClick = {toggleTeamsModal}
         // isActive = {isActivateBionicText}
         color = '#DCD9D8'
         />
+
+{/* 
+<Sidebarbuttoncom
+        icon = {
+            <svg xmlns="http://www.w3.org/2000/svg" className='text-gray-700 fill-current' width="24" height="24" viewBox="0 0 24 24"><path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z"/></svg>
+        }
+        text = 'Teams'
+        handleClick = {props.openSideBar}
+        // isActive = {isActivateBionicText}
+        color = '#DCD9D8'
+        /> */}
         </div>
+      
       
 
         
-
+      
 
     
 

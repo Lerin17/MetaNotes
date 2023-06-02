@@ -544,7 +544,7 @@ import isHotkey from 'is-hotkey';
               <div 
                 style={{
                 gridTemplateRows: 'auto 1fr'
-                }} className='App w-full h-full bg-white grid grid-flow-row overflow-hidden' >
+                }} className='App w-full h-full  grid grid-flow-row overflow-hidden' >
               <div className="w-full rounded  font-bold overflow-hidden px-2"> 
                   <div className=' text-left flex justify-between py-1' >
                       <input className='border-none bg-transparent outline-none font-header5 font-bold text-slate-800'
@@ -626,7 +626,7 @@ import isHotkey from 'is-hotkey';
             padding: '10px',
             borderTop: '2px solid #94A3B8',
             textAlign: 'start',
-            color:'GrayText'
+            color:'GrayText',
           }}
             />
             </div>

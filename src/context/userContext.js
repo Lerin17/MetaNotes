@@ -16,20 +16,14 @@ const UserContextProvider = (props) => {
 
   const [isLoginModalOpen, setisLoginModalOpen] = React.useState(false);
 
-  React.useEffect(() => {
-    //first
-    // const socket = io('http://localhost:5024/')
-
-    socketHook.on('me', (id) => {
-      console.log(id, 'socketid')
-    })
-  }, [userData]);
 
 //   const [isSharedModalOpen, setisSharedModalOpen] = React.useState(false);
 
   const [userName, setuserName] = React.useState();
 
   const [userEmail, setuserEmail] = React.useState();
+
+  const [isDarkMode, setisDarkMode] = React.useState(false);
 
   const [userPassword, setuserPassword] = React.useState();
 
@@ -86,6 +80,16 @@ const UserContextProvider = (props) => {
   console.log(
     process.env.REACT_APP_PASS, 'process'
   )
+
+  
+  React.useEffect(() => {
+    //first
+    // const socket = io('http://localhost:5024/')
+
+    socketHook.on('me', (id) => {
+      console.log(id, 'socketid')
+    })
+  }, [userData]);
 
   
   React.useEffect(() => {
@@ -182,7 +186,7 @@ const UserContextProvider = (props) => {
   }
 
   return (
-    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData, LogIn, isWaitingUserContext, setisWaitingUserContext}}>
+    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData, LogIn, isWaitingUserContext, setisWaitingUserContext, isDarkMode, setisDarkMode}}>
         {props.children}
     </UserContext.Provider>
   )

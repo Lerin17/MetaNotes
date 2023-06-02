@@ -9,7 +9,9 @@ module.exports = {
       header2: 'Bree Serif',
       header3: 'Syncopate',
       header4: 'Days One',
-      header5: 'Didact Gothic'
+      header5: 'Didact Gothic',
+      header6: 'EN',
+      header7:"MINE"
     },
   
     extend: {

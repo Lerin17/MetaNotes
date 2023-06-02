@@ -39,6 +39,14 @@
     background: -moz-linear-gradient(-45deg, #f85032 0%, #f16f5c 50%, #f6290c 51%, #f02f17 71%, #e73827 100%);
 }
 
+.sidebar1{
+  background-color: #d5d5d5;
+  opacity: 1;
+  background-image:  linear-gradient(30deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(150deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(30deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(150deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(60deg, #ffffff77 25%, transparent 25.5%, transparent 75%, #ffffff77 75%, #ffffff77), linear-gradient(60deg, #ffffff77 25%, transparent 25.5%, transparent 75%, #ffffff77 75%, #ffffff77);
+  background-size: 76px 133px;
+  background-position: 0 0, 0 0, 38px 67px, 38px 67px, 0 0, 38px 67px;
+}
+
 
 .platnium{
   background: -moz-linear-gradient(-45deg, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%)
@@ -66,6 +74,23 @@ background: linear-gradient(0deg, rgba(251,251,251,1) 0%, rgba(252,252,252,1) 0%
   -moz-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
 }
 
+.ex{
+  background-color: #4e758c7f
+}
+
+.eex{
+  background-color: #4f8c4e7f
+}
+  
+
+
+.reex{
+  background-color: #0bda207f
+}
+
+.reex1{
+  background-color: #0909097f
+}
   
 
 /* @imp
@@ -90,6 +115,14 @@ ort url("~@flaticon/flaticon-uicons/css/all/all"); */
   color: #00bfb6;
   font-family: arial;
   position: relative;
+}
+
+.ex{
+  background-color: #404d5054;
+}
+
+.eex{
+  background-color: #ffffff54;
 }
 
 
