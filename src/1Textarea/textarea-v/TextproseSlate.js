@@ -47,7 +47,7 @@ import { Socket } from 'socket.io-client';
     
     const {updateBookTextProse,  currentBook, bookID, LibaryArray, selectedBook, setselectedBook, isResettextareas,  setbookID, currentBookMetaArray} =  React.useContext(LibaryContext)
 
-    const { socketClient} = React.useContext(socketContext)
+    const {socketRooms, emitToRoom, socket} = React.useContext(socketContext)
 
     const {userData} = React.useContext(UserContext)
 
@@ -485,7 +485,8 @@ import { Socket } from 'socket.io-client';
       </div>
     )
   }
-  
+
+
 
   // console.log(currentTagObj)
     
@@ -539,14 +540,30 @@ import { Socket } from 'socket.io-client';
   //     )
   // }
 
+  React.useEffect(() => {
+    
+    if(userData && socketRooms){
+      socket.open()
+
+      socket.on('getprosedata', (data) => {
+        console.log(data)
+      })
+    }
+
+  }, [userData, socketRooms]);
+
     const handleChangeSlate = (value) => {
+
+      if(userData && socketRooms){
+        
+        emitToRoom(value)
+
+      }else{
+        setValue(value)
+      }
 
       // console.log(socketHook.rooms)
       
- 
-      
-      
-      setValue(value)
     } 
 
 
@@ -560,11 +577,9 @@ import { Socket } from 'socket.io-client';
 
     return (       
       // <div className='flex flex-col lg:flex-row md:flex-row' >
-        <Slate editor={editor} value={value} onChange={value => {setValue(value)
-        if(userData){
-          
-         
-        }
+        <Slate editor={editor} value={value} 
+        
+        onChange={value => {setValue(value)
         }
         } >
               <div 

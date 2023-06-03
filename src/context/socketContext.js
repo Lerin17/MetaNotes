@@ -45,6 +45,12 @@ React.useEffect(() => {
 
 // }, [exex]);
 
+const emitToRoom = (value) => {
+  socket.open()
+
+  socket.emit('textprosedata', {value, socketRooms})
+}
+
 const joinRoom = (id) => {
   // console.log(id, 'room')
 
@@ -53,7 +59,7 @@ const joinRoom = (id) => {
   socket.emit('joinroom', id)
 
   socket.on('roomsdata', (rooms) => {
-    setsocketRooms(rooms)
+    setsocketRooms(rooms[1])
     console.log(rooms, 'socketroom')
   })
 
@@ -79,7 +85,7 @@ const [socketRooms, setsocketRooms] = React.useState();
 
   return (
     <socketContext.Provider value={{
-      socket, setsocketRooms, socketRooms,joinRoom
+      socket, setsocketRooms, socketRooms,joinRoom, emitToRoom
     }}>
       {props.children}
     </socketContext.Provider>
