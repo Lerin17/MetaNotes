@@ -6,35 +6,68 @@ import { UserContext } from './userContext'
 
   const socketContext = React.createContext()
 
+    
+const socket = io( 'http://localhost:5024');
+
 
 const SocketContextProvider = (props) => {
 
   const {userData, } = React.useContext(UserContext)
 
+  
+const [socketRooms, setsocketRooms] = React.useState();
+
   const [exex, setexex] = React.useState();
 
-  
-const socket = io( 'http://localhost:5024/', {
-  autoConnect: false
-});
 
+
+// React.useEffect(() => {
+//   socket.on('me', (id) => {
+//     console.log(id, 'socketid')
+//   })
+
+//   socket.on('connect', () => {
+//     console.log('...connecting')
+//   })
+
+
+//   socket.emit('jam', '33x')  
+// }, []);
 
 
 React.useEffect(() => {
 
   if(userData){
-    socket.connect()
+    // socket.connect()
+
+  
 
     socket.on('me', (id) => {
       console.log(id, 'socketid')
     })
 
-    socket.emit('jam', '33x')
+    socket.on('connect', () => {
+      console.log('...connecting')
+    })
 
-  
+    
+    socket.on('getprosedata', (data) => {
+
+      // console.log('tezxz')
+      console.log(data, 'textprosedata')
+    })
+
+
+    socket.emit('jam', '33x')  
   }
 
 }, [userData]);
+
+
+// React.useEffect(() => {
+//   console.log('socket change')
+//   console.log(socket.id, 'socket id')
+// }, [socket]);
 
 
 // React.useEffect(() => {
@@ -45,16 +78,30 @@ React.useEffect(() => {
 
 // }, [exex]);
 
-const emitToRoom = (value) => {
-  socket.open()
+const emitToRoom = (operations) => {
+  
+  // console.log('...emmitting')
+  
+  const operation = operations[0]
 
-  socket.emit('textprosedata', {value, socketRooms})
+  console.log([...operations, 'oparate'], '...operations')
+
+  // console.log(operations, '...operations')
+
+  console.log(operation, '...emmitting')
+
+
+
+  socket.emit('textprosedata', {operation, socketRooms})
+
 }
 
 const joinRoom = (id) => {
   // console.log(id, 'room')
 
-  socket.open()
+
+
+  // socket.open()
 
   socket.emit('joinroom', id)
 
@@ -75,7 +122,6 @@ const joinRoom = (id) => {
   
 }
 
-const [socketRooms, setsocketRooms] = React.useState();
 
 
 // React.useEffect(() => {

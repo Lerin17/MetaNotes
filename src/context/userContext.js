@@ -3,7 +3,7 @@ import React from 'react'
 
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
-import { socketClient } from './socket'
+
 // import { connect } from 'socket.io-client'
 
 

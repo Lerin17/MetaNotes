@@ -540,25 +540,87 @@ import { Socket } from 'socket.io-client';
   //     )
   // }
 
-  React.useEffect(() => {
-    
-    if(userData && socketRooms){
-      socket.open()
+  // React.useEffect(() => {
 
-      socket.on('getprosedata', (data) => {
-        console.log(data)
-      })
-    }
+  
+    
+  //   if(userData && socketRooms){
+  //     socket.open()
+
+      
+
+  //     socket.on('getprosedata', (data) => {
+
+  //       // console.log('tezxz')
+  //       console.log(data, 'textprosedata')
+  //     })
+  //   }
+
+  // }, [userData, socketRooms]);
+
+  const applyChange = () =>  {
+
+    console.log('...applychange')
+
+                        editor.apply({
+  type: 'insert_text',
+  path: [0, 0],
+  offset: 15,
+  text: 'A new string of text to be inserted.',
+})
+
+  }
+
+  React.useEffect(() => {
+
+    console.log(Boolean(userData && socketRooms), 'truth')
+
 
   }, [userData, socketRooms]);
+  
+    // React.useEffect(() => {
+
+    //   console.log(socketRooms, '.......transmit')
+
+    //   // console.log(Boolean(userData && socketRooms))
+
+
+    // }, [value]);
+
+
+    // setTimeout(() => {
+      
+     
+    // }, 20000);
 
     const handleChangeSlate = (value) => {
 
-      if(userData && socketRooms){
-        
-        emitToRoom(value)
+      console.log(editor.operations, 'operations')
 
+      if(userData && socketRooms){
+
+        socket.on('getprosedata', (data) => {
+          // applyChange()
+
+          if(data[0].type == 'set_selection'){
+            return
+          }else{
+            editor.apply(data[0])
+          }
+
+          console.log('....editor apply')     
+          console.log(data, 'textprosedataxx')
+        })
+
+       
+
+        setValue(value)
+
+
+        console.log('...emmittingxxx')
       }else{
+
+        console.log('...onchange normal')
         setValue(value)
       }
 
@@ -578,10 +640,14 @@ import { Socket } from 'socket.io-client';
     return (       
       // <div className='flex flex-col lg:flex-row md:flex-row' >
         <Slate editor={editor} value={value} 
+
         
-        onChange={value => {setValue(value)
+        
+        onChange={value => {handleChangeSlate(value)
         }
         } >
+
+        
               <div 
                 style={{
                 gridTemplateRows: 'auto 1fr'
@@ -617,6 +683,9 @@ import { Socket } from 'socket.io-client';
           autoFocus
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {
+
+              console.log(editor.operations, 'operationsKey')
+
               if(isHotkey(hotkey, event)){
                 console.log(event, 'hotKeys')
                 event.preventDefault()
@@ -628,6 +697,18 @@ import { Socket } from 'socket.io-client';
                   toggleMark(editor, format)
                 }
                
+              }else{
+                if(userData && socketRooms){
+
+                  setTimeout(() => {
+                    console.log(editor.operations, 'operations')
+                  }, 500);
+              
+
+                  
+
+                  emitToRoom(editor.operations)
+                }
               }
               // console.log(`obj.${prop} = ${obj[prop]}`);
             }
