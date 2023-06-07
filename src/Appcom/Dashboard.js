@@ -58,7 +58,7 @@ function Dashboard(params) {
     )
 
     return (
-        <div className="h-screen border-slate-700 border-x" >
+        <div className="h-screen " >
             <div>
                 <div style={{
                     borderBottom:'4px solid #CCCCCC'
