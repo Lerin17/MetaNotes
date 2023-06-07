@@ -78,7 +78,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   .redx{
     background-image: url('../public/images/midnight.webp');
     background-size: cover;
-    background-repeat: no-repeat;
+    /* filter: brightness(1.1); */
     
   }
 

@@ -47,7 +47,7 @@ import { Socket } from 'socket.io-client';
     
     const {updateBookTextProse,  currentBook, bookID, LibaryArray, selectedBook, setselectedBook, isResettextareas,  setbookID, currentBookMetaArray} =  React.useContext(LibaryContext)
 
-    const {socketRooms, emitToRoom, socket} = React.useContext(socketContext)
+    const {socketRooms, emitToRoom, socket, isEmitChange, setisEmitChange, socketID, senderSocketID, setsenderSocketID, roomMembersIDs, setroomMembersIDs,receivedOperations, setreceivedOperations} = React.useContext(socketContext)
 
     const {userData} = React.useContext(UserContext)
 
@@ -56,6 +56,8 @@ import { Socket } from 'socket.io-client';
     const {currentTag,  currentTagObj, gettextproseValues, settextproseLocationObj, currentLocationPath, setcurrentLocationPath, toggleisTagLibaryDisplay } = React.useContext(TagContext)
 
     const {updateInitialTextProseValue, bionicTextValueAltered, isActivateBionicText, initialTextProseValue} = React.useContext(bionicContext)
+
+    const [Operations, setOperations] = React.useState();
 
     //set hotkey properly
     const HOTKEYS = {
@@ -573,47 +575,74 @@ import { Socket } from 'socket.io-client';
 
   React.useEffect(() => {
 
-    console.log(Boolean(userData && socketRooms), 'truth')
+   if(userData && socketRooms){
+
+    console.log('...ready to receive')
+
+    socket.on('getprosedata', ([operations, sendersocketid]) => {
+      // applyChange()
+
+      console.log(operations, sendersocketid, 'textprosedataxx')
+
+      setreceivedOperations({state:'send', operations})
+
+       setsenderSocketID(sendersocketid)
+  
+
+    })
+   }
 
 
   }, [userData, socketRooms]);
-  
-    // React.useEffect(() => {
-
-    //   console.log(socketRooms, '.......transmit')
-
-    //   // console.log(Boolean(userData && socketRooms))
 
 
-    // }, [value]);
 
-
-    // setTimeout(() => {
+  React.useEffect(() => {
+    if(receivedOperations){
+      if(receivedOperations.state == 'send' && receivedOperations.operations){
       
-     
-    // }, 20000);
+      
+        editor.apply(receivedOperations.operations[0])  
+
+        setreceivedOperations({state:'', operations: null})
+
+    }
+    }
+
+  }, [receivedOperations]);
+  
+    
+
+
+
+    React.useEffect(() => {  
+        if(userData && socketRooms){
+
+          console.log(receivedOperations, 'receivedOperations')
+
+          
+          if(receivedOperations && receivedOperations.state == 'send'){
+
+            console.log('emiiiit')
+            
+              emitToRoom(Operations, socketID)
+          
+            
+          }else{
+            
+          }
+         
+        
+        }
+      
+    }, [Operations]);
+
+
 
     const handleChangeSlate = (value) => {
-
-      console.log(editor.operations, 'operations')
-
       if(userData && socketRooms){
 
-        socket.on('getprosedata', (data) => {
-          // applyChange()
-
-          if(data[0].type == 'set_selection'){
-            return
-          }else{
-            editor.apply(data[0])
-          }
-
-          console.log('....editor apply')     
-          console.log(data, 'textprosedataxx')
-        })
-
-       
-
+        setOperations(editor.operations)
         setValue(value)
 
 
@@ -623,9 +652,6 @@ import { Socket } from 'socket.io-client';
         console.log('...onchange normal')
         setValue(value)
       }
-
-      // console.log(socketHook.rooms)
-      
     } 
 
 
@@ -682,9 +708,15 @@ import { Socket } from 'socket.io-client';
           renderLeaf={renderLeaf}
           autoFocus
           onKeyDown={(event) => {
+
+            if(receivedOperations.state == ''){
+              setreceivedOperations({state:'send', operations: null})
+            }
+         
+
             for (const hotkey in HOTKEYS) {
 
-              console.log(editor.operations, 'operationsKey')
+              // console.log(editor.operations, 'operationsKey')
 
               if(isHotkey(hotkey, event)){
                 console.log(event, 'hotKeys')
@@ -697,18 +729,6 @@ import { Socket } from 'socket.io-client';
                   toggleMark(editor, format)
                 }
                
-              }else{
-                if(userData && socketRooms){
-
-                  setTimeout(() => {
-                    console.log(editor.operations, 'operations')
-                  }, 500);
-              
-
-                  
-
-                  emitToRoom(editor.operations)
-                }
               }
               // console.log(`obj.${prop} = ${obj[prop]}`);
             }

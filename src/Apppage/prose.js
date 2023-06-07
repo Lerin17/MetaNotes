@@ -59,7 +59,7 @@ function Prose(params) {
 
                TaggeditemsLibary: isTagLibaryDisplay?'lg:w-4/12 md:w-4/12 lg:h-screen overflow-auto md:h-screen w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0 transition-all animate-fade':'hidden',
 
-               Dashboard: isMetamodal || isTagLibaryDisplay ? 'hidden': `  ${isOpenSideBar?' xl:w-3/12 lg:w-3/12':'lg:w-3/12  xl:w-3/12'} bg-white   lg:block xl:block hidden`
+               Dashboard: isMetamodal || isTagLibaryDisplay ? 'hidden': `  ${isOpenSideBar?' xl:w-3/12 lg:w-3/12':'lg:w-3/12  xl:w-3/12'} bg-gray-100  border-x  lg:block xl:block hidden`
             }
            
         )   
@@ -252,7 +252,9 @@ const openSideBar = () => {
                         
                       }}
                       className={classes.Dashboard} >
-                            <Dashboard/>
+                            <Dashboard
+                            key={'Dashboard'}
+                            />
                     </div>
                 
 

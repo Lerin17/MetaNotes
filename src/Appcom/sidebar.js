@@ -636,7 +636,7 @@ className={`h-full  flex flex-col w-full  justify-start redx relative  ${props.i
         style={{
             width: props.isOpenSideBar?600:'2px'
         }}
-        className={`h-full  top-0 absolute  z-30 ${props.isOpenSideBar?' blurred':'right-0 '}  border-r  shadow`}
+        className={`h-full  top-0 absolute  z-30 ${props.isOpenSideBar?' blurred shadow':'right-0 '} `}
         >
             
         </motion.div>
@@ -661,7 +661,7 @@ className={`h-full  flex flex-col w-full  justify-start redx relative  ${props.i
                 <AnimatePresence>
                     <motion.div 
                     style={{
-                        webkitTextStroke:"1px gray"
+                        WebkitTextStroke:"1px gray"
                     }}
                     initial={!isLoginModalOpen && {y:30}} transition={{type:'spring', stiffness:100}} animate={!isLoginModalOpen &&{y:0}}>
                         M                    </motion.div>
@@ -681,7 +681,7 @@ className={`h-full  flex flex-col w-full  justify-start redx relative  ${props.i
                 {!isLoginModalOpen &&
                     <div
                        style={{
-                        webkitTextStroke:"1px black"
+                        WebkitTextStroke:"4px #1E293B"
                     }}
                     >
                         m
@@ -1018,7 +1018,9 @@ className={`h-full  flex flex-col w-full  justify-start redx relative  ${props.i
                     
                 // height: 400
                 }} className= 'w-full ' >
-                    <TeamsModal/>
+                    <TeamsModal
+                    key={'teamsModal'}
+                    />
                 </div>
             </div>
         </Box>

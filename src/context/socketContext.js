@@ -17,34 +17,38 @@ const SocketContextProvider = (props) => {
   
 const [socketRooms, setsocketRooms] = React.useState();
 
+const [socketID, setsocketID] = React.useState();
+
+const [senderSocketID, setsenderSocketID] = React.useState();
+
+const [roomMembersIDs, setroomMembersIDs] = React.useState([]);
+
   const [exex, setexex] = React.useState();
 
+const [isEmitChange, setisEmitChange] = React.useState(true);
+
+const [receivedOperations, setreceivedOperations] = React.useState({state:'send', operations: null});
 
 
-// React.useEffect(() => {
-//   socket.on('me', (id) => {
-//     console.log(id, 'socketid')
-//   })
 
-//   socket.on('connect', () => {
-//     console.log('...connecting')
-//   })
-
-
-//   socket.emit('jam', '33x')  
-// }, []);
 
 
 React.useEffect(() => {
+
+  socket.on('me', (id) => {
+
+    setsocketID(id)
+    
+
+    console.log(id, 'socketid')
+  })
 
   if(userData){
     // socket.connect()
 
   
 
-    socket.on('me', (id) => {
-      console.log(id, 'socketid')
-    })
+ 
 
     socket.on('connect', () => {
       console.log('...connecting')
@@ -78,21 +82,24 @@ React.useEffect(() => {
 
 // }, [exex]);
 
-const emitToRoom = (operations) => {
-  
-  // console.log('...emmitting')
-  
-  const operation = operations[0]
-
-  console.log([...operations, 'oparate'], '...operations')
-
-  // console.log(operations, '...operations')
-
-  console.log(operation, '...emmitting')
+const emitToRoom = (operations, mySocketid) => {
+  console.log(operations, '...emmitting')
 
 
+//  console.log(x, 'room')
+  // setsenderSocketID()
 
-  socket.emit('textprosedata', {operation, socketRooms})
+  //EMIT
+
+   const filteredRoomMemebers = roomMembersIDs.filter(item => item !== mySocketid)
+
+   if(operations){
+    if(operations[0].type !== 'set_selection'){
+      socket.emit('textprosedata', [operations, filteredRoomMemebers, mySocketid, socketRooms])
+     }
+   }
+
+
 
 }
 
@@ -105,9 +112,13 @@ const joinRoom = (id) => {
 
   socket.emit('joinroom', id)
 
-  socket.on('roomsdata', (rooms) => {
+  socket.on('roomsdata', ([rooms, idsOfRoomMembers]) => {
+
+    console.log('....socket run', rooms, idsOfRoomMembers)
+
     setsocketRooms(rooms[1])
-    console.log(rooms, 'socketroom')
+    setroomMembersIDs(idsOfRoomMembers)
+    console.log(idsOfRoomMembers, 'socketroom')
   })
 
   // setexex('exex')
@@ -131,7 +142,7 @@ const joinRoom = (id) => {
 
   return (
     <socketContext.Provider value={{
-      socket, setsocketRooms, socketRooms,joinRoom, emitToRoom
+      socket,socketID, setsocketID, setsocketRooms, socketRooms,joinRoom, emitToRoom, isEmitChange, setisEmitChange, senderSocketID, setsenderSocketID, roomMembersIDs, setroomMembersIDs, receivedOperations, setreceivedOperations
     }}>
       {props.children}
     </socketContext.Provider>
