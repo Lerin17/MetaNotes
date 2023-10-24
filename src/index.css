@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree&family=El+Messiri&family=Hammersmith+One&family=Uncial+Antiqua&family=Stick+No+Bills&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree&family=Stick+No+Bills&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree&family=Bree+Serif&family=Righteous&family=Syncopate:wght@400;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Days+One&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap');
+
+
+.bg_slider {
+    --initialTextColor: rgba(21, 8, 8, 0.955);
+    --slideTextColor: rgba(248, 243, 243, 0.981);
+
+    --initialBgColor: #27283800;
+    --slideBgColor: rgb(73, 99, 225);
+
+    color: var(--initialTextColor);
+
+    background-image: linear-gradient(90deg,
+        var(--initialBgColor) 0%,
+        var(--initialBgColor) 50%,
+        var(--slideBgColor) 50%,
+        var(--slideBgColor) 100%);
+    background-size: 200%;
+    transition: background-position .3s cubic-bezier(.47, .1, 1, .63),
+      color .2s linear;
+    transition-delay: 0.0s, 0.15s;
+  }
+
+  .bg_slider:hover {
+    color: var(--slideTextColor);
+    cursor: pointer;
+    background-position: -100% 100%;
+  }
+
+  .red{
+    background: -moz-linear-gradient(-45deg, #f85032 0%, #f16f5c 50%, #f6290c 51%, #f02f17 71%, #e73827 100%);
+}
+
+.sidebar1{
+  background-color: #d5d5d5;
+  opacity: 1;
+  background-image:  linear-gradient(30deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(150deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(30deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(150deg, #ffffff 12%, transparent 12.5%, transparent 87%, #ffffff 87.5%, #ffffff), linear-gradient(60deg, #ffffff77 25%, transparent 25.5%, transparent 75%, #ffffff77 75%, #ffffff77), linear-gradient(60deg, #ffffff77 25%, transparent 25.5%, transparent 75%, #ffffff77 75%, #ffffff77);
+  background-size: 76px 133px;
+  background-position: 0 0, 0 0, 38px 67px, 38px 67px, 0 0, 38px 67px;
+}
+
+
+.platnium{
+  background: -moz-linear-gradient(-45deg, #ffffff 0%, #f1f1f1 50%, #e1e1e1 51%, #f6f6f6 100%)
+}
+
+.black{
+  background: -moz-linear-gradient(-45deg, #aebcbf 0%, #6e7774 50%, #0a0e0a 51%, #0a0809 100%);
+}
+  /* .popover {
+    animation: name duration timing-function delay iteration-count direction fill-mode;
+  } */
+.bx{
+  background: rgb(40,41,41);
+  background: linear-gradient(0deg, rgba(40,41,41,1) 0%, rgba(35,36,38,1) 0%, rgba(36,37,39,1) 30%, rgba(25,26,28,1) 47%, rgba(30,31,33,1) 71%, rgba(87,85,85,1) 90%, rgba(109,106,106,1) 95%, rgba(113,107,107,1) 100%); 
+}
+
+.btn{
+  background: rgb(251,251,251);
+background: linear-gradient(0deg, rgba(251,251,251,1) 0%, rgba(252,252,252,1) 0%, rgba(252,252,252,1) 30%, rgba(251,251,251,1) 47%, rgba(250,250,250,1) 71%, rgba(247,247,247,0.9540148823201156) 90%, rgba(247,247,247,0.9091969551492471) 95%, rgba(247,247,247,0.9512137618719363) 100%); 
+}
+
+.shadowxl{
+  box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.75);
+}
+
+.ex{
+  background-color: #4e758c7f
+}
+
+.eex{
+  background-color: #4f8c4e7f
+}
+  
+
+
+.reex{
+  background-color: #0bda207f
+}
+
+.reex1{
+  background-color: #0909097f
+}
+  
+
+/* @imp
+ort url("~@flaticon/flaticon-uicons/css/all/all"); */
+
+/* @import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree&display=swap') */
+/* @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap') */
+/* @import url('https://fonts.googleapis.com/css2?display=swap') */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.box1 {
+  width: 100px;
+  height: 50px;
+  /* margin: 50px auto; */
+  border: 1px solid #000000;
+  /* padding: 20px; */
+  text-align: center;
+  /* font-weight: 900; */
+  color: #00bfb6;
+  font-family: arial;
+  position: relative;
+}
+
+.ex{
+  background-color: #404d5054;
+}
+
+.eex{
+  background-color: #ffffff54;
+}
+
+
+.sb8:after {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-left: 10px solid transparent;
+  border-right: 10px solid #fff;
+  border-top: 10px solid #fff;
+  border-bottom: 10px solid transparent;
+  right: 24px;
+  bottom: -13px;
+}
+
+.sb8:before {
+  content: "";
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-left: 10px solid transparent;
+  border-right: 10px solid #00bfb6;
+  border-top: 10px solid #00bfb6;
+  border-bottom: 10px solid transparent;
+  right: 20px;
+  bottom: -23px;
+}
