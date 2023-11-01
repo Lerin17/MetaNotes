@@ -1,9 +1,12 @@
-import React from 'react'
-import _ from "lodash";
+import React, { useEffect } from 'react'
+import _, { uniqueId } from "lodash";
 import { bionicContext } from './bionicContext';
 import { UserContext } from './userContext';
 import axios from 'axios';
 import { socketContext } from './socketContext';
+import { TeamsContext } from './teamsContext';
+
+
 
 // import { emitx } from './socket';
 
@@ -17,7 +20,9 @@ const LibaryContext = React.createContext()
 
 const LibaryContextProvider = (props) => {
 
-    const {userData} = React.useContext(UserContext)
+    const {userData, allUsersDataArray, setallUsersDataArray} = React.useContext(UserContext)
+
+    const {userLibaryData} = React.useContext(TeamsContext)
 
     const {socket, joinRoom} = React.useContext(socketContext)
 
@@ -115,32 +120,175 @@ const LibaryContextProvider = (props) => {
         }       
     }, [currentBook]);
 
+    
+//Upon initialization get locally stored userLibaryData and reflect it on the Libary
     React.useEffect(() => {
 
-        const userLocalLibary = JSON.parse(localStorage.getItem('userLocalLibary')) 
 
-        console.log(userLocalLibary, 'courage')
+            const getAllUsersDataArray = JSON.parse(localStorage.getItem('allUsersDataArray')) 
 
-        if(!userLocalLibary){
-            setLibaryArray([])
-        }else{
-            setLibaryArray(userLocalLibary)
-        }
+            const latestUserId = JSON.parse(localStorage.getItem('latestUserId'))
+
+            console.log(getAllUsersDataArray)
+    
+            //LibaryArray updated with data from localStorage
+
+            //On first time use 
+            if(!getAllUsersDataArray || !getAllUsersDataArray.length){
+                return
+            }else if(getAllUsersDataArray.length === 1){
+                setallUsersDataArray(getAllUsersDataArray)
+
+                setLibaryArray(getAllUsersDataArray[0].LibaryArray)
+            }else if(getAllUsersDataArray.length > 1){
+                setallUsersDataArray(getAllUsersDataArray)
+
+                const latestUserData = getAllUsersDataArray.find(item => item.userid === latestUserId )
+
+                if(latestUserData){
+                    setLibaryArray(latestUserData.LibaryArray)
+                }
+               
+            }
 
         
     }, []);
 
+    // React.useEffect(() => {
+    //     if(userData){
+        
+    //     }
+     
+    // }, [userData]);
+
+    // const getLatestUserId =  
+
+  React.useEffect( () => {
+
+    const update = async () => {
+        if(userData){
+            const usersLocalDataArray = JSON.parse(localStorage.getItem('allUsersDataArray')) 
+      
+            //-----should encrypt latestUserId
+            
+      
+            const promise1 = () => new Promise((resolve, reject) => {
+                
+                  const lastestUserId = JSON.parse(localStorage.getItem('lastestUserId'))
+
+                  if(lastestUserId){
+                    resolve(lastestUserId);
+                  }
+               
+
+            });
+
+            // const getlatest = () => setTimeout(() => {
+            //     const lastestUserId =  JSON.parse(localStorage.getItem('lastestUserId'))
+
+            //     console.log(lastestUserId, 'userx')
+
+            //     return lastestUserId
+            // }, 100);
+      
+            const valuex = await promise1()
+      
+            console.log(valuex, 'user')
+            
+      
+          //   const latest = await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      
+      
+      
+      
+            //No previous userLogin
+            if( usersLocalDataArray.length === 1 && !usersLocalDataArray[0].userid){
+          
+              console.log('expected')
+          
+      
+              const updatedAllUsersDataArray = {userid:userData._id, LibaryArray}
+      
+              console.log(updatedAllUsersDataArray, 'expected')
+      
+              setallUsersDataArray([updatedAllUsersDataArray])
+      
+            }else if(usersLocalDataArray.length && usersLocalDataArray[0].userid !== valuex){
+      
+              
+              
+              console.log(usersLocalDataArray[0].userid, valuex,'usersLocalDataArray')
+      
+              //detecting an newUser
+              const newUser = {userid:userData._id, LibaryArray:[]}
+      
+      //update allUserData with newUserData
+              setallUsersDataArray ([ ...usersLocalDataArray, newUser]) 
+            }else if(usersLocalDataArray.length > 1){
+              const id = userData._id
+      
+              const getUserLocalData = usersLocalDataArray.find(item => item.userid === id)
+      
+              setLibaryArray(getUserLocalData.LibaryArray)
+              
+            }
+      
+            localStorage.setItem('latestUserId', JSON.stringify(userData._id))
+      
+          }
+    }
+
+    update()
+    //update usersLocalDataArray on login
+ 
+  }, [userData]);
 
     // localStorage.clear()
 
     React.useEffect(() => {
+        console.log('save userLibary onchange')
 
-        //save userLibaryData Locally
-        localStorage.setItem('userLocalLibary', JSON.stringify(LibaryArray))
+        // const getAllUsersDataArray = JSON.parse(localStorage.getItem('allUsersDataArray')) 
 
- 
+        if(LibaryArray.length){
 
-      //save userData to onlineDataBase
+            console.log(allUsersDataArray, 'wrong')
+               //save userLibaryData Locally after LibaryArray update
+        if(!allUsersDataArray.length ){
+
+            const defaultEntry = {userid:null, LibaryArray}
+            setallUsersDataArray([defaultEntry])
+         
+       }else if(allUsersDataArray.length === 1){
+
+        const defaultUserId = allUsersDataArray[0].userid
+
+        if(defaultUserId){
+                 const updatedEntry = {userid:defaultUserId, LibaryArray}
+
+                 setallUsersDataArray([updatedEntry])
+
+        }else{
+            console.log('wrong')
+
+            const defaultEntry = {userid:null, LibaryArray}
+
+            setallUsersDataArray([defaultEntry])
+        }
+   
+       }else if(allUsersDataArray.length > 1){
+        const lastestUserId = JSON.parse(localStorage.getItem('lastestUserId'))
+
+        setallUsersDataArray(prev => {return (prev.map(item => item.userid === lastestUserId?{userid:item.userid, LibaryArray}:item))})
+       }
+        }
+
+     
+    }, [LibaryArray]);
+
+    React.useEffect(() => {
+      //save userData to onlineDataBase upon userLogin or LibaryArray update
 
      if(userData){
         axios.post(`http://localhost:5024/api/libary/saveLibaryArray/${userData._id}`, {
@@ -151,7 +299,31 @@ const LibaryContextProvider = (props) => {
             console.log(error, 'error')
          })
     }
-    }, [LibaryArray]);
+    }, [LibaryArray, userData]);
+
+    
+    React.useEffect(() => {
+        //Upon allUsersDataArray Update
+        if(allUsersDataArray.length){
+            console.log('change', allUsersDataArray)
+            localStorage.setItem('allUsersDataArray', JSON.stringify(allUsersDataArray))
+        }
+        
+    }, [allUsersDataArray]);
+
+
+    // React.useEffect(() => {
+    //     if(userData){
+    //         axios.post(`http://localhost:5024/api/libary/saveLibaryArray/${userData._id}`, {
+    //             LibaryArrayData:LibaryArray
+    //         }).then((res) => {
+    //             console.log(res, 'MybooksOnline')
+    //          }).catch((error) => {
+    //             console.log(error, 'error')
+    //          })
+    //     }
+        
+    // }, [userData, LibaryArray]);
 
     // React.useEffect(() => {
     //     console.log('current book log changes')
@@ -186,8 +358,7 @@ const LibaryContextProvider = (props) => {
     //handle and ui end
 
 
-    //handle mounting an already existing book start
-    const openBook = (id, isBookFromMyOnlineLibary, bookSharedWithMe) => {
+     const openBook = (id, isBookFromMyOnlineLibary, bookSharedWithMe) => {
 
         // console.log(bookSharedWithMe.bookData.bookData, 'rookdata')
 
@@ -240,7 +411,6 @@ const LibaryContextProvider = (props) => {
         
         // console.log(book, 'open book')
     }
-
     //clearText area checks for recent saves and advices on updates before clearing textArea
 
     const ClearTextArea = () => {

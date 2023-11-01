@@ -264,7 +264,7 @@ const TeamsModal = () => {
     </div>
 
     const LibaryBooksDisplay = userLibaryData?.sharedBooks.length? userLibaryData.sharedBooks.map ((item,i) => (
-        <div onClick={()=>OpenBook(item)} className=''>
+        <div key={i} onClick={()=>OpenBook(item)} className=''>
              <SingleLibaryBook
              key={i}
              title={item.name}
@@ -280,7 +280,7 @@ const TeamsModal = () => {
 
     console.log(LibaryBooksDisplay, 'Libary')
 
-    const TeamMemberDisplay = teamMembersArray.length? teamMembersArray.map((item,i) => (<div className='mx-1'>
+    const TeamMemberDisplay = teamMembersArray.length? teamMembersArray.map((item,i) => (<div key={i} className='mx-1'>
         <SingleTeamMemberAvatar
         key={i}
         name= {item.name}

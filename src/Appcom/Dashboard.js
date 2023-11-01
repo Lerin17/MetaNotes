@@ -51,8 +51,9 @@ function Dashboard(params) {
     
     }
 
-    const smooth =  xRecentFilesOpened.map(item => 
+    const smooth =  xRecentFilesOpened.map((item,i) => 
         <FileComponent
+        key={i}
         book = {item}
         />
     )

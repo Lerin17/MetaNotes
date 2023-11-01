@@ -640,6 +640,9 @@ import { Socket } from 'socket.io-client';
 
 
     const handleChangeSlate = (value) => {
+
+      console.log(userData, socketRooms)
+
       if(userData && socketRooms){
 
         setOperations(editor.operations)

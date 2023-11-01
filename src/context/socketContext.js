@@ -27,6 +27,7 @@ const [roomMembersIDs, setroomMembersIDs] = React.useState([]);
 
 const [isEmitChange, setisEmitChange] = React.useState(true);
 
+//receivedOperations determines whether changes from one user should be emitted to the room, if the state is send..emit and vice versa
 const [receivedOperations, setreceivedOperations] = React.useState({state:'send', operations: null});
 
 

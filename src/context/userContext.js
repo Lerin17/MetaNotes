@@ -3,6 +3,7 @@ import React from 'react'
 
 import axios from 'axios'
 import CryptoJS from 'crypto-js'
+import { uniqueId } from 'lodash'
 
 // import { connect } from 'socket.io-client'
 
@@ -36,12 +37,17 @@ const UserContextProvider = (props) => {
 
   const [userData, setuserData] = React.useState();
 
+  const [allUsersDataArray, setallUsersDataArray] = React.useState([]);
+
+  const [userLocalLibary, setuserLocalLibary] = React.useState();
+
   const [TeamMembers, setTeamMembers] = React.useState([]);
 
   const [isWaitingUserContext, setisWaitingUserContext] = React.useState(false);
 
   let cipherUserName
   let cipherPassword
+
 
   const SignUp =  () => {
 
@@ -51,7 +57,8 @@ const UserContextProvider = (props) => {
         axios.post(`http://localhost:5024/api/authorize/createuser`, {
         username: userName,
         email:userEmail,
-        password:userPassword
+        password:userPassword,
+        localID:''
     }).then((res) => {
       console.log(res, 'response')
       setuserData(res.data.savedUser)
@@ -166,11 +173,23 @@ const UserContextProvider = (props) => {
 
 }).catch((error) => {
   console.log(error, 'errorMessage')
-  setnotification({
-    type:'error',
-    message: error.response.data.message,
-    instance:'LOGIN/SIGNUP'
-  })
+
+  if(!error.response){
+    //GENERIC ERROR MESSAGE
+    setnotification({
+      type:'error',
+      message: error.message,
+      instance:'LOGIN/SIGNUP'
+    })
+  }else{
+    //AUTHORED ERROR MESSAGE
+    setnotification({
+      type:'error',
+      message: error.response.data.message,
+      instance:'LOGIN/SIGNUP'
+    })
+  }
+
 
   
   setisWaitingUserContext(false)
@@ -204,7 +223,7 @@ const UserContextProvider = (props) => {
   }
 
   return (
-    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData, LogIn, isWaitingUserContext, setisWaitingUserContext, isDarkMode, setisDarkMode}}>
+    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData, LogIn, isWaitingUserContext, setisWaitingUserContext, isDarkMode, setisDarkMode, allUsersDataArray, setallUsersDataArray}}>
         {props.children}
     </UserContext.Provider>
   )

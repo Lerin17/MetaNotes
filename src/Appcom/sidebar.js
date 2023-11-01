@@ -338,10 +338,6 @@ function Sidebar (props) {
         return (
         <div 
         style={{
-            // border: `1px solid ${bgColor}`,
-            // backgroundColor: bgColor,
-            // backdropFilter: 'blur(2px)',
-            // background:'#5c8c4e7f'
             background:'#ffffff54'
         }} className={`w-full  rounded-lg  ${props.isActive?'scale-105 bg-black':''} cursor-pointer   md:mt-4 lg:mt-4 p-1 relative shadow-md hover:scale-105 transition-all `} >
 
@@ -352,18 +348,17 @@ function Sidebar (props) {
                     
                         <div   onClick={()=> {
                                if(props.text == 'New'){
-                                // console.log('New clicked dammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
-                                // setisActivateBionicText(false)
+                        
                                 clearInitialTextProseValue()
                             }
                              props.handleClick()
                         }
                          
                            } className="px-1" >
-                        {/* <IconButton  className="sm:w-8 mx-auto hover:bg-transparent" > */}
+  
                         {props.icon}
                        
-                        {/* </IconButton >              */}
+               
                         </div>
                       
                        
@@ -375,9 +370,7 @@ function Sidebar (props) {
                             style={{
                                 //  webkitTextStroke:"1px black"
                             }}
-                        //     style={{
-                        // WebkitTextStroke : '1px black'
-                        // }}
+                   
                  sx={{ minHeight: 0, minWidth: 0, padding: 0 }} className = {`${props.isActive?'text-white':'text-slate-700'}  capitalize font-header5`}  variant= "text" >
                             {props.text}
                             </div>
@@ -441,9 +434,10 @@ function Sidebar (props) {
         return (
             <div className={`w-16 border-gray-300 border-r border-b ${isNewFolderInterface? currentFolderContentIDs.includes(props.bookid)?'opacity-50':'':''}  bg-gradient-to-l from-gray-700 via-gray-700 to-gray-900 mr-1 mt-1  flex flex-col ${currentFileSelectedInMenu == props.bookid?'text-blue-600 border':''}`} >
                 <div className="  self-center "  >
-                <IconButton onClick={()=>{
+                <IconButton onClick={(e)=>{
                     addToRecentFiles(props.allbookData)
                     clearInitialTextProseValue()
+                    console.log(e, 'event')
                     openBook(props.bookid, false, null)}} className="hover:bg-transparent py-0 " >
                 <i className=" ri-file-list-2-line text-gray-300 "></i>
                 </IconButton>
@@ -654,17 +648,18 @@ className={`h-full  flex flex-col w-full  justify-start redx relative  ${props.i
         <AnimatePresence>
             {userData &&     
                 <div
-                className="font-header2"
+                className="font-header2 uppercase"
                 >
                 {!isLoginModalOpen &&
 
                 <AnimatePresence>
                     <motion.div 
                     style={{
-                        WebkitTextStroke:"1px gray"
+                        WebkitTextStroke:"1px gray",
+                        
                     }}
                     initial={!isLoginModalOpen && {y:30}} transition={{type:'spring', stiffness:100}} animate={!isLoginModalOpen &&{y:0}}>
-                        M                    </motion.div>
+                        {userData.username[0]}                   </motion.div>
                 </AnimatePresence>
                 
                 }
@@ -777,13 +772,11 @@ className={`h-full  flex flex-col w-full  justify-start redx relative  ${props.i
         />
 
         <div className="relative">
-                {userLibaryData &&   <div className="absolute font-bold -right-2 text-sm z-10 px-1 text-slate-100 cursor-pointer hover:scale-110 transition-all bg-green-600  top-2 ">
-                               {userLibaryData.  booksReceivedArray.length}
+                {userLibaryData &&  <div className="absolute font-bold -right-2 text-sm z-10 px-1 text-slate-100 cursor-pointer hover:scale-110 transition-all bg-green-600  top-2 ">
+                               {userLibaryData.booksReceivedArray.length}
                             </div>}
-               
 
-
-                            <Sidebarbuttoncom
+        <Sidebarbuttoncom
         icon = {
             <svg xmlns="http://www.w3.org/2000/svg" className='text-slate-800 fill-current' width="24" height="24" viewBox="0 0 24 24"><path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z"/></svg>
         }
@@ -792,17 +785,6 @@ className={`h-full  flex flex-col w-full  justify-start redx relative  ${props.i
         // isActive = {isActivateBionicText}
         color = '#DCD9D8'
         />
-
-{/* 
-<Sidebarbuttoncom
-        icon = {
-            <svg xmlns="http://www.w3.org/2000/svg" className='text-gray-700 fill-current' width="24" height="24" viewBox="0 0 24 24"><path d="M5 7c2.761 0 5 2.239 5 5s-2.239 5-5 5c-2.762 0-5-2.239-5-5s2.238-5 5-5zm15-4c0-1.657-1.344-3-3-3-1.657 0-3 1.343-3 3 0 .312.061.606.148.888l-4.209 3.157c.473.471.877 1.009 1.201 1.599l4.197-3.148c.477.317 1.048.504 1.663.504 1.656 0 3-1.343 3-3zm-5.852 17.112c-.087.282-.148.576-.148.888 0 1.657 1.343 3 3 3 1.656 0 3-1.343 3-3s-1.344-3-3-3c-.615 0-1.186.187-1.662.504l-4.197-3.148c-.324.59-.729 1.128-1.201 1.599l4.208 3.157zm6.852-5.05c1.656 0 3-1.343 3-3s-1.344-3-3-3c-1.281 0-2.367.807-2.797 1.938h-6.283c.047.328.08.66.08 1s-.033.672-.08 1h6.244c.395 1.195 1.508 2.062 2.836 2.062z"/></svg>
-        }
-        text = 'Teams'
-        handleClick = {props.openSideBar}
-        // isActive = {isActivateBionicText}
-        color = '#DCD9D8'
-        /> */}
         </div>
       
       
