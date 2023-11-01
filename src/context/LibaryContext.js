@@ -20,7 +20,7 @@ const LibaryContext = React.createContext()
 
 const LibaryContextProvider = (props) => {
 
-    const {userData, allUsersDataArray, setallUsersDataArray} = React.useContext(UserContext)
+    const {userData, allUsersDataArray, setallUsersDataArray,  latestUserIdx, userStatus} = React.useContext(UserContext)
 
     const {userLibaryData} = React.useContext(TeamsContext)
 
@@ -129,14 +129,14 @@ const LibaryContextProvider = (props) => {
 
             const latestUserId = JSON.parse(localStorage.getItem('latestUserId'))
 
-            console.log(getAllUsersDataArray)
-    
             //LibaryArray updated with data from localStorage
 
             //On first time use 
             if(!getAllUsersDataArray || !getAllUsersDataArray.length){
                 return
             }else if(getAllUsersDataArray.length === 1){
+
+                console.log(getAllUsersDataArray, 'getallusersdata')
                 setallUsersDataArray(getAllUsersDataArray)
 
                 setLibaryArray(getAllUsersDataArray[0].LibaryArray)
@@ -165,39 +165,15 @@ const LibaryContextProvider = (props) => {
 
   React.useEffect( () => {
 
-    const update = async () => {
+    const update =  () => {
         if(userData){
             const usersLocalDataArray = JSON.parse(localStorage.getItem('allUsersDataArray')) 
-      
+
+            const latestUserId = latestUserIdx
             //-----should encrypt latestUserId
             
-      
-            const promise1 = () => new Promise((resolve, reject) => {
-                
-                  const lastestUserId = JSON.parse(localStorage.getItem('lastestUserId'))
-
-                  if(lastestUserId){
-                    resolve(lastestUserId);
-                  }
-               
-
-            });
-
-            // const getlatest = () => setTimeout(() => {
-            //     const lastestUserId =  JSON.parse(localStorage.getItem('lastestUserId'))
-
-            //     console.log(lastestUserId, 'userx')
-
-            //     return lastestUserId
-            // }, 100);
-      
-            const valuex = await promise1()
-      
-            console.log(valuex, 'user')
             
-      
-          //   const latest = await new Promise(resolve => setTimeout(resolve, 1000))
-      
+            console.log(usersLocalDataArray[0].userid, latestUserId,'usersLocalDataArray')
       
       
       
@@ -205,23 +181,23 @@ const LibaryContextProvider = (props) => {
             //No previous userLogin
             if( usersLocalDataArray.length === 1 && !usersLocalDataArray[0].userid){
           
-              console.log('expected')
+            //   console.log('expected')
           
       
               const updatedAllUsersDataArray = {userid:userData._id, LibaryArray}
       
-              console.log(updatedAllUsersDataArray, 'expected')
+            //   console.log(updatedAllUsersDataArray, 'expected')
       
               setallUsersDataArray([updatedAllUsersDataArray])
       
-            }else if(usersLocalDataArray.length && usersLocalDataArray[0].userid !== valuex){
-      
+            }else if(usersLocalDataArray.length && isNewUserAdded){   
               
-              
-              console.log(usersLocalDataArray[0].userid, valuex,'usersLocalDataArray')
+              console.log(usersLocalDataArray[0].userid, latestUserId,'usersLocalDataArray')
       
               //detecting an newUser
               const newUser = {userid:userData._id, LibaryArray:[]}
+
+            //   setLibaryArray([])
       
       //update allUserData with newUserData
               setallUsersDataArray ([ ...usersLocalDataArray, newUser]) 
@@ -233,16 +209,15 @@ const LibaryContextProvider = (props) => {
               setLibaryArray(getUserLocalData.LibaryArray)
               
             }
-      
-            localStorage.setItem('latestUserId', JSON.stringify(userData._id))
-      
           }
+
     }
 
     update()
+
     //update usersLocalDataArray on login
  
-  }, [userData]);
+  }, [userStatus]);
 
     // localStorage.clear()
 

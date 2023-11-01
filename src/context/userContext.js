@@ -29,6 +29,8 @@ const UserContextProvider = (props) => {
 
   const [userEmail, setuserEmail] = React.useState();
 
+  const [latestUserIdx, setlatestUserIdx] = React.useState();
+
   const [isDarkMode, setisDarkMode] = React.useState(false);
 
   const [userPassword, setuserPassword] = React.useState();
@@ -38,6 +40,10 @@ const UserContextProvider = (props) => {
   const [userData, setuserData] = React.useState();
 
   const [allUsersDataArray, setallUsersDataArray] = React.useState([]);
+
+  const [isNewUserAdded, setisNewUserAdded] = React.useState(false);
+
+  const [userStatus, setuserStatus] = React.useState('');
 
   const [userLocalLibary, setuserLocalLibary] = React.useState();
 
@@ -93,25 +99,54 @@ const UserContextProvider = (props) => {
     process.env.REACT_APP_PASS, 'process'
   )
 
+  React.useEffect(() => {
+    
+  }, []);
   
 
     React.useEffect(() => {
+      const getlatestUserId = JSON.parse(localStorage.getItem('latestUserId'))
+
+      const usersLocalDataArray = JSON.parse(localStorage.getItem('allUsersDataArray')) 
+
+      const userIds = usersLocalDataArray?usersLocalDataArray.map(item => item.userid):[]
+
+      
 
       if(userData){
 
-  
-        // socketClient.connect()
-    
-        // socketClient.on('me', (id) => {
-        //   console.log(id, 'socketid')
-        // })
-    
-        // socketClient.emit('jam', '33x')
-    
-        // socketClient.on('roomsdata', (data) => {
-        //   console.log(data, 'socketroom')
-        // })
+        console.log(getlatestUserId, 'latestuserget')
+
+        localStorage.setItem('latestUserId', JSON.stringify(userData._id))
+
+       if(!getlatestUserId){
+         
+        setuserStatus('First User')
+
+          setlatestUserIdx(userData._id)
+        }else if(userIds.includes(userData._id)){
+
+          if(getlatestUserId !== userData._id){
+            setuserStatus('Switched User')
+
+            setlatestUserIdx(userData._id)
+          }else{
+            setuserStatus('Same User')
+          }
+         
+          // setisNewUserAdded(true)
+
+          setlatestUserIdx(userData._id)
+        }else if(userIds.includes(userData._id)){
+          setuserStatus('New User')
+        }
+        
+        console.log('latestsUser set')
+
+       
       }
+    
+      // setlatestUserId(latestUserId)
     
     }, [userData]);
 
@@ -223,7 +258,7 @@ const UserContextProvider = (props) => {
   }
 
   return (
-    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData, LogIn, isWaitingUserContext, setisWaitingUserContext, isDarkMode, setisDarkMode, allUsersDataArray, setallUsersDataArray}}>
+    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData, LogIn, isWaitingUserContext, setisWaitingUserContext, isDarkMode, setisDarkMode, allUsersDataArray, setallUsersDataArray, latestUserIdx, userStatus}}>
         {props.children}
     </UserContext.Provider>
   )
