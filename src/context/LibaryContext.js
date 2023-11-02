@@ -20,7 +20,7 @@ const LibaryContext = React.createContext()
 
 const LibaryContextProvider = (props) => {
 
-    const {userData, allUsersDataArray, setallUsersDataArray,  latestUserIdx, userStatus} = React.useContext(UserContext)
+    const {userData, allUsersDataArray, setallUsersDataArray,  latestUserId, userStatus} = React.useContext(UserContext)
 
     const {userLibaryData} = React.useContext(TeamsContext)
 
@@ -121,7 +121,7 @@ const LibaryContextProvider = (props) => {
     }, [currentBook]);
 
     
-//Upon initialization get locally stored userLibaryData and reflect it on the Libary
+//Upon initialization get locally stored userLibaryData(via latestUserid) and reflect it on the Libary
     React.useEffect(() => {
 
 
@@ -165,11 +165,11 @@ const LibaryContextProvider = (props) => {
 
   React.useEffect( () => {
 
-    const update =  () => {
+    const updateUponLogin =  () => {
         if(userData){
             const usersLocalDataArray = JSON.parse(localStorage.getItem('allUsersDataArray')) 
 
-            const latestUserId = latestUserIdx
+            // const latestUserId = latestUserIdx
             //-----should encrypt latestUserId
             
             
@@ -179,10 +179,7 @@ const LibaryContextProvider = (props) => {
       
       
             //No previous userLogin
-            if( usersLocalDataArray.length === 1 && !usersLocalDataArray[0].userid){
-          
-            //   console.log('expected')
-          
+            if(userStatus === 'First User'){
       
               const updatedAllUsersDataArray = {userid:userData._id, LibaryArray}
       
@@ -190,21 +187,24 @@ const LibaryContextProvider = (props) => {
       
               setallUsersDataArray([updatedAllUsersDataArray])
       
-            }else if(usersLocalDataArray.length && isNewUserAdded){   
-              
+            }else if(userStatus === 'New User'){   
+              console.log('run New user')
+
               console.log(usersLocalDataArray[0].userid, latestUserId,'usersLocalDataArray')
       
               //detecting an newUser
               const newUser = {userid:userData._id, LibaryArray:[]}
 
-            //   setLibaryArray([])
+              setLibaryArray([])
       
       //update allUserData with newUserData
               setallUsersDataArray ([ ...usersLocalDataArray, newUser]) 
-            }else if(usersLocalDataArray.length > 1){
+            }else if(userStatus === 'Switched User'){
               const id = userData._id
       
               const getUserLocalData = usersLocalDataArray.find(item => item.userid === id)
+
+              console.log(getUserLocalData, 'switced user')
       
               setLibaryArray(getUserLocalData.LibaryArray)
               
@@ -213,7 +213,7 @@ const LibaryContextProvider = (props) => {
 
     }
 
-    update()
+    updateUponLogin()
 
     //update usersLocalDataArray on login
  
@@ -253,9 +253,17 @@ const LibaryContextProvider = (props) => {
         }
    
        }else if(allUsersDataArray.length > 1){
-        const lastestUserId = JSON.parse(localStorage.getItem('lastestUserId'))
+        // const getlastestUserId = latestUserIdx
 
-        setallUsersDataArray(prev => {return (prev.map(item => item.userid === lastestUserId?{userid:item.userid, LibaryArray}:item))})
+        console.log(latestUserId, 'latestUserID')
+
+        // setallUsersDataArray(prev => {
+        //     return (
+        //         prev.map(item => item.userid === lastestUserId?{}:item)
+        //     )
+        // })
+
+        setallUsersDataArray(prev => {return (prev.map(item => item.userid === latestUserId?{userid:item.userid, LibaryArray}:item))})
        }
         }
 
@@ -278,6 +286,8 @@ const LibaryContextProvider = (props) => {
 
     
     React.useEffect(() => {
+        console.log(allUsersDataArray, 'allUsersave')
+
         //Upon allUsersDataArray Update
         if(allUsersDataArray.length){
             console.log('change', allUsersDataArray)

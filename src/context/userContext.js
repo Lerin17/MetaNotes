@@ -29,7 +29,7 @@ const UserContextProvider = (props) => {
 
   const [userEmail, setuserEmail] = React.useState();
 
-  const [latestUserIdx, setlatestUserIdx] = React.useState();
+  const [latestUserId, setlatestUserId] = React.useState();
 
   const [isDarkMode, setisDarkMode] = React.useState(false);
 
@@ -100,7 +100,9 @@ const UserContextProvider = (props) => {
   )
 
   React.useEffect(() => {
-    
+    const getlatestUserId = JSON.parse(localStorage.getItem('latestUserId'))
+
+    setlatestUserId(getlatestUserId)
   }, []);
   
 
@@ -111,37 +113,46 @@ const UserContextProvider = (props) => {
 
       const userIds = usersLocalDataArray?usersLocalDataArray.map(item => item.userid):[]
 
+      console.log(usersLocalDataArray, 'userLocalArray')
+
+      console.log(userIds, 'userIds')
+
       
 
       if(userData){
 
-        console.log(getlatestUserId, 'latestuserget')
+        // console.log(getlatestUserId, 'latestuserget')
 
         localStorage.setItem('latestUserId', JSON.stringify(userData._id))
 
-       if(!getlatestUserId){
+        setlatestUserId(userData._id)
+
+       if(!latestUserId){
          
         setuserStatus('First User')
 
-          setlatestUserIdx(userData._id)
+          // setlatestUserId(userData._id)
         }else if(userIds.includes(userData._id)){
+          console.log('sitched user')
 
-          if(getlatestUserId !== userData._id){
+          if(latestUserId !== userData._id){
             setuserStatus('Switched User')
 
-            setlatestUserIdx(userData._id)
+            // setlatestUserId(userData._id)
           }else{
             setuserStatus('Same User')
           }
          
           // setisNewUserAdded(true)
 
-          setlatestUserIdx(userData._id)
-        }else if(userIds.includes(userData._id)){
+          // setlatestUserId(userData._id)
+        }else if(!userIds.includes(userData._id)){
+          console.log('latestsUser set')
+
           setuserStatus('New User')
         }
         
-        console.log('latestsUser set')
+      
 
        
       }
@@ -258,7 +269,7 @@ const UserContextProvider = (props) => {
   }
 
   return (
-    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData, LogIn, isWaitingUserContext, setisWaitingUserContext, isDarkMode, setisDarkMode, allUsersDataArray, setallUsersDataArray, latestUserIdx, userStatus}}>
+    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData, LogIn, isWaitingUserContext, setisWaitingUserContext, isDarkMode, setisDarkMode, allUsersDataArray, setallUsersDataArray, latestUserId, userStatus}}>
         {props.children}
     </UserContext.Provider>
   )
