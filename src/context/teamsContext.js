@@ -10,7 +10,7 @@ const TeamsContext = React.createContext()
 
 const TeamsContextProvider = (props) => {
 
-  const {userData, setnotification} = React.useContext(UserContext)    
+  const {userData, userLibaryData, setuserLibaryData, setnotification} = React.useContext(UserContext)    
 
   // const [isLoginModalOpen, setisLoginModalOpen] = React.useState(false);
 
@@ -28,7 +28,7 @@ const TeamsContextProvider = (props) => {
   const [addTeamEmailValue, setaddTeamEmailValue] = React.useState('');
   const [teamMembersArray, setteamMembersArray] = React.useState([]);
   const [sharedLibaryBooksArray, setsharedLibaryBooksArray] = React.useState([]);
-  const [userLibaryData, setuserLibaryData] = React.useState();
+  // const [userLibaryData, setuserLibaryData] = React.useState();
 
   const [teamsNotification, setteamsNotification] = React.useState();
 
@@ -166,36 +166,40 @@ const TeamsContextProvider = (props) => {
   // console.log(libaryBooksArray)
 
   React.useEffect(() => {
-//set userLibary upon Login
+//set userLibary upon Login POINTLESS, ALL DATA ALREADY CONTAINED IN USERLIBARYDATA
 
-    if(userData){
+    if(userLibaryData){
       // console.log(userData)
-      axios.get(`http://localhost:5024/api/libary/getUser/${userData._id}`).then((res) => {
-        console.log(res)
-         setsharedLibaryBooksArray(res.data.sharedBooks)
+      setsharedLibaryBooksArray(userLibaryData.sharedBooks)
         
-         setteamMembersArray(res.data.sharedWriters)
+         setteamMembersArray(userLibaryData.sharedWriters)
 
-        console.log(res.data, 'serUserLibaryData')
-        setuserLibaryData(res.data)
+      // axios.get(`http://localhost:5024/api/libary/getUser/${userData._id}`).then((res) => {
+      //   console.log(res)
+      //    setsharedLibaryBooksArray(res.data.sharedBooks)
+        
+      //    setteamMembersArray(res.data.sharedWriters)
+
+      //   console.log(res.data, 'serUserLibaryData')
+      //   setuserLibaryData(res.data)
 
        
 
-        // setnotification({
-        //   type:'success',
-        //   message: "Libaries Added",
-        //   instance:'TEAMS'
-        // })
-      }).catch((error) => {
-        console.log(error, 'error')
-        //     setnotification({
-        //   type:'error',
-        //   message: error.response.data.message,
-        //   instance:'TEAMS'
-        // })
-      })
+      //   // setnotification({
+      //   //   type:'success',
+      //   //   message: "Libaries Added",
+      //   //   instance:'TEAMS'
+      //   // })
+      // }).catch((error) => {
+      //   console.log(error, 'error')
+      //   //     setnotification({
+      //   //   type:'error',
+      //   //   message: error.response.data.message,
+      //   //   instance:'TEAMS'
+      //   // })
+      // })
     }   
-  }, [userData]);
+  }, [userLibaryData]);
 
   // console.log(teamMembersArray)
 
@@ -266,7 +270,7 @@ const OpenBook = (book) => {
 console.log(selectedBook, 'selectedbook')
 
   return (
-    <TeamsContext.Provider value={{isTeamsModalOpen, toggleTeamsModal, isAddNewTeamOpen, setisAddNewTeamOpen, addTeamNameValue, addTeamEmailValue, setaddTeamEmailValue, setaddTeamNameValue, AddNewTeamMember, teamMembersArray, setteamMembersArray, AddBookToLibary,sharedLibaryBooksArray, setsharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu,OpenBook, selectedBook, setselectedBook, writersToAddArray, setwritersToAddArray, AddWriterToBook, isWaiting, setisWaiting, userLibaryData, isMessagesOpen, setisMessagesOpen, AcceptBook, openBookSharedWithMe }}>
+    <TeamsContext.Provider value={{isTeamsModalOpen, toggleTeamsModal, isAddNewTeamOpen, setisAddNewTeamOpen, addTeamNameValue, addTeamEmailValue, setaddTeamEmailValue, setaddTeamNameValue, AddNewTeamMember, teamMembersArray, setteamMembersArray, AddBookToLibary,sharedLibaryBooksArray, setsharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu,OpenBook, selectedBook, setselectedBook, writersToAddArray, setwritersToAddArray, AddWriterToBook, isWaiting, setisWaiting, isMessagesOpen, setisMessagesOpen, AcceptBook, openBookSharedWithMe }}>
         {props.children}
     </TeamsContext.Provider>
   )

@@ -16,11 +16,11 @@ const TeamsModal = () => {
 
    const randomColor = () => (uniqolor.random().color)
 
-    const {isAddNewTeamOpen, setisAddNewTeamOpen,  setaddTeamEmailValue, setaddTeamNameValue,addTeamNameValue, addTeamEmailValue, AddNewTeamMember,teamMembersArray,sharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu, OpenBook, selectedBook, setselectedBook,writersToAddArray, setwritersToAddArray, AddWriterToBook, isWaiting, isMessagesOpen, setisMessagesOpen, userLibaryData, AcceptBook } = React.useContext(TeamsContext)
+    const {isAddNewTeamOpen, setisAddNewTeamOpen,  setaddTeamEmailValue, setaddTeamNameValue,addTeamNameValue, addTeamEmailValue, AddNewTeamMember,teamMembersArray,sharedLibaryBooksArray,isAddWriterToBookMenu, setisAddWriterToBookMenu, OpenBook, selectedBook, setselectedBook,writersToAddArray, setwritersToAddArray, AddWriterToBook, isWaiting, isMessagesOpen, setisMessagesOpen, AcceptBook } = React.useContext(TeamsContext)
 
     const {LibaryArray, openBook} = React.useContext(LibaryContext)
 
-    const {notification, setnotification, userData} = React.useContext(UserContext)  
+    const {notification, setnotification, userData, userLibaryData} = React.useContext(UserContext)  
     
     const [issharedWriterLibary, setissharedWriterLibary] = React.useState(false);
 
@@ -247,7 +247,7 @@ const TeamsModal = () => {
 
     const LibaryBooksShareWithMe = AcceptedBooksArray.length?  AcceptedBooksArray.map(item => {
         
-           return  (<div onClick={()=>{openBook(null ,true, item)}}
+           return  (<div onClick={()=>{openBook(item.bookData.bookid)}}
          
         
            className=' m-1 cursor-pointer border border-red-400'>

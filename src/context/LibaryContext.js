@@ -20,9 +20,9 @@ const LibaryContext = React.createContext()
 
 const LibaryContextProvider = (props) => {
 
-    const {userData, allUsersDataArray, setallUsersDataArray,  latestUserId, userStatus} = React.useContext(UserContext)
+    const {userData, userLibaryData, allUsersDataArray, setallUsersDataArray,  latestUserId, userStatus} = React.useContext(UserContext)
 
-    const {userLibaryData} = React.useContext(TeamsContext)
+    // const {userLibaryData} = React.useContext(TeamsContext)
 
     const {socket, joinRoom} = React.useContext(socketContext)
 
@@ -145,6 +145,8 @@ const LibaryContextProvider = (props) => {
 
                 const latestUserData = getAllUsersDataArray.find(item => item.userid === latestUserId )
 
+                console.log(latestUserData, 'latestUser')
+
                 if(latestUserData){
                     setLibaryArray(latestUserData.LibaryArray)
                 }
@@ -173,7 +175,7 @@ const LibaryContextProvider = (props) => {
             //-----should encrypt latestUserId
             
             
-            console.log(usersLocalDataArray[0].userid, latestUserId,'usersLocalDataArray')
+            // console.log(usersLocalDataArray[0].userid, latestUserId,'usersLocalDataArray')
       
       
       
@@ -190,7 +192,7 @@ const LibaryContextProvider = (props) => {
             }else if(userStatus === 'New User'){   
               console.log('run New user')
 
-              console.log(usersLocalDataArray[0].userid, latestUserId,'usersLocalDataArray')
+            //   console.log(usersLocalDataArray[0].userid, latestUserId,'usersLocalDataArray')
       
               //detecting an newUser
               const newUser = {userid:userData._id, LibaryArray:[]}
@@ -343,38 +345,116 @@ const LibaryContextProvider = (props) => {
     //handle and ui end
 
 
-     const openBook = (id, isBookFromMyOnlineLibary, bookSharedWithMe) => {
+     const openBook = (id) => {
 
+        const selectedItemId = String(id)
         // console.log(bookSharedWithMe.bookData.bookData, 'rookdata')
 
         console.log(id)
         const book = LibaryArray.find(item => item.bookid == id)
+        let isBookAvailbleOnline
+        let onlineBookData
 
-        if(isBookFromMyOnlineLibary){
+        if(userLibaryData && userData){
+            //Initiate Opening a book for synced collaboration
 
-            console.log('joinroom')
+             const userSharedBooksArray = userLibaryData.sharedBooks
 
-            // console.log(bookSharedWithMe.bookData.bookData.bookid)
+             const userReceivedBooksArray = userLibaryData.booksReceivedArray
+
+
+             const getSelectedItemFromASharedBooks = userSharedBooksArray.find(item => item.bookid === selectedItemId) 
+
+            //  const get = userSharedBooksArray.find(item => item.boo)
+
+             const getSelectedItemFromReceivedBooks = userReceivedBooksArray.find(item => item.bookData.bookid === selectedItemId)
+
+             console.log(userSharedBooksArray,userReceivedBooksArray,selectedItemId, 'isBookAv')
+
+             isBookAvailbleOnline = getSelectedItemFromASharedBooks|| getSelectedItemFromReceivedBooks?true:false
+
+             console.log(isBookAvailbleOnline, 'isBookAvailable')
+
+             if(isBookAvailbleOnline){
+                console.log(getSelectedItemFromASharedBooks, 'sharedBooks')
+
+               if(getSelectedItemFromASharedBooks){
+                // Opening an Item that originated from the user's libary and was shared
+                console.log('did run')
+
+                setselectedBook(getSelectedItemFromASharedBooks.bookData)
+
+                joinRoom(getSelectedItemFromASharedBooks.bookData.bookid) 
+
+               }else{
+                // Opening an Item that was received from a different user after it was shared by him/her
+                
+                setselectedBook(getSelectedItemFromReceivedBooks.bookData.bookData)
+                // setselectedBook(getSelectedItemFromReceivedBooks.bookData.bookData)
+
+                joinRoom(getSelectedItemFromReceivedBooks.bookData.bookData.bookid)
+               }
+
+               setTimeout(() => {
+                toggleResetTextareas() 
+                // socketClient.emit('sendroomsdata')
+               }, 100);
+
+               return
+             }
+
+             
+        }
+
+
+        // if(isBookAvailbleOnline){
+        //     console.log('joinroom')
+
+        //     const getSelectedBookSharedBook = userSharedBooksArray.find(item => item.bookid === id)
+
+        //     // if(getSharedBook){}
+
+        //     setselectedBook(bookSharedWithMe.bookData.bookData)
+
+        //     joinRoom(bookSharedWithMe.bookData.bookData.bookid)
+        
+        //     setTimeout(() => {
+        //         toggleResetTextareas() 
+
+        //         // socketClient.emit('sendroomsdata')
+                
+        //        }, 100);
+
+        //     return
+        // }
+
+
+
+        // if(isBookFromMyOnlineLibary){
+
+        //     console.log('joinroom')
+
+        //     // console.log(bookSharedWithMe.bookData.bookData.bookid)
 
            
             
             
 
-            //should fix the bookData.bookData
+        //     //should fix the bookData.bookData
 
-            setselectedBook(bookSharedWithMe.bookData.bookData)
+        //     setselectedBook(bookSharedWithMe.bookData.bookData)
 
-            joinRoom(bookSharedWithMe.bookData.bookData.bookid)
+        //     joinRoom(bookSharedWithMe.bookData.bookData.bookid)
         
-            setTimeout(() => {
-                toggleResetTextareas() 
+        //     setTimeout(() => {
+        //         toggleResetTextareas() 
 
-                // socketClient.emit('sendroomsdata')
+        //         // socketClient.emit('sendroomsdata')
                 
-               }, 100);
+        //        }, 100);
 
-            return
-        }
+        //     return
+        // }
         
         setselectedBook(book)
         console.log(book)

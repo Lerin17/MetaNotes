@@ -110,7 +110,6 @@ const joinRoom = (id) => {
 
 
   // socket.open()
-
   socket.emit('joinroom', id)
 
   socket.on('roomsdata', ([rooms, idsOfRoomMembers]) => {

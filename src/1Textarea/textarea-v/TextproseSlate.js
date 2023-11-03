@@ -226,7 +226,9 @@ import { Socket } from 'socket.io-client';
     //handle the updating of the location needed to switch from tagLocation to initial cursorLocation
 
     React.useEffect(() => {
+      //POINTLESS
       if(editor){
+        console.log(editor.selection, 'selection')
         settextproseLocationObj(editor.selection)
       }
       
@@ -601,6 +603,10 @@ import { Socket } from 'socket.io-client';
     if(receivedOperations){
       if(receivedOperations.state == 'send' && receivedOperations.operations){
       
+        console.log('apply Operations', receivedOperations)
+
+        // console.log()
+        
       
         editor.apply(receivedOperations.operations[0])  
 
@@ -616,8 +622,11 @@ import { Socket } from 'socket.io-client';
 
 
     React.useEffect(() => {  
+      console.log(socketRooms, 'socketRoom')
         if(userData && socketRooms){
 
+
+          console.log(Operations, 'operations')
           console.log(receivedOperations, 'receivedOperations')
 
           

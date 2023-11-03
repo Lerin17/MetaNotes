@@ -39,6 +39,8 @@ const UserContextProvider = (props) => {
 
   const [userData, setuserData] = React.useState();
 
+  const [userLibaryData, setuserLibaryData] = React.useState();
+
   const [allUsersDataArray, setallUsersDataArray] = React.useState([]);
 
   const [isNewUserAdded, setisNewUserAdded] = React.useState(false);
@@ -146,7 +148,7 @@ const UserContextProvider = (props) => {
           // setisNewUserAdded(true)
 
           // setlatestUserId(userData._id)
-        }else if(!userIds.includes(userData._id)){
+        }else if(!userIds.includes(userData._id )){
           console.log('latestsUser set')
 
           setuserStatus('New User')
@@ -160,6 +162,39 @@ const UserContextProvider = (props) => {
       // setlatestUserId(latestUserId)
     
     }, [userData]);
+
+
+    React.useEffect(() => {
+      //set userLibary upon Login
+      
+          if(userData){
+            // console.log(userData)
+            axios.get(`http://localhost:5024/api/libary/getUser/${userData._id}`).then((res) => {
+              console.log(res)
+              //  setsharedLibaryBooksArray(res.data.sharedBooks)
+              
+              //  setteamMembersArray(res.data.sharedWriters)
+      
+              console.log(res.data, 'serUserLibaryData')
+              setuserLibaryData(res.data)
+      
+             
+      
+              // setnotification({
+              //   type:'success',
+              //   message: "Libaries Added",
+              //   instance:'TEAMS'
+              // })
+            }).catch((error) => {
+              console.log(error, 'error')
+              //     setnotification({
+              //   type:'error',
+              //   message: error.response.data.message,
+              //   instance:'TEAMS'
+              // })
+            })
+          }   
+        }, [userData]);
 
 
   
@@ -269,7 +304,7 @@ const UserContextProvider = (props) => {
   }
 
   return (
-    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData, LogIn, isWaitingUserContext, setisWaitingUserContext, isDarkMode, setisDarkMode, allUsersDataArray, setallUsersDataArray, latestUserId, userStatus}}>
+    <UserContext.Provider value={{isLoginModalOpen, toggleLoginModal, setuserEmail, setuserName, setuserPassword, SignUp, notification, setnotification,userData,userLibaryData, setuserLibaryData, LogIn, isWaitingUserContext, setisWaitingUserContext, isDarkMode, setisDarkMode, allUsersDataArray, setallUsersDataArray, latestUserId, userStatus}}>
         {props.children}
     </UserContext.Provider>
   )
