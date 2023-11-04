@@ -58,6 +58,7 @@ import { Socket } from 'socket.io-client';
     const {updateInitialTextProseValue, bionicTextValueAltered, isActivateBionicText, initialTextProseValue} = React.useContext(bionicContext)
 
     const [Operations, setOperations] = React.useState();
+    const [Transforms, setTransforms] = React.useState();
 
     //set hotkey properly
     const HOTKEYS = {
@@ -579,7 +580,7 @@ import { Socket } from 'socket.io-client';
 
    if(userData && socketRooms){
 
-    console.log('...ready to receive')
+    console.log('...ready to receive..')
 
     socket.on('getprosedata', ([operations, sendersocketid]) => {
       // applyChange()
@@ -655,6 +656,7 @@ import { Socket } from 'socket.io-client';
       if(userData && socketRooms){
 
         setOperations(editor.operations)
+        // setTransform(editor.)
         setValue(value)
 
 
