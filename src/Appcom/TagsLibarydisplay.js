@@ -39,7 +39,7 @@ function TagsLibary(params) {
         }
     }): []
 
-    console.log(getTagitemArray, 'getTaggedItem')
+    console.log(getTagitemArray, 'getTaggedItemx')
 
     React.useEffect(() => {
         console.log('rest TagsItems')
