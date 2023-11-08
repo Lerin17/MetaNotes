@@ -23,7 +23,10 @@ import { toast, ToastContainer } from "react-toastify";
 import ModalCustom from "../Appcom/Custom/ModalCustom";
 // import { TeamsContext } from "../context/teamsContext";
 
+// import { RoomProvider } from "./liveblocks.config";
+import { RoomProvider } from "../liveblocks.config";
 
+import { ClientSideSuspense } from "@liveblocks/react";
 
 import TeamsModal from "../Appcom/SidebarCom/TeamsModal";
 import { motion } from "framer-motion";
@@ -32,7 +35,7 @@ import { motion } from "framer-motion";
 function Prose(params) {
     const {isMetamodal} = React.useContext(Metacontext)
 
-    const {isLibarymodal, isResettextareas, } = React.useContext(LibaryContext)
+    const {isLibarymodal, isResettextareas, selectedBook } = React.useContext(LibaryContext)
 
     const {taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, isTagMenu} = React.useContext(TagContext)
 
@@ -269,9 +272,14 @@ const openSideBar = () => {
            
 
                 <div className= {classes.proseContainer} >
-                    <Textproseslate
-                    key={proseKeyValue}
-                    /> 
+                    <RoomProvider id='my-room' initialPresence={{}}>
+                        <ClientSideSuspense fallback="Loading…">
+                            {() =>   <Textproseslate
+                             key={proseKeyValue}
+                            /> }
+                        </ClientSideSuspense>
+                    </RoomProvider>
+                  
 
                 {/* {isMetamodal && <div className="lg:w-4/12 md:w-4/12 w-11/12  absolute md:left-0 md:-translate-x-0 lg:left-0 lg:-translate-x-0 left-1/2 -translate-x-1/2  lg:relative md:relative bottom-0 " >
                 <Textarea/>

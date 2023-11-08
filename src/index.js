@@ -21,6 +21,9 @@ import { TeamsContextProvider } from './context/teamsContext';
 import { UserContextProvider } from './context/userContext';
 import { SocketContextProvider } from './context/socketContext';
 
+//liveblock collaboration
+
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

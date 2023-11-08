@@ -1,10 +1,19 @@
 import { ClassNames } from '@emotion/react'
 import React, {Component, forwardRef, useCallback, useRef} from 'react'
 
-// Import React dependencies.
 
 
-//mui dependencies
+// Import React dependencies
+
+import { SlateEditorComponent } from './SlateEditorComponent';
+
+//Liveblocks
+import LiveblocksProvider from "@liveblocks/yjs";
+import { slateNodesToInsertDelta, withYjs, YjsEditor } from "@slate-yjs/core";
+import * as Y from "yjs"
+import { useRoom } from '../../liveblocks.config';
+import styles from "../../CollaborativeEditor.module.css";
+//mui imports
 import { Button, imageListItemClasses } from "@mui/material";
 // Import the Slate editor factory.
 import { createEditor, Editor, Node, Path, Text, Transforms } from 'slate'
@@ -35,12 +44,16 @@ import { Socket } from 'socket.io-client';
 
 
 
-// const initialValue =!iscurrentMetaempty && currentMeta?currentMeta.content :  [
-//   {
-//     type: 'paragraph',
-//     children: [{ text: '' }],
-//   },
-// ]
+
+const initialValuex =  [
+  {
+    type: 'paragraph',
+    children: [{ text: 'A line of text in a paragraph.' }],
+  },
+]
+
+
+
 
   
   const Textproseslate = () => {
@@ -68,6 +81,49 @@ import { Socket } from 'socket.io-client';
       'mod+`': 'code',
     }
 
+    //Collaboration
+    const room = useRoom()
+    const [Connected, setConnected] = React.useState(false);
+    const [sharedType, setsharedType] = React.useState();
+    const [Provider, setProvider] = React.useState();
+
+
+    //set up Liveblocks yjs Provider
+    React.useEffect(() => {
+
+
+      const yDoc = new Y.Doc()
+      
+      const yProvider = new LiveblocksProvider(room, yDoc);
+
+      const sharedDoc = yDoc.get("content", Y.XmlText)
+
+      // sharedDoc.applyDelta(slateNodesToInsertDelta(initialValuex))
+
+
+      yProvider.on("sync", setConnected);
+
+      
+
+
+      
+
+
+      console.log(sharedDoc, 'sharedDocdxxdxdxdxd')
+
+
+
+    setsharedType(sharedDoc);
+    setProvider(yProvider);
+
+    return () => {
+      yDoc?.destroy();
+      yProvider?.off("sync", setConnected);
+      yProvider?.destroy();
+    }
+
+
+    }, [room]);
 
     // console.log(currentTagObj)
 
@@ -140,6 +196,17 @@ import { Socket } from 'socket.io-client';
     const [markx, setmarkx] = React.useState({xx:'xx'});
     const [value, setValue] = React.useState(initialValue);
     const [title, settitle] = React.useState(initialTitle);
+
+    const [valuex, setvaluex] = React.useState( [
+      {
+        type: 'paragraph',
+        children: [{ text: 'A line of text in a paragraph.' }],
+      },
+    ]);
+
+    React.useEffect(() => {
+      console.log(room, 'rooooooom')
+    }, [valuex]);
     // const [currentTag, setcurrentTag] = React.useState();
     // const [ismarksBtnclicked, setismarksBtnclicked] = React.useState(false);
 
@@ -174,6 +241,7 @@ import { Socket } from 'socket.io-client';
 
       if(selectedBook && currentBook){
         console.log('jam')
+        //recent
         setValue(selectedBook.bookTextprosecontent)
         settitle(selectedBook.bookTitle)
         console.log(selectedBook)
@@ -675,19 +743,23 @@ import { Socket } from 'socket.io-client';
        }, [])
 
      
-      //  setmarkx(marks)
+      
+      const isNotReadyToCollaborate = Boolean(!Connected || !sharedType || !Provider)
+      //collaborative slate
+      
+     
 
-    return (       
-      // <div className='flex flex-col lg:flex-row md:flex-row' >
-        <Slate editor={editor} value={value} 
+     const SlateEditorComponentprops = {
+      editor, Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark
+     }
+   
 
-        
-        
+    return (   
+      isNotReadyToCollaborate?
+        <Slate editor={editor} value={value}  
         onChange={value => {handleChangeSlate(value)
         }
         } >
-
-        
               <div 
                 style={{
                 gridTemplateRows: 'auto 1fr'
@@ -788,9 +860,67 @@ import { Socket } from 'socket.io-client';
             </div>
             </div>
           </div>
-          </Slate>     
+          </Slate>:<SlateEditor sharedType={sharedType} value={valuex} Provider={Provider}/> 
     )
   }
+
+  const emptyNode = {
+    children: [{ text: '' }],
+  };
+
+  function SlateEditor({ sharedType, Provider, value }) {
+
+
+    // console.log(SharedType, 'typex')
+    const editor = useMemo(() => {
+      const e = withReact(withYjs(createEditor(), sharedType));
+
+  
+      // Ensure editor always has at least 1 valid child
+      const { normalizeNode } = e;
+
+      e.normalizeNode = (entry) => {
+        const [node] = entry;
+
+        console.log(node, 'noddexexe')
+
+     
+  
+        if (!Editor.isEditor(node) || node.children.length > 0) {
+          console.log(sharedType, 'noddeeeeeeeee')
+          return normalizeNode(entry);
+        }
+  
+        Transforms.insertNodes(editor, emptyNode, { at: [0] });
+      };
+  
+      return e;
+    }, []);
+
+ 
+  
+    React.useEffect(() => {
+      // console.log('eeeeeeeeend', editor, emptyNode)
+      YjsEditor.connect(editor);
+      return () => YjsEditor.disconnect(editor);
+    }, [editor]);
+
+   
+      return (
+        <div className={styles.container}>
+          <div className={styles.editorContainer}>
+            <Slate value={value} onChange={value => {
+              console.log(value, 'valuuue')
+            }} editor={editor} initialValue={[emptyNode]}>
+              <Editable className={styles.editor} placeholder="Start typing here…" />
+            </Slate>
+          </div>
+        </div>
+      );
+
+
+  }
+
 
 //toggleMark button
 
@@ -838,6 +968,10 @@ import { Socket } from 'socket.io-client';
     ReactEditor.focus(editor);
 
 } 
+
+
+
+
 
 ////////
 
