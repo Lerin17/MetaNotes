@@ -48,7 +48,7 @@ import { Socket } from 'socket.io-client';
 const initialValuex =  [
   {
     type: 'paragraph',
-    children: [{ text: 'A line of text in a paragraph.' }],
+    children: [{ text: 'A linexx of text in a paragraph.' }],
   },
 ]
 
@@ -88,13 +88,15 @@ const initialValuex =  [
     const [Provider, setProvider] = React.useState();
 
 
+
+
     //set up Liveblocks yjs Provider
     React.useEffect(() => {
-
-
       const yDoc = new Y.Doc()
       
       const yProvider = new LiveblocksProvider(room, yDoc);
+
+
 
       const sharedDoc = yDoc.get("content", Y.XmlText)
 
@@ -102,12 +104,6 @@ const initialValuex =  [
 
 
       yProvider.on("sync", setConnected);
-
-      
-
-
-      
-
 
       console.log(sharedDoc, 'sharedDocdxxdxdxdxd')
 
@@ -125,9 +121,45 @@ const initialValuex =  [
 
     }, [room]);
 
+
+
+ 
+
+      
+   
+
     // console.log(currentTagObj)
 
-    const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+    const editor = useMemo(() => {
+      const e = withHistory(withReact(withYjs(createEditor(), sharedType)));
+
+      
+      console.log(sharedType, 'noddexexe')
+  
+      // Ensure editor always has at least 1 valid child
+      const { normalizeNode } = e;
+
+      e.normalizeNode = (entry) => {
+        const [node] = entry;
+
+
+     
+  
+        if (!Editor.isEditor(node) || node.children.length > 0) {
+          console.log(sharedType, 'noddeeeeeeeee')
+          return normalizeNode(entry);
+        }
+  
+        Transforms.insertNodes(editor, emptyNode, { at: [0] });
+      };
+  
+      return e;
+    }, []);
+
+    const isNotReadyToCollaborate = Boolean(!Connected || !sharedType || !Provider)
+
+
+
 
     let istextprosermpty = true
     let initialValue
@@ -744,19 +776,181 @@ const initialValuex =  [
 
      
       
-      const isNotReadyToCollaborate = Boolean(!Connected || !sharedType || !Provider)
+
       //collaborative slate
       
      
 
      const SlateEditorComponentprops = {
-      editor, Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark
+       Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isNotReadyToCollaborate
      }
    
 
     return (   
-      isNotReadyToCollaborate?
-        <Slate editor={editor} value={value}  
+      isNotReadyToCollaborate?<div>
+        ...Creating
+      </div>:
+      <SlateEditorx
+      {...SlateEditorComponentprops}
+      />
+        // <Slate editor={editor} value={value}  
+        // onChange={value => {handleChangeSlate(value)
+        // }
+        // } >
+        //       <div 
+        //         style={{
+        //         gridTemplateRows: 'auto 1fr'
+        //         }} className='App w-full h-full  grid grid-flow-row overflow-hidden' >
+        //       <div className="w-full rounded  font-bold overflow-hidden px-2"> 
+        //           <div className=' text-left flex justify-between py-1' >
+        //               <input className='border-none bg-transparent outline-none font-header5 font-bold text-slate-800'
+        //               onChange={ontitleChange}
+        //               value={title}
+        //               placeholder={'Enter title'}
+        //               />
+
+        //               <div className='text-gray-300 mr-16 font-header5' >
+        //                 Last saved
+        //                 </div>
+        //           </div>
+        //           <div className=' border-2 border-slate-400' >
+        //             <Toolbar
+        //             mark = {markx}
+        //             />
+        //           </div>
+               
+        //          </div>
+        //   <div style={{
+        //         gridTemplateRows: '1fr 0.1fr'
+        //         }} className=" main-content grid grid-flow-col overflow-hidden  ">
+        //     <div className="overflow-auto p-4 relative lg:h-full md:h-full  ">
+        //       {/* <div className="w-full mb-12"></div> */}
+          
+        //     < Editable  
+        //   renderElement={renderElement}
+        //   renderLeaf={renderLeaf}
+        //   autoFocus
+        //   onKeyDown={(event) => {
+
+        //     if(receivedOperations.state == ''){
+        //       setreceivedOperations({state:'send', operations: null})
+        //     }
+         
+
+        //     for (const hotkey in HOTKEYS) {
+
+        //       // console.log(editor.operations, 'operationsKey')
+
+        //       if(isHotkey(hotkey, event)){
+        //         console.log(event, 'hotKeys')
+        //         event.preventDefault()
+        //         const format = HOTKEYS[hotkey]
+        //         console.log(format)
+        //         if(format == 'tag'){
+        //           toggleMark(editor, format, MetaID, updatMetaId, currentTagObj)
+        //         }else{
+        //           toggleMark(editor, format)
+        //         }
+               
+        //       }
+        //       // console.log(`obj.${prop} = ${obj[prop]}`);
+        //     }
+        //   }}
+
+        //   onMouseEnter={() => {
+        //     setTimeout(() => {
+        //       console.log(Editor.marks(editor))
+        //       // console.log(Editor)
+        //       setmarkx(Editor.marks(editor))
+
+        //       // const Metaid = editor.selection.metaid
+              
+        //       // displayMetaContentPopup(Metaid)
+        //       // console.log(editor.selection)
+        //       // console.log(value)
+        //       // gettextproseEditor(editor)
+        //     }, 20);
+        //   }}
+
+        //   onClick={()=>{
+        //     setTimeout(() => {
+        //       console.log(Editor.marks(editor))
+        //       setmarkx(Editor.marks(editor))
+        //       console.log(editor.selection)
+        //       console.log(value)
+        //       // gettextproseEditor(editor)
+        //     }, 20);
+        //   //   const {selection} = editor
+        //   // const anchoroffset = selection.anchor.offset
+        //   // const focusoffset = selection.focus.offset
+        //   // const focuspath = selection.focus.path
+
+        //   }}
+
+        //   style={{
+        //     padding: '10px',
+        //     borderTop: '2px solid #94A3B8',
+        //     textAlign: 'start',
+        //     color:'GrayText',
+        //   }}
+        //     />
+        //     </div>
+        //     </div>
+        //   </div>
+        //   </Slate>
+          // <SlateEditor sharedType={sharedType} value={valuex} Provider={Provider}/> 
+    )
+  }
+
+  const emptyNode = {
+    children: [{ text: '' }],
+  };
+
+
+
+  const SlateEditorx = ({ Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isNotReadyToCollaborate}) => {
+
+    const editorx = useMemo(() => {
+      const e = withHistory(withReact(withYjs(createEditor(), sharedType)));
+
+      
+      console.log(sharedType, 'noddexexe')
+  
+      // Ensure editor always has at least 1 valid child
+      const { normalizeNode } = e;
+
+      e.normalizeNode = (entry) => {
+        const [node] = entry;
+
+
+     
+  
+        if (!Editor.isEditor(node) || node.children.length > 0) {
+          console.log(sharedType, 'noddeeeeeeeee')
+          return normalizeNode(entry);
+        }
+  
+        Transforms.insertNodes(editorx, emptyNode, { at: [0] });
+      };
+  
+      return e;
+    }, []);
+
+    React.useEffect(() => {
+      console.log('eeeeeeeeend', editorx, sharedType)
+     if(isNotReadyToCollaborate){
+      return
+     }else{
+      YjsEditor.connect(editorx);
+     }
+
+    
+     
+      return () => YjsEditor.disconnect(editorx);
+    }, [editorx, userData]);
+
+    return (
+      <Slate editor={editorx} value={value}  
         onChange={value => {handleChangeSlate(value)
         }
         } >
@@ -795,9 +989,159 @@ const initialValuex =  [
           autoFocus
           onKeyDown={(event) => {
 
-            if(receivedOperations.state == ''){
-              setreceivedOperations({state:'send', operations: null})
+            // if(receivedOperations.state == ''){
+            //   setreceivedOperations({state:'send', operations: null})
+            // }
+         
+
+            for (const hotkey in HOTKEYS) {
+
+              // console.log(editor.operations, 'operationsKey')
+
+              if(isHotkey(hotkey, event)){
+                console.log(event, 'hotKeys')
+                event.preventDefault()
+                const format = HOTKEYS[hotkey]
+                console.log(format)
+                if(format == 'tag'){
+                  toggleMark(editorx, format, MetaID, updatMetaId, currentTagObj)
+                }else{
+                  toggleMark(editorx, format)
+                }
+               
+              }
+              // console.log(`obj.${prop} = ${obj[prop]}`);
             }
+          }}
+
+          onMouseEnter={() => {
+            setTimeout(() => {
+              console.log(Editor.marks(editorx))
+              // console.log(Editor)
+              setmarkx(Editor.marks(editorx))
+
+              // const Metaid = editor.selection.metaid
+              
+              // displayMetaContentPopup(Metaid)
+              // console.log(editor.selection)
+              // console.log(value)
+              // gettextproseEditor(editor)
+            }, 20);
+          }}
+
+          onClick={()=>{
+            setTimeout(() => {
+              console.log(Editor.marks(editorx))
+              setmarkx(Editor.marks(editorx))
+              console.log(editorx.selection)
+              console.log(value)
+              // gettextproseEditor(editor)
+            }, 20);
+          //   const {selection} = editor
+          // const anchoroffset = selection.anchor.offset
+          // const focusoffset = selection.focus.offset
+          // const focuspath = selection.focus.path
+
+          }}
+
+          style={{
+            padding: '10px',
+            borderTop: '2px solid #94A3B8',
+            textAlign: 'start',
+            color:'GrayText',
+          }}
+            />
+            </div>
+            </div>
+          </div>
+          </Slate>
+    )
+  }
+
+  const DefaultSlateEditor = ({ Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isNotReadyToCollaborate}) => {
+
+    const editor = useMemo(() => {
+      const e = withHistory(withReact((createEditor())));
+
+      
+      // console.log(sharedType, 'noddexexe')
+  
+      // Ensure editor always has at least 1 valid child
+      const { normalizeNode } = e;
+
+      e.normalizeNode = (entry) => {
+        const [node] = entry;
+
+
+     
+  
+        if (!Editor.isEditor(node) || node.children.length > 0) {
+          console.log(sharedType, 'noddeeeeeeeee')
+          return normalizeNode(entry);
+        }
+  
+        Transforms.insertNodes(editor, emptyNode, { at: [0] });
+      };
+  
+      return e;
+    }, []);
+
+    // React.useEffect(() => {
+    //   console.log('eeeeeeeeend', editorx, sharedType)
+    //  if(isNotReadyToCollaborate){
+    //   return
+    //  }else{
+    //   YjsEditor.connect(editorx);
+    //  }
+
+    
+     
+    //   return () => YjsEditor.disconnect(editorx);
+    // }, [editorx, userData]);
+
+    return (
+      <Slate editor={editor} value={value}  
+        onChange={value => {handleChangeSlate(value)
+        }
+        } >
+              <div 
+                style={{
+                gridTemplateRows: 'auto 1fr'
+                }} className='App w-full h-full  grid grid-flow-row overflow-hidden' >
+              <div className="w-full rounded  font-bold overflow-hidden px-2"> 
+                  <div className=' text-left flex justify-between py-1' >
+                      <input className='border-none bg-transparent outline-none font-header5 font-bold text-slate-800'
+                      onChange={ontitleChange}
+                      value={title}
+                      placeholder={'Enter title'}
+                      />
+
+                      <div className='text-gray-300 mr-16 font-header5' >
+                        Last saved
+                        </div>
+                  </div>
+                  <div className=' border-2 border-slate-400' >
+                    <Toolbar
+                    mark = {markx}
+                    />
+                  </div>
+               
+                 </div>
+          <div style={{
+                gridTemplateRows: '1fr 0.1fr'
+                }} className=" main-content grid grid-flow-col overflow-hidden  ">
+            <div className="overflow-auto p-4 relative lg:h-full md:h-full  ">
+              {/* <div className="w-full mb-12"></div> */}
+          
+            < Editable  
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
+          autoFocus
+          onKeyDown={(event) => {
+
+            // if(receivedOperations.state == ''){
+            //   setreceivedOperations({state:'send', operations: null})
+            // }
          
 
             for (const hotkey in HOTKEYS) {
@@ -860,65 +1204,8 @@ const initialValuex =  [
             </div>
             </div>
           </div>
-          </Slate>:<SlateEditor sharedType={sharedType} value={valuex} Provider={Provider}/> 
+          </Slate>
     )
-  }
-
-  const emptyNode = {
-    children: [{ text: '' }],
-  };
-
-  function SlateEditor({ sharedType, Provider, value }) {
-
-
-    // console.log(SharedType, 'typex')
-    const editor = useMemo(() => {
-      const e = withReact(withYjs(createEditor(), sharedType));
-
-  
-      // Ensure editor always has at least 1 valid child
-      const { normalizeNode } = e;
-
-      e.normalizeNode = (entry) => {
-        const [node] = entry;
-
-        console.log(node, 'noddexexe')
-
-     
-  
-        if (!Editor.isEditor(node) || node.children.length > 0) {
-          console.log(sharedType, 'noddeeeeeeeee')
-          return normalizeNode(entry);
-        }
-  
-        Transforms.insertNodes(editor, emptyNode, { at: [0] });
-      };
-  
-      return e;
-    }, []);
-
- 
-  
-    React.useEffect(() => {
-      // console.log('eeeeeeeeend', editor, emptyNode)
-      YjsEditor.connect(editor);
-      return () => YjsEditor.disconnect(editor);
-    }, [editor]);
-
-   
-      return (
-        <div className={styles.container}>
-          <div className={styles.editorContainer}>
-            <Slate value={value} onChange={value => {
-              console.log(value, 'valuuue')
-            }} editor={editor} initialValue={[emptyNode]}>
-              <Editable className={styles.editor} placeholder="Start typing here…" />
-            </Slate>
-          </div>
-        </div>
-      );
-
-
   }
 
 
