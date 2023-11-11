@@ -35,11 +35,11 @@ import { motion } from "framer-motion";
 function Prose(params) {
     const {isMetamodal} = React.useContext(Metacontext)
 
-    const {isLibarymodal, isResettextareas, selectedBook } = React.useContext(LibaryContext)
+    const {isLibarymodal, isResettextareas, selectedBook, roomID_YjsProvider, setroomID_YjsProvider } = React.useContext(LibaryContext)
 
     const {taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, isTagMenu} = React.useContext(TagContext)
 
-    const {isLoginModalOpen, setnotification, notification, isDarkMode} = React.useContext(UserContext)
+    const {isLoginModalOpen, setnotification, notification, isDarkMode, userData} = React.useContext(UserContext)
     const {isTeamsModalOpen} = React.useContext(TeamsContext)
 
     const {isActivateBionicText} = React.useContext(bionicContext)
@@ -49,6 +49,16 @@ function Prose(params) {
     const [isOpenSideBar, setisOpenSideBar] = React.useState(false);
     // const {taggedObjArray, } = React.useContext(TagContext)
 
+
+    const roomID = userData && selectedBook?String(selectedBook.bookid):''
+
+    // const [roomIDX, setroomIDX] = React.useState('default');
+
+    // React.useEffect(() => {
+    //     if(userData && selectedBook){
+    //         setroomIDX(String(selectedBook.bookid))
+    //     }
+    // }, [userData, selectedBook]);
 
     // console.log(isMetamodal)
     const styles = () => {
@@ -272,7 +282,7 @@ const openSideBar = () => {
            
 
                 <div className= {classes.proseContainer} >
-                    <RoomProvider id='my-room' initialPresence={{}}>
+                    <RoomProvider id={`${roomID_YjsProvider}`} initialPresence={{}}>
                         <ClientSideSuspense fallback="Loading…">
                             {() =>   <Textproseslate
                              key={proseKeyValue}

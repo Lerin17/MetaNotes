@@ -28,7 +28,7 @@ const LibaryContextProvider = (props) => {
 
    
     const {notification, setnotification} = React.useContext(UserContext)
- 
+    
 
     const [LibaryArray, setLibaryArray] = React.useState([]);
     const [FolderArray, setFolderArray] = React.useState([]);
@@ -45,6 +45,9 @@ const LibaryContextProvider = (props) => {
     const [currentBook, setcurrentBook] = React.useState();
     const [selectedBook, setselectedBook] = React.useState();
     // const [history, sethistory] = React.useState();
+
+    //hold roomID value for yjs provider
+    const [roomID_YjsProvider, setroomID_YjsProvider] = React.useState('default-room');
 
     //hold folder values START
 
@@ -386,6 +389,8 @@ const LibaryContextProvider = (props) => {
 
                 joinRoom(getSelectedItemFromASharedBooks.bookData.bookid) 
 
+                setroomID_YjsProvider(getSelectedItemFromASharedBooks.bookData.bookid)
+
                }else{
                 // Opening an Item that was received from a different user after it was shared by him/her
                 
@@ -393,6 +398,8 @@ const LibaryContextProvider = (props) => {
                 // setselectedBook(getSelectedItemFromReceivedBooks.bookData.bookData)
 
                 joinRoom(getSelectedItemFromReceivedBooks.bookData.bookData.bookid)
+
+                setroomID_YjsProvider(getSelectedItemFromReceivedBooks.bookData.bookData.bookid)
                }
 
                setTimeout(() => {
@@ -724,7 +731,7 @@ const LibaryContextProvider = (props) => {
     
     
     return (
-        <LibaryContext.Provider value={{LibaryArray,updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal, toggleResetTextareas, isResettextareas, openBook, currentBook, bookID, selectedBook, setselectedBook,  setbookID, currentBookMetaArray, setcurrentBookCreatedTagArray, currentBookCreatedTagArray, newFileSaveError, setnewFileSaveError, ClearTextArea, getFolderDescription, getFolderName, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, currentFolderContent, saveCurrentFolder, currentFolderName, currentFolderDescription,FolderArray,clearCurrentFolder,openFolder,setcurrentFolderDescription, setcurrentFolderName, currentFolderID, currentFileSelectedInMenu, setcurrentFileSelectedInMenu }} >
+        <LibaryContext.Provider value={{LibaryArray,updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal, toggleResetTextareas, isResettextareas, openBook, currentBook, bookID, selectedBook, setselectedBook,  setbookID, currentBookMetaArray, setcurrentBookCreatedTagArray, currentBookCreatedTagArray, newFileSaveError, setnewFileSaveError, ClearTextArea, getFolderDescription, getFolderName, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, currentFolderContent, saveCurrentFolder, currentFolderName, currentFolderDescription,FolderArray,clearCurrentFolder,openFolder,setcurrentFolderDescription, setcurrentFolderName, currentFolderID, currentFileSelectedInMenu, setcurrentFileSelectedInMenu,roomID_YjsProvider, setroomID_YjsProvider }} >
              {props.children}
         </LibaryContext.Provider>    
     )

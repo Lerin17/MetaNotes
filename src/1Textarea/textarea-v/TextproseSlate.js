@@ -82,33 +82,50 @@ const initialValuex =  [
     }
 
     //Collaboration
-    const room = useRoom()
+    let room 
     const [Connected, setConnected] = React.useState(false);
     const [sharedType, setsharedType] = React.useState();
     const [Provider, setProvider] = React.useState();
+    const [isMountCollaborativeEditor, setisMountCollaborativeEditor] = React.useState(false);
+
+    // setTimeout(() => {
+    //   setisMountCollaborativeEditor(true)
+    // }, 5000);
 
 
-
+    room = useRoom()
 
     //set up Liveblocks yjs Provider
     React.useEffect(() => {
+   
+      console.log(room, 'roommmmmm')
+
+      console.log('hame')
+
       const yDoc = new Y.Doc()
       
       const yProvider = new LiveblocksProvider(room, yDoc);
 
 
 
-      const sharedDoc = yDoc.get("content", Y.XmlText)
+      const sharedDoc = selectedBook? yDoc.get("content", Y.XmlText):''
 
-      // sharedDoc.applyDelta(slateNodesToInsertDelta(initialValuex))
+      console.log(sharedDoc.doc, 'doc')
 
-
-      yProvider.on("sync", setConnected);
-
+      if(room.id && room.id !== 'default-room'){
+        console.log('cow', room.id)
+        sharedDoc.applyDelta(slateNodesToInsertDelta(selectedBook.bookTextprosecontent))
+      }
+      
       console.log(sharedDoc, 'sharedDocdxxdxdxdxd')
 
 
 
+
+ 
+
+    //conditionals for rendering of collaborative editor component
+    yProvider.on("sync", setConnected);
     setsharedType(sharedDoc);
     setProvider(yProvider);
 
@@ -123,6 +140,8 @@ const initialValuex =  [
 
 
 
+
+
  
 
       
@@ -131,27 +150,27 @@ const initialValuex =  [
     // console.log(currentTagObj)
 
     const editor = useMemo(() => {
-      const e = withHistory(withReact(withYjs(createEditor(), sharedType)));
+      const e = withHistory(withReact((createEditor())));
 
       
-      console.log(sharedType, 'noddexexe')
+      // console.log(sharedType, 'noddexexe')
   
-      // Ensure editor always has at least 1 valid child
-      const { normalizeNode } = e;
+      // // Ensure editor always has at least 1 valid child
+      // const { normalizeNode } = e;
 
-      e.normalizeNode = (entry) => {
-        const [node] = entry;
+      // e.normalizeNode = (entry) => {
+      //   const [node] = entry;
 
 
      
   
-        if (!Editor.isEditor(node) || node.children.length > 0) {
-          console.log(sharedType, 'noddeeeeeeeee')
-          return normalizeNode(entry);
-        }
+      //   if (!Editor.isEditor(node) || node.children.length > 0) {
+      //     console.log(sharedType, 'noddeeeeeeeee')
+      //     return normalizeNode(entry);
+      //   }
   
-        Transforms.insertNodes(editor, emptyNode, { at: [0] });
-      };
+      //   Transforms.insertNodes(editor, emptyNode, { at: [0] });
+      // };
   
       return e;
     }, []);
@@ -286,6 +305,7 @@ const initialValuex =  [
 
       setTimeout(() => {
         console.log('when')
+     
         // setselectedBook() changed it 
         setselectedBook(null)
       }, 50);
@@ -755,7 +775,7 @@ const initialValuex =  [
 
       if(userData && socketRooms){
 
-        setOperations(editor.operations)
+        // setOperations(editor.operations)
         // setTransform(editor.)
         setValue(value)
 
@@ -782,15 +802,16 @@ const initialValuex =  [
      
 
      const SlateEditorComponentprops = {
-       Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isNotReadyToCollaborate
-     }
+       Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isNotReadyToCollaborate,isMountCollaborativeEditor
+     } 
    
 
     return (   
-      isNotReadyToCollaborate?<div>
-        ...Creating
-      </div>:
+      userData?
       <SlateEditorx
+      {...SlateEditorComponentprops}
+      />: 
+      <DefaultSlateEditor
       {...SlateEditorComponentprops}
       />
         // <Slate editor={editor} value={value}  
@@ -829,7 +850,7 @@ const initialValuex =  [
         //     < Editable  
         //   renderElement={renderElement}
         //   renderLeaf={renderLeaf}
-        //   autoFocus
+        //   autoFocus ={true}
         //   onKeyDown={(event) => {
 
         //     if(receivedOperations.state == ''){
@@ -898,7 +919,7 @@ const initialValuex =  [
         //     </div>
         //   </div>
         //   </Slate>
-          // <SlateEditor sharedType={sharedType} value={valuex} Provider={Provider}/> 
+        
     )
   }
 
@@ -910,11 +931,15 @@ const initialValuex =  [
 
   const SlateEditorx = ({ Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isNotReadyToCollaborate}) => {
 
+    console.log()
+
     const editorx = useMemo(() => {
       const e = withHistory(withReact(withYjs(createEditor(), sharedType)));
 
       
       console.log(sharedType, 'noddexexe')
+
+
   
       // Ensure editor always has at least 1 valid child
       const { normalizeNode } = e;
@@ -950,6 +975,9 @@ const initialValuex =  [
     }, [editorx, userData]);
 
     return (
+      isNotReadyToCollaborate?<div>
+        ...loading document
+      </div>:
       <Slate editor={editorx} value={value}  
         onChange={value => {handleChangeSlate(value)
         }
@@ -1058,16 +1086,14 @@ const initialValuex =  [
     )
   }
 
-  const DefaultSlateEditor = ({ Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isNotReadyToCollaborate}) => {
+  const DefaultSlateEditor = ({ Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isNotReadyToCollaborate, isMountCollaborativeEditor}) => {
 
     const editor = useMemo(() => {
       const e = withHistory(withReact((createEditor())));
-
-      
-      // console.log(sharedType, 'noddexexe')
-  
       // Ensure editor always has at least 1 valid child
       const { normalizeNode } = e;
+
+
 
       e.normalizeNode = (entry) => {
         const [node] = entry;
@@ -1086,18 +1112,8 @@ const initialValuex =  [
       return e;
     }, []);
 
-    // React.useEffect(() => {
-    //   console.log('eeeeeeeeend', editorx, sharedType)
-    //  if(isNotReadyToCollaborate){
-    //   return
-    //  }else{
-    //   YjsEditor.connect(editorx);
-    //  }
+  
 
-    
-     
-    //   return () => YjsEditor.disconnect(editorx);
-    // }, [editorx, userData]);
 
     return (
       <Slate editor={editor} value={value}  
@@ -1169,13 +1185,6 @@ const initialValuex =  [
               console.log(Editor.marks(editor))
               // console.log(Editor)
               setmarkx(Editor.marks(editor))
-
-              // const Metaid = editor.selection.metaid
-              
-              // displayMetaContentPopup(Metaid)
-              // console.log(editor.selection)
-              // console.log(value)
-              // gettextproseEditor(editor)
             }, 20);
           }}
 
@@ -1187,12 +1196,7 @@ const initialValuex =  [
               console.log(value)
               // gettextproseEditor(editor)
             }, 20);
-          //   const {selection} = editor
-          // const anchoroffset = selection.anchor.offset
-          // const focusoffset = selection.focus.offset
-          // const focuspath = selection.focus.path
-
-          }}
+         }}
 
           style={{
             padding: '10px',
@@ -1255,9 +1259,6 @@ const initialValuex =  [
     ReactEditor.focus(editor);
 
 } 
-
-
-
 
 
 ////////
