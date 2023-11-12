@@ -48,6 +48,14 @@ const LibaryContextProvider = (props) => {
 
     //hold roomID value for yjs provider
     const [roomID_YjsProvider, setroomID_YjsProvider] = React.useState('default-room');
+    
+    const [collaborationStatus, setCollaborationStatus] = React.useState('default_editor-false');
+
+    //states for collaborationStatus
+    //false
+    //initiate
+    //provider_docs_setu
+    //mount_editor
 
     //hold folder values START
 
@@ -78,8 +86,12 @@ const LibaryContextProvider = (props) => {
     //START additional for ui config and reset of textprose
     const [isLibarymodal, setisLibarymodal] = React.useState(false);
     const [isNewFolderInterface, setisNewFolderInterface] = React.useState(false);
+
+    //FIX should be rerender text editor and should be in a higher level context
     const [isResettextareas, setisResettextareas] = React.useState(false);
     //additional for ui config and reset of textprose end
+
+    const [isBeginCollaboration, setisBeginCollaboration] = React.useState(false);
 
     //is book already present on reset
     //   const isbookalready = Libaryarrayids.some(item => item == currentBook.bookid)
@@ -88,9 +100,6 @@ const LibaryContextProvider = (props) => {
     const [currentFileSelectedInMenu, setcurrentFileSelectedInMenu] = React.useState();
 
     React.useEffect(() => {
-     
-
-        // console.log(Boolean(currentBook), 'check')
     
         //check if libaryarray is empty and currentbook is valid, then set,***else if add it to the list
         if(LibaryArray.length == 0 && currentBook){
@@ -214,11 +223,18 @@ const LibaryContextProvider = (props) => {
               setLibaryArray(getUserLocalData.LibaryArray)
               
             }
+
+
           }
 
     }
 
-    updateUponLogin()
+    // updateUponLogin()
+    // if(isResettextareas){
+    //     setisResettextareas(false)
+    // }else{
+    //     setisResettextareas(true)
+    // }
 
     //update usersLocalDataArray on login
  
@@ -402,10 +418,13 @@ const LibaryContextProvider = (props) => {
                 setroomID_YjsProvider(getSelectedItemFromReceivedBooks.bookData.bookData.bookid)
                }
 
+               setisBeginCollaboration(true)
+               setCollaborationStatus('collaborative_editor-initiate')
+
                setTimeout(() => {
                 toggleResetTextareas() 
                 // socketClient.emit('sendroomsdata')
-               }, 100);
+               }, 200);
 
                return
              }
@@ -478,7 +497,7 @@ const LibaryContextProvider = (props) => {
         setTimeout(() => {
          toggleResetTextareas() 
          
-        }, 100);
+        }, 200);
 
         
         // console.log(book, 'open book')
@@ -562,8 +581,10 @@ const LibaryContextProvider = (props) => {
      console.log(selectedBook, 'selcted book')
       updateBookID()
 
-      if(selectedBook || currentBook){
+      if(selectedBook){
         console.log('2nd')
+        
+        console.log(selectedBook, 'selecttttt')
         setbookID(selectedBook.bookid)
       }
     }, [isResettextareas]);
@@ -731,7 +752,7 @@ const LibaryContextProvider = (props) => {
     
     
     return (
-        <LibaryContext.Provider value={{LibaryArray,updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal, toggleResetTextareas, isResettextareas, openBook, currentBook, bookID, selectedBook, setselectedBook,  setbookID, currentBookMetaArray, setcurrentBookCreatedTagArray, currentBookCreatedTagArray, newFileSaveError, setnewFileSaveError, ClearTextArea, getFolderDescription, getFolderName, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, currentFolderContent, saveCurrentFolder, currentFolderName, currentFolderDescription,FolderArray,clearCurrentFolder,openFolder,setcurrentFolderDescription, setcurrentFolderName, currentFolderID, currentFileSelectedInMenu, setcurrentFileSelectedInMenu,roomID_YjsProvider, setroomID_YjsProvider }} >
+        <LibaryContext.Provider value={{LibaryArray,updateBookTextProse, updateBookMetaArray, Createbookentry, isLibarymodal,  toggleLibaryModal, toggleResetTextareas, isResettextareas, openBook, currentBook, bookID, selectedBook, setselectedBook,  setbookID, currentBookMetaArray, setcurrentBookCreatedTagArray, currentBookCreatedTagArray, newFileSaveError, setnewFileSaveError, ClearTextArea, getFolderDescription, getFolderName, toggleisNewFolderInterface, isNewFolderInterface, updateCurrentFolderContent, currentFolderContent, saveCurrentFolder, currentFolderName, currentFolderDescription,FolderArray,clearCurrentFolder,openFolder,setcurrentFolderDescription, setcurrentFolderName, currentFolderID, currentFileSelectedInMenu, setcurrentFileSelectedInMenu,roomID_YjsProvider, setroomID_YjsProvider, isBeginCollaboration, collaborationStatus, setCollaborationStatus }} >
              {props.children}
         </LibaryContext.Provider>    
     )

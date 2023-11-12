@@ -35,7 +35,7 @@ import { motion } from "framer-motion";
 function Prose(params) {
     const {isMetamodal} = React.useContext(Metacontext)
 
-    const {isLibarymodal, isResettextareas, selectedBook, roomID_YjsProvider, setroomID_YjsProvider } = React.useContext(LibaryContext)
+    const {isLibarymodal, isResettextareas, selectedBook, roomID_YjsProvider, setroomID_YjsProvider, isBeginCollaboration } = React.useContext(LibaryContext)
 
     const {taggedObjArray, toggleisTagLibaryDisplay, isTagLibaryDisplay, isTagMenu} = React.useContext(TagContext)
 
@@ -49,8 +49,9 @@ function Prose(params) {
     const [isOpenSideBar, setisOpenSideBar] = React.useState(false);
     // const {taggedObjArray, } = React.useContext(TagContext)
 
+    
 
-    const roomID = userData && selectedBook?String(selectedBook.bookid):''
+    // const roomID = userData && selectedBook?String(selectedBook.bookid):''
 
     // const [roomIDX, setroomIDX] = React.useState('default');
 
