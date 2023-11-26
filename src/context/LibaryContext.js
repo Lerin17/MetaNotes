@@ -418,7 +418,7 @@ const LibaryContextProvider = (props) => {
                 setroomID_YjsProvider(getSelectedItemFromReceivedBooks.bookData.bookData.bookid)
                }
 
-               setisBeginCollaboration(true)
+            //    setisBeginCollaboration(true)
                setCollaborationStatus('collaborative_editor-initiate')
 
                setTimeout(() => {

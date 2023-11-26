@@ -11,7 +11,8 @@ import { SlateEditorComponent } from './SlateEditorComponent';
 import LiveblocksProvider from "@liveblocks/yjs";
 import { slateNodesToInsertDelta, withYjs, YjsEditor } from "@slate-yjs/core";
 import * as Y from "yjs"
-import { useRoom } from '../../liveblocks.config';
+import { useOthers, useRoom } from '../../liveblocks.config';
+
 import styles from "../../CollaborativeEditor.module.css";
 //mui imports
 import { Button, imageListItemClasses } from "@mui/material";
@@ -41,6 +42,7 @@ import isHotkey from 'is-hotkey';
 import {  socketContext } from '../../context/socketContext';
 import { UserContext } from '../../context/userContext';
 import { Socket } from 'socket.io-client';
+// import { YXmlText } from 'yjs/dist/src/internals';
 
 
 
@@ -96,17 +98,16 @@ const initialValuex =  [
     room = useRoom()
     const getStatus = collaborationStatus.split('-')
     const isReadyToCollaborate = Boolean(Connected && sharedType && Provider)
-    
+
+    console.log(useOthers(), 'othersss')
 
     //set up Liveblocks yjs Provider
-    React.useEffect(() => {
-
-      
+    React.useEffect(() => {  
 
       let yDoc
       let yProvider
       let sharedDoc
-
+    
       //FIX for running init if its not initalizted before the doc is opened
       let timeLimitforisReadyToCollaborate = 1000
 
@@ -117,72 +118,118 @@ const initialValuex =  [
       
         yProvider = new LiveblocksProvider(room, yDoc);
         
-      sharedDoc = isBeginCollaboration? yDoc.get("content", Y.XmlText):''
+      sharedDoc =  yDoc.get("content", Y.XmlText)
 
-      console.log(sharedDoc.doc, 'doc')
+      // const ex = withHistory(withReact(withYjs(createEditor(), sharedDoc)));
 
+      console.log(sharedDoc.toDelta(), 'editor')
+      
+
+      //  jam = yDoc.get("content", Y.XmlText).length
+
+      // console.log(jam, 'docc')
+
+      console.log(sharedDoc.doc,'doc', sharedDoc.length)
+
+      
         console.log('cow', room.id)
-        sharedDoc.applyDelta(slateNodesToInsertDelta(selectedBook.bookTextprosecontent))
+
+        
+      if(useOthers().length === 0){
+           yDoc?.destroy()
+
+           //what does the next user get after this is run
+
+          sharedDoc.applyDelta(slateNodesToInsertDelta(selectedBook.bookTextprosecontent))
+      }
+      
  
       
       console.log(sharedDoc, 'sharedDocdxxdxdxdxd')
+
+      // yProvider.on('synced', (e) => {
+      //   console.log(e, 'eee')
+      // })
 
         //conditionals for rendering of collaborative editor component
       yProvider.on("sync", setConnected);
       setsharedType(sharedDoc);
       setProvider(yProvider);
+
+
+
+      
       }
 
-      const docsSetup = (stage) => {
-        if(stage === '2'){
-          setCollaborationStatus('collaborative_editor-provider_docs_setup')
-        }else if(stage === '3'){
-          setCollaborationStatus('collaborative_editor-mount_editor') 
-        }
-       
-      }
+   
+    
 
 
-    if(getStatus[0] === 'collaborative_editor'){
-      if(getStatus[1] === 'initiate'){
+    if(getStatus[0] === 'collaborative_editor' && getStatus[1] === 'initiate'){
+    
         initCollab()
         setTimeout(() => {
-          docsSetup('2')
+          setCollaborationStatus('collaborative_editor-provider_docs_setup')
         }, 1000);
         
-      }else {
-        if(isBeginCollaboration &&  getStatus[1] === 'provider_docs_setup'){
-          setTimeout(() => {
-            docsSetup('3')
-          }, 1000);
-   
-        }
-        
       }
-    }
    
+    
+      // window.addEventListener('beforeunload', cleanUp)
+    
 
 
-
+      const cleanUp = () => {
+        yDoc?.destroy();
+        yProvider?.off("sync", setConnected);
+        yProvider?.destroy();
+      }
 
   
-    return () => {
-      const cleanUpYjs = () => {
-        yDoc?.destroy();
-      yProvider?.off("sync", setConnected);
-      yProvider?.destroy();
-      }
-
-      cleanUpYjs()
-      
+    return () => { 
+      cleanUp()    
     }
 
 
+    }, [room]);
+
+    React.useEffect(() => {
+
+      // const docsSetup = (stage) => {
+      //   if(stage === '2'){
+      //     setCollaborationStatus('collaborative_editor-provider_docs_setup')
+      //   }else if(stage === '3'){
+        
+      //   }
+       
+      // }
+
+      console.log(collaborationStatus, 'statuseeee')
+
+          if(getStatus[1] === 'provider_docs_setup'){
+            setTimeout(() => {
+              setCollaborationStatus('collaborative_editor-mount_editor') 
+            }, 1000);
+     
+          }
     }, [collaborationStatus]);
 
 
+    React.useEffect(() => {
+      if(Connected){
+        console.log(sharedType._length, 'shared')
+        // console.log(sharedType.length.share, 'length')
+      }
+    }, [Connected]);
 
-
+    React.useEffect(() => {
+      console.log(Connected, sharedType,  Provider, 'eeeeeend')
+      // console.log(Connected, 'eeee3')
+      if(Connected && sharedType && Provider){
+       
+        setisMountCollaborativeEditor(true)
+      }
+    }, [Connected, sharedType, Provider]);
 
  
 
@@ -397,23 +444,23 @@ const initialValuex =  [
       
     }, [value]);
 
-    const swtichCursorLocation = () => {
-      ReactEditor.focus(editor)
-      console.log('damn')
-      Transforms.select(editor, {path: currentLocationPath, offset: 0})
-      setcurrentLocationPath(null)
-    }
+    // const swtichCursorLocation = () => {
+    //   ReactEditor.focus(editor)
+    //   console.log('damn')
+    //   Transforms.select(editor, {path: currentLocationPath, offset: 0})
+    //   setcurrentLocationPath(null)
+    // }
 
-    //handle ui change for finding tagLocation
-      React.useEffect(() => {
-        // console.log('switch')
-        // console.log(currentLocationPath,'switch')
-        if(currentLocationPath){      
-          swtichCursorLocation();
-        }
+    // //handle ui change for finding tagLocation
+    //   React.useEffect(() => {
+    //     // console.log('switch')
+    //     // console.log(currentLocationPath,'switch')
+    //     if(currentLocationPath){      
+    //       swtichCursorLocation();
+    //     }
 
       
-      }, [currentLocationPath]);
+    //   }, [currentLocationPath]);
 
       //should handle MetaPopover when the Metaid of the text Leave is obtained
       React.useEffect(() => {
@@ -844,7 +891,7 @@ const initialValuex =  [
      
 
      const SlateEditorComponentprops = {
-       Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isReadyToCollaborate,isMountCollaborativeEditor, isBeginCollaboration, collaborationStatus, getStatus
+       Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isReadyToCollaborate,isMountCollaborativeEditor, isBeginCollaboration, collaborationStatus, getStatus, currentLocationPath, setcurrentLocationPath
      } 
 
     //  const RenderSlateEditor = () => {
@@ -865,21 +912,24 @@ const initialValuex =  [
       // }
     
     //  }
+    console.log(collaborationStatus, getStatus, 'statuseeee')
    
 
     if(collaborationStatus.split('-')[0] === 'default_editor'){
       return <SlateEditorx
       {...SlateEditorComponentprops}
       />
-    }else if(collaborationStatus.split('-')[0] === 'collaborative_editor' && collaborationStatus.split('-')[1] === 'mount_editor'){
+    }else if(collaborationStatus.split('-')[1] == 'mount_editor' && isMountCollaborativeEditor){
       return <SlateEditorx
       {...SlateEditorComponentprops}
       />
     }else{
       return <div>
-        Loading…
+        ...loading
       </div>
     }
+    
+   
   }
 
   const emptyNode = {
@@ -888,19 +938,40 @@ const initialValuex =  [
 
 
 
-  const SlateEditorx = ({ Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isReadyToCollaborate, isMountCollaborativeEditor,collaborationStatus, getStatus}) => {
+  const SlateEditorx = ({ Editor, value, handleChangeSlate,ontitleChange, title, markx,setmarkx, renderElement,renderLeaf, MetaID, updatMetaId, currentTagObj, HOTKEYS, Toolbar, Editable,isHotkey,toggleMark, sharedType, userData, isReadyToCollaborate, isMountCollaborativeEditor,collaborationStatus, getStatus, currentLocationPath, setcurrentLocationPath}) => {
 
-    console.log()
+    // console.log()
+
+    const swtichCursorLocation = () => {
+      ReactEditor.focus(editorx)
+      console.log('damn')
+      Transforms.select(editorx, {path: currentLocationPath, offset: 0})
+      setcurrentLocationPath(null)
+    }
+
+
+        //handle ui change for finding tagLocation
+        React.useEffect(() => {
+          // console.log('switch')
+          // console.log(currentLocationPath,'switch')
+          if(currentLocationPath){      
+            swtichCursorLocation();
+          }
+  
+        
+        }, [currentLocationPath]);
 
     // const normalEditor = useMemo(() => {})
 
     const editorx = useMemo(() => {
       const  eCollaborate = withHistory(withReact(withYjs(createEditor(), sharedType)));
 
-      const e  = getStatus[0] === 'collaborative_editor' && getStatus[1] === 'provider_docs_setup'? withHistory(withReact(withYjs(createEditor(), sharedType))):  withHistory(withReact((createEditor())));
+      const e  = getStatus[0] === 'collaborative_editor' && getStatus[1] === 'mount_editor'? withHistory(withReact(withYjs(createEditor(), sharedType))):  withHistory(withReact((createEditor())));
 
-      
-      console.log(sharedType, 'noddexexe')
+      if(sharedType){
+           console.log(sharedType._length, 'noddexexe')
+      }
+   
 
 
   
@@ -926,18 +997,21 @@ const initialValuex =  [
 
     React.useEffect(() => {
       console.log('eeeeeeeeend', editorx, sharedType)
-     if(!isReadyToCollaborate){
-      return
-     }else{
+      console.log(YjsEditor)
+     if(collaborationStatus.split('-')[0] === 'collaborative_editor' && collaborationStatus.split('-')[1] === 'mount_editor'){
+
+      console.log(isReadyToCollaborate, 'eeeee2')
       YjsEditor.connect(editorx);
+
+     }else{
+      return
      }
 
-    
-     
       return () => YjsEditor.disconnect(editorx);
-    }, [editorx, userData]);
+    }, [editorx]);
 
-    return (     
+    
+    return (   
       <Slate editor={editorx} value={value}  
         onChange={value => {handleChangeSlate(value)
         }
