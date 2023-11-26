@@ -96,6 +96,7 @@ const initialValuex =  [
 
 
     room = useRoom()
+    const others = useOthers()
     const getStatus = collaborationStatus.split('-')
     const isReadyToCollaborate = Boolean(Connected && sharedType && Provider)
 
@@ -110,6 +111,8 @@ const initialValuex =  [
     
       //FIX for running init if its not initalizted before the doc is opened
       let timeLimitforisReadyToCollaborate = 1000
+
+     
 
       const initCollab = () => {
         console.log('init collab')
@@ -135,7 +138,7 @@ const initialValuex =  [
         console.log('cow', room.id)
 
         
-      if(useOthers().length === 0){
+      if(others.length === 0){
            yDoc?.destroy()
 
            //what does the next user get after this is run
