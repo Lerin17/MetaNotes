@@ -5,6 +5,7 @@ import { UserContext } from './userContext';
 import axios from 'axios';
 import { socketContext } from './socketContext';
 import { TeamsContext } from './teamsContext';
+import { Metacontext } from './MetamodalContext';
 
 
 
@@ -24,7 +25,11 @@ const LibaryContextProvider = (props) => {
 
     // const {userLibaryData} = React.useContext(TeamsContext)
 
-    const {socket, joinRoom} = React.useContext(socketContext)
+    const {socket, joinRoom, socketID, emitToRoom,  socketRooms, receivedMetaArrayData, setreceivedMetaArrayData} = React.useContext(socketContext)
+
+    const {MetaArray,setMetaArray  } = React.useContext(Metacontext)
+
+//    const {} = React.useContext()
 
    
     const {notification, setnotification} = React.useContext(UserContext)
@@ -131,6 +136,52 @@ const LibaryContextProvider = (props) => {
  
         }       
     }, [currentBook]);
+
+    //HANDLE EMITTING AND UPDATING  METAARRAY FOR COLLABORATIVE EDITING
+    React.useEffect(() => {
+        console.log(currentBookMetaArray, 'currentBookMetaArray')
+
+        if(currentBookMetaArray && socketRooms && receivedMetaArrayData.state === 'send' && !receivedMetaArrayData.metadata){
+            emitToRoom(currentBookMetaArray, socketID)
+        }else if(currentBookMetaArray && socketRooms && receivedMetaArrayData.state === 'donotsend' && !receivedMetaArrayData.metadata){
+            setreceivedMetaArrayData({state:'send', metadata: null})
+        }
+        
+    }, [currentBookMetaArray]);
+
+    React.useEffect(() => {
+        if(receivedMetaArrayData.metadata && receivedMetaArrayData.state === 'justreceiveddata'){
+                setMetaArray(receivedMetaArrayData.metadata)
+                // setcurrentBookMetaArray(receivedMetaArrayData.metadata)
+                
+                setreceivedMetaArrayData({state:'donotsend', metadata: null})
+        }
+    }, [receivedMetaArrayData]);
+
+
+   React.useEffect(() => {
+
+    if(userData && socketRooms){
+        console.log('cozab 1')
+        socket.on('$metaarraydata', ([metadata, senderid]) => {
+
+
+           
+
+            if(senderid !== socketID && !receivedMetaArrayData.metadata){
+                console.log('cozab 2', metadata)
+                // setcurrentBookMetaArray(metadata)
+                setreceivedMetaArrayData({state:'justreceiveddata', metadata})
+            }
+           
+        })
+    }
+        
+
+    }, [socketRooms, userData]);
+
+
+    //HANDLE EMITTING AND UPDATING  METAARRAY FOR COLLABORATIVE EDITING
 
     
 //Upon initialization get locally stored userLibaryData(via latestUserid) and reflect it on the Libary

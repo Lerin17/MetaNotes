@@ -30,6 +30,8 @@ const [isEmitChange, setisEmitChange] = React.useState(true);
 //receivedOperations determines whether changes from one user should be emitted to the room, if the state is send..emit and vice versa
 const [receivedOperations, setreceivedOperations] = React.useState({state:'send', operations: null});
 
+const [receivedMetaArrayData, setreceivedMetaArrayData] = React.useState({state:'send', metadata: null});
+
 
 
 
@@ -47,7 +49,10 @@ React.useEffect(() => {
   if(userData){
     // socket.connect()
 
-  
+    
+    socket.on('$metaarraydata', (metadata) => {
+      console.log('cozab 2', metadata)
+    })
 
  
 
@@ -83,8 +88,10 @@ React.useEffect(() => {
 
 // }, [exex]);
 
-const emitToRoom = (operations, mySocketid) => {
-  console.log(operations, '...emmitting')
+
+
+const emitToRoom = (emitdata, mySocketid) => {
+  // console.log(operations, '...emmitting')
 
 
 //  console.log(x, 'room')
@@ -93,13 +100,24 @@ const emitToRoom = (operations, mySocketid) => {
   //EMIT
 
    const filteredRoomMemebers = roomMembersIDs.filter(item => item !== mySocketid)
+//ITEMS CONTAINED ARE USED FOR EMITTING EDITOR OPERATIONS
 
-   if(operations){
-    if(operations[0].type !== 'set_selection'){
-      socket.emit('textprosedata', [operations, filteredRoomMemebers, mySocketid, socketRooms])
-     }
-   }
+  //  let operations = emitdata
 
+  //  if(operations){
+  //   if(operations[0].type !== 'set_selection'){
+  //     socket.emit('textprosedata', [operations, filteredRoomMemebers, mySocketid, socketRooms])
+  //    }
+  //  }
+
+//ITEMS CONTAINED ARE USED FOR EMITTING EDITOR OPERATIONS
+
+
+
+if(emitdata){
+console.log(emitdata, 'emitToRoom')
+  socket.emit('metaarraydata', [emitdata, socketRooms, mySocketid])
+}
 
 
 }
@@ -142,7 +160,7 @@ const joinRoom = (id) => {
 
   return (
     <socketContext.Provider value={{
-      socket,socketID, setsocketID, setsocketRooms, socketRooms,joinRoom, emitToRoom, isEmitChange, setisEmitChange, senderSocketID, setsenderSocketID, roomMembersIDs, setroomMembersIDs, receivedOperations, setreceivedOperations
+      socket,socketID, setsocketID, setsocketRooms, socketRooms,joinRoom, emitToRoom, isEmitChange, setisEmitChange, senderSocketID, setsenderSocketID, roomMembersIDs, setroomMembersIDs, receivedOperations, setreceivedOperations, receivedMetaArrayData, setreceivedMetaArrayData
     }}>
       {props.children}
     </socketContext.Provider>

@@ -50,6 +50,23 @@ function Prose(params) {
     // const {taggedObjArray, } = React.useContext(TagContext)
 
     
+    // useErrorListener((error) => {
+    //     switch (error.code){
+    //         case -1:
+
+    //         break
+
+    //         case 4001:
+
+    //         break
+
+    //         default:
+    //         console.log('broken')
+    //         break
+    //     }
+    // })
+
+    // console.log(error, 'liveblocks error')
 
     // const roomID = userData && selectedBook?String(selectedBook.bookid):''
 

@@ -23,6 +23,7 @@ import { withHistory } from 'slate-history';
 
 import { Metacontext } from '../context/MetamodalContext';
 import { LibaryContext } from '../context/LibaryContext';
+import { socketContext } from '../context/socketContext';
 
 
 // Add the initial valu dde.
@@ -37,6 +38,8 @@ import { LibaryContext } from '../context/LibaryContext';
     const {updateBookMetaArray} = React.useContext(LibaryContext)
 
     const {isMetamodal, toggleMetamodal,  CreateMetaID, currentMetacontent, currentMeta, MetacontentOnchange, updateCurrentMeta, updateMetaArray, MetaArray, } = React.useContext(Metacontext)
+
+    const {emitToRoom} = React.useContext(socketContext)
 
     
     let iscurrentMetaempty = true

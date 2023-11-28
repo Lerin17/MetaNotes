@@ -374,7 +374,7 @@ const initialValuex =  [
     }, [value, title]);
 
 
-    //the useeffect below handle the switvhing out of books. including their id, textprose and meta content. it occurs
+    //the useeffect below handle the switvhing out of books. including their id, textprose and metaArray content. it occurs
 
     React.useEffect(() => {
       // const textprosecontent = LibaryArray.find(item => item.bookid == bookID) 

@@ -56,9 +56,7 @@ function createCurrentMetaObj(Metaid) {
   )
 }
 
-React.useEffect(() => {
-  
-}, []);
+
 
 console.log(MetaArray, 'metaArray')
 
@@ -105,14 +103,14 @@ console.log(MetaArray, 'metaArray')
   if(MetaArray.length < 1){
     return false
   }
-  const xisSelectedMetalready = MetaArray.some(item => item.id === id)
+  const getSelectedMeta = MetaArray.some(item => item.id === id)
   const SelectedMetaobj = MetaArray.find(item => item.id === id)
 
-  if(xisSelectedMetalready){
+  if(getSelectedMeta){
     setcurrentMeta(SelectedMetaobj)
   }
   // console.log(xisSelectedMetalready, 'is')
-  return xisSelectedMetalready
+  return getSelectedMeta
   }
 
 
@@ -134,6 +132,13 @@ setTextproseID(id)
 
    setMetaArray(prev => [...prev, currentMeta])
  }
+
+
+// React.useEffect(() => {
+
+//  }, [MetaArray]);
+
+
 
  const updateCurrentMeta = (Metacontent) => {
    setcurrentMeta(prev => ({...prev, content: Metacontent }))
